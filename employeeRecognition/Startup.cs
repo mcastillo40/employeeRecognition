@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,10 +35,12 @@ namespace employeeRecognition
         {
             if (env.IsDevelopment())
             {
+                Console.WriteLine("Environment1 : ", env);
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                Console.WriteLine("Environment 2: ", env);
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
