@@ -27,7 +27,7 @@ namespace csharp_db_test
 
                     Submit_Tsql_NonQuery(connection, "2 - Create-Tables", Build_2_Tsql_CreateTables());
 
-                    //Submit_Tsql_NonQuery(connection, "3 - Inserts", Build_3_Tsql_Inserts());
+                    Submit_Tsql_NonQuery(connection, "3 - Inserts", Build_3_Tsql_Inserts());
 
                     //Submit_Tsql_NonQuery(connection, "4 - Update-Join", Build_4_Tsql_UpdateJoin(),
                     //"@csharpParmDepartmentName", "Accounting");
@@ -121,7 +121,7 @@ namespace csharp_db_test
             id              int IDENTITY(1,1)   not null    PRIMARY KEY,                -- IDENTIY(1,1) is SQL for auto_increment
             user_id         int                 not null    REFERENCES userAcct (id),   -- A foreign key to userAcct.id
             permission_id   int                 not null    REFERENCES permission (id), -- A foreign key to permission.id
-            type            varchar             null                                    -- Changed from bit to varchar
+            type            varchar(128)             null                                    -- NEEDS SIZE (128)
         )
 
 
@@ -129,7 +129,7 @@ namespace csharp_db_test
         (
             id          int IDENTITY(1,1)   not null    PRIMARY KEY,            -- IDENTIY(1,1) is SQL for auto_increment                
             role_id     int                 not null    REFERENCES role (id),   -- A foreign key to role.id
-            type        varchar             null,                               -- Can be of many types. Default is null.
+            type        varchar(128)            null,                               -- NEEDS SIZE (128).
             time        time                null,   -- FIX
             date        date                null    -- FIX
         )
@@ -143,21 +143,33 @@ namespace csharp_db_test
         static string Build_3_Tsql_Inserts()
         {
             return @"
-        -- The company has these departments.
-        INSERT INTO tabDepartment (DepartmentCode, DepartmentName)
-        VALUES
-            ('acct', 'Accounting'),
-            ('hres', 'Human Resources'),
-            ('legl', 'Legal');
 
-        -- The company has these employees, each in one department.
-        INSERT INTO tabEmployee (EmployeeName, EmployeeLevel, DepartmentCode)
-        VALUES
-            ('Alison'  , 19, 'acct'),
-            ('Barbara' , 17, 'hres'),
-            ('Carol'   , 21, 'acct'),
-            ('Deborah' , 24, 'legl'),
-            ('Elle'    , 15, null);
+            INSERT INTO userAcct(first_name, last_name, password, email, create_on, signature)
+            VALUES
+            ('Vinh', 'Dong', 'psw0', 'dongv@oregonstate.edu', CURRENT_TIMESTAMP, null),
+            ('Geneva', 'Lai', 'psw1', 'laig@oregonstate.edu', CURRENT_TIMESTAMP,null ),
+            ('Matt', 'Castillo', 'psw2', 'castimat@oregonstate.edu', CURRENT_TIMESTAMP, null); 
+
+            INSERT INTO permission (addUser, editUser, deleteUser)
+            VALUES
+            ('1', '1', '1'),
+            ('0', '0', '0'),
+            ('0', '0', '0');
+
+            INSERT INTO role (user_id, permission_id, type) 
+            VALUES 
+            ('1', '1', 'admin'),
+            ('2', '2', 'user'),
+            ('3', '3', 'user')
+
+            INSERT into award (role_id, type, time, date)
+            VALUES
+            ('1', 'service', '12:00:00.0000000', '2019-01-27'),
+            ('2', 'performance', '01:30:00.0000000', '2019-01-28'),
+            ('3', 'team worker', '02:45:00.0000000', '2019-01-29')
+
+
+
     ";
         }
 
