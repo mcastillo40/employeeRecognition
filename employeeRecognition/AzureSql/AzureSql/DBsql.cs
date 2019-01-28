@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;   // System.Data.dll
 //using System.Data;           // For:  SqlDbType , ParameterDirection
 
@@ -103,7 +103,7 @@ namespace csharp_db_test
             last_name   varchar(128)       not null,
             password    varchar(128)       not null,
             email       varchar(128)       not null,
-            create_on   date                null,
+            create_on   datetime2,
             signature   image
         
         );
@@ -111,9 +111,9 @@ namespace csharp_db_test
         CREATE TABLE permission
         (
             id          int IDENTITY(1,1) not null  PRIMARY KEY,    -- IDENTIY(1,1) is SQL for auto_increment
-            addUser     varchar null,                                   -- Changed from bit to varchar       
-            editUser    varchar null,                                   -- Changed from bit to varchar
-            deleteUser  varchar null                                    -- Changed from bit to varchar
+            addUser     bit not null,                                   -- Can be 0, 1, or null       
+            editUser    bit not null,                                   
+            deleteUser  bit not null                                    
         )
 
         CREATE TABLE role
@@ -129,9 +129,9 @@ namespace csharp_db_test
         (
             id          int IDENTITY(1,1)   not null    PRIMARY KEY,            -- IDENTIY(1,1) is SQL for auto_increment                
             role_id     int                 not null    REFERENCES role (id),   -- A foreign key to role.id
-            type        int                 null,                               -- Can be of many types. Default is null.
-            time        time                null,
-            date        date                null
+            type        varchar             null,                               -- Can be of many types. Default is null.
+            time        time                null,   -- FIX
+            date        date                null    -- FIX
         )
     ";
         }
