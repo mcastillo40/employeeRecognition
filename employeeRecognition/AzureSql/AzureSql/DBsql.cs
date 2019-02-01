@@ -29,8 +29,9 @@ namespace csharp_db_test
 
                     Submit_Tsql_NonQuery(connection, "3 - Inserts", Build_3_Tsql_Inserts());
 
-                    //Submit_Tsql_NonQuery(connection, "4 - Update-Join", Build_4_Tsql_UpdateJoin(),
-                    //"@csharpParmDepartmentName", "Accounting");
+                  
+                      Submit_Tsql_NonQuery(connection, "4 - Update-Join", Build_4_Tsql_UpdateJoin(),
+                    "@csharpParmDepartmentName", "Accounting");
 
                     //Submit_Tsql_NonQuery(connection, "5 - Delete-Join", Build_5_Tsql_DeleteJoin(),
                     //"@csharpParmDepartmentName", "Legal");
@@ -103,7 +104,7 @@ namespace csharp_db_test
             last_name   varchar(128)       not null,
             password    varchar(128)       not null,
             email       varchar(128)       not null,
-            create_on   datetime2,
+            create_on   datetime2           default CURRENT_TIMESTAMP,          
             signature   image
         
         );
@@ -128,10 +129,11 @@ namespace csharp_db_test
         CREATE TABLE award 
         (
             id          int IDENTITY(1,1)   not null    PRIMARY KEY,            -- IDENTIY(1,1) is SQL for auto_increment                
-            role_id     int                 not null    REFERENCES role (id),   -- A foreign key to role.id
+            sender_role_id       int        not null    REFERENCES role (id),   -- A foreign key to role.id (the sender)
+            recipient_user_id   int         not null    REFERENCES userAcct (id),  -- A foreign key to userAcct.id (the recipient)
             type        varchar(128)            null,                               -- NEEDS SIZE (128).
-            time        time                null,   -- FIX
-            date        date                null    -- FIX
+            time        time                null,   -- fixed
+            date        date                null    -- fixed
         )
     ";
         }
@@ -144,11 +146,11 @@ namespace csharp_db_test
         {
             return @"
 
-            INSERT INTO userAcct(first_name, last_name, password, email, create_on, signature)
+            INSERT INTO userAcct(first_name, last_name, password, email, signature)
             VALUES
-            ('Vinh', 'Dong', 'psw0', 'dongv@oregonstate.edu', CURRENT_TIMESTAMP, null),
-            ('Geneva', 'Lai', 'psw1', 'laig@oregonstate.edu', CURRENT_TIMESTAMP,null ),
-            ('Matt', 'Castillo', 'psw2', 'castimat@oregonstate.edu', CURRENT_TIMESTAMP, null); 
+            ('Vinh', 'Dong', 'psw0', 'dongv@oregonstate.edu', null),
+            ('Geneva', 'Lai', 'psw1', 'laig@oregonstate.edu',null ),
+            ('Matt', 'Castillo', 'psw2', 'castimat@oregonstate.edu', null); 
 
             INSERT INTO permission (addUser, editUser, deleteUser)
             VALUES
@@ -158,15 +160,15 @@ namespace csharp_db_test
 
             INSERT INTO role (user_id, permission_id, type) 
             VALUES 
-            ('1', '1', 'admin'),
-            ('2', '2', 'user'),
-            ('3', '3', 'user')
+            ('1', '1', 'admin'),    -- Vinh
+            ('2', '2', 'user'),     -- Geneva
+            ('3', '3', 'user')      -- Matt
 
-            INSERT into award (role_id, type, time, date)
+            INSERT into award (sender_role_id, recipient_user_id, type, time, date)
             VALUES
-            ('1', 'service', '12:00:00.0000000', '2019-01-27'),
-            ('2', 'performance', '01:30:00.0000000', '2019-01-28'),
-            ('3', 'team worker', '02:45:00.0000000', '2019-01-29')
+            ('1', '3', 'service', '12:00:00.0000000', '2019-01-27'),         -- From 1 (Vinh), to 3 (Matt)
+            ('2', '1', 'performance', '01:30:00.0000000', '2019-01-28'),     -- From 2 (Geneva), to 1 (Vinh)
+            ('3', '2', 'team worker', '02:45:00.0000000', '2019-01-29')      -- From 3 (Matt), to 2 (Geneva)
 
 
 
@@ -176,21 +178,40 @@ namespace csharp_db_test
         /***********************************
           SQL UPDATE FUNCTION
         ************************************/
+        // If conditions in MS SQL: https://docs.microsoft.com/en-us/sql/t-sql/language-elements/if-else-transact-sql?view=sql-server-2017
         static string Build_4_Tsql_UpdateJoin()
         {
             return @"
-        DECLARE @DName1  nvarchar(128) = @csharpParmDepartmentName;  --'Accounting';
+        -- DECLARE @DName1  nvarchar(128) = @csharpParmDepartmentName;  --'Accounting';
 
         -- Promote everyone in one department (see @parm...).
-        UPDATE empl
+        -- UPDATE empl
+        -- SET
+        --     empl.EmployeeLevel += 1
+        -- FROM
+        --     tabEmployee   as empl
+        -- INNER JOIN
+        --     tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
+        -- WHERE
+        --     dept.DepartmentName = @DName1;
+
+        -- 
+
+
+        -- User can change their name
+        UPDATE userAcct
         SET
-            empl.EmployeeLevel += 1
-        FROM
-            tabEmployee   as empl
-        INNER JOIN
-            tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
+            userAcct.first_name = 'Geneva01'
         WHERE
-            dept.DepartmentName = @DName1;
+            userAcct.id = 2;
+
+
+        
+        
+
+
+        -- Admin can edit any account
+
     ";
         }
 
@@ -200,21 +221,27 @@ namespace csharp_db_test
         static string Build_5_Tsql_DeleteJoin()
         {
             return @"
-        DECLARE @DName2  nvarchar(128);
-        SET @DName2 = @csharpParmDepartmentName;  --'Legal';
+        -- DECLARE @DName2  nvarchar(128);
+        -- SET @DName2 = @csharpParmDepartmentName;  --'Legal';
 
         -- Right size the Legal department.
-        DELETE empl
-        FROM
-            tabEmployee   as empl
-        INNER JOIN
-            tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
-        WHERE
-            dept.DepartmentName = @DName2
+        -- DELETE empl
+        -- FROM
+        --     tabEmployee   as empl
+        -- INNER JOIN
+        --     tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
+        -- WHERE
+        --     dept.DepartmentName = @DName2
 
         -- Disband the Legal department.
-        DELETE tabDepartment
-            WHERE DepartmentName = @DName2;
+        -- DELETE tabDepartment
+        --     WHERE DepartmentName = @DName2;
+
+        -- User can delete, from the system, awards that this user has previously given
+
+        -- Admin can delete an account entirely
+
+
     ";
         }
 
