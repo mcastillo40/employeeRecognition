@@ -36,7 +36,7 @@ namespace csharp_db_test
                     //Submit_Tsql_NonQuery(connection, "5 - Delete-Join", Build_5_Tsql_DeleteJoin(),
                     //"@csharpParmDepartmentName", "Legal");
 
-                    //Submit_6_Tsql_SelectEmployees(connection);
+                    Submit_6_Tsql_SelectEmployees(connection);
                 }
             }
             catch (SqlException e)
@@ -237,6 +237,8 @@ namespace csharp_db_test
         -- DELETE tabDepartment
         --     WHERE DepartmentName = @DName2;
 
+
+
         -- User can delete, from the system, awards that this user has previously given
 
         -- Admin can delete an account entirely
@@ -252,20 +254,23 @@ namespace csharp_db_test
         ************************************/
         static string Build_6_Tsql_SelectEmployees()
         {
-            return @"
+               return @"
         -- Look at all the final Employees.
-        SELECT
-            empl.EmployeeGuid,
-            empl.EmployeeName,
-            empl.EmployeeLevel,
-            empl.DepartmentCode,
-            dept.DepartmentName
-        FROM
-            tabEmployee   as empl
-        LEFT OUTER JOIN
-            tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
-        ORDER BY
-            EmployeeName;
+        -- SELECT
+        --     empl.EmployeeGuid,
+        --     empl.EmployeeName,
+        --     empl.EmployeeLevel,
+        --     empl.DepartmentCode,
+        --     dept.DepartmentName
+        -- FROM
+        --     tabEmployee   as empl
+        -- LEFT OUTER JOIN
+        --     tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
+        -- ORDER BY
+        --     EmployeeName;
+
+        -- View all the awards created (to and from whom)
+        SELECT * FROM award;
     ";
         }
 
@@ -273,7 +278,8 @@ namespace csharp_db_test
         {
             Console.WriteLine();
             Console.WriteLine("=================================");
-            Console.WriteLine("Now, SelectEmployees (6)...");
+            Console.WriteLine("Now, view all awards created.");
+            Console.WriteLine("(award_id, sender_role_id, recipient_user_id, type, time, date:)");
 
             string tsql = Build_6_Tsql_SelectEmployees();
 
@@ -283,12 +289,15 @@ namespace csharp_db_test
                 {
                     while (reader.Read())
                     {
-                        Console.WriteLine("{0} , {1} , {2} , {3} , {4}",
-                            reader.GetGuid(0),
-                            reader.GetString(1),
+                        Console.WriteLine("{0} , {1} , {2} , {3}, {4}, {5}", 
+                            reader.GetInt32(0),
+                            reader.GetInt32(1),
                             reader.GetInt32(2),
                             (reader.IsDBNull(3)) ? "NULL" : reader.GetString(3),
-                            (reader.IsDBNull(4)) ? "NULL" : reader.GetString(4));
+                            reader.GetTimeSpan(4),
+                            reader.GetDateTime(5));
+                            //(reader.IsDBNull(4)) ? "NULL" : reader.GetDateTime(4));
+                            //(reader.IsDBNull(5)) ? "NULL" : reader.GetDateTime(5));
                     }
                 }
             }
