@@ -20,12 +20,15 @@ export class NavMenu extends Component {
                         
                     </NavLink>
                    
-                    <NavLink className="nav-link nav-item" to="/counter" >Counter
+                    <NavLink className="nav-link nav-item" to="/counter">Counter
                         
                     </NavLink>
                    
-                    <NavLink className="nav-link nav-item" to="/fetchdata">Fetch Data
+                    <NavLink className="nav-link nav-item" to="/fetchdata">Users
                         
+                    </NavLink>
+                    <NavLink className="nav-link nav-item" to="/award">Awards
+   
                     </NavLink>
                 </div>
             </div>
