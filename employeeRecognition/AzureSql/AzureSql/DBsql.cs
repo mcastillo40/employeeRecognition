@@ -29,14 +29,11 @@ namespace csharp_db_test
 
                     Submit_Tsql_NonQuery(connection, "3 - Inserts", Build_3_Tsql_Inserts());
 
-                  
-                      Submit_Tsql_NonQuery(connection, "4 - Update-Join", Build_4_Tsql_UpdateJoin(),
-                    "@csharpParmDepartmentName", "Accounting");
+                    Submit_Tsql_NonQuery(connection, "4 - Update", Build_4_Tsql_Update());
 
-                    //Submit_Tsql_NonQuery(connection, "5 - Delete-Join", Build_5_Tsql_DeleteJoin(),
-                    //"@csharpParmDepartmentName", "Legal");
+                    //Submit_Tsql_NonQuery(connection, "5 - Delete-Join", Build_5_Tsql_DeleteJoin());
 
-                    Submit_6_Tsql_SelectEmployees(connection);
+                    Submit_6_Tsql_ViewAwards(connection);
                 }
             }
             catch (SqlException e)
@@ -65,26 +62,6 @@ namespace csharp_db_test
         {
             return @"
 
-        -- This section below (Microsoft demo tables) is commented out, but kept so we can use as template 
-
-        -- DROP TABLE IF EXISTS tabEmployee;
-        -- DROP TABLE IF EXISTS tabDepartment;  -- Drop parent table last.
-
-        -- CREATE TABLE tabDepartment
-        -- (
-        --     DepartmentCode  nchar(4)          not null    PRIMARY KEY,
-        --     DepartmentName  nvarchar(128)     not null
-        -- );
-
-        -- CREATE TABLE tabEmployee
-        -- (
-        --     EmployeeGuid    uniqueIdentifier  not null  default NewId()    PRIMARY KEY,
-        --     EmployeeName    nvarchar(128)     not null,
-        --     EmployeeLevel   int               not null,
-        --     DepartmentCode  nchar(4)              null
-        --     REFERENCES tabDepartment (DepartmentCode) -- (REFERENCES would be disallowed on temporary tables.)
-        -- );
-
         -- Clean the DB:
         DROP TABLE IF EXISTS [user];
         DROP TABLE IF EXISTS tabDepartment;
@@ -111,8 +88,8 @@ namespace csharp_db_test
 
         CREATE TABLE permission
         (
-            id          int IDENTITY(1,1) not null  PRIMARY KEY,    -- IDENTIY(1,1) is SQL for auto_increment
-            addUser     bit not null,                                   -- Can be 0, 1, or null       
+            id          int IDENTITY(0,1) not null  PRIMARY KEY,      -- Only two entries in permission: user (0) or admin (1)
+            addUser     bit not null,                                 -- Can be 0, 1, or null       
             editUser    bit not null,                                   
             deleteUser  bit not null                                    
         )
@@ -129,7 +106,7 @@ namespace csharp_db_test
         CREATE TABLE award 
         (
             id          int IDENTITY(1,1)   not null    PRIMARY KEY,            -- IDENTIY(1,1) is SQL for auto_increment                
-            sender_role_id       int        not null    REFERENCES role (id),   -- A foreign key to role.id (the sender)
+            sender_user_id       int        not null    REFERENCES userAcct (id),   -- A foreign key to role.id (the sender)
             recipient_user_id   int         not null    REFERENCES userAcct (id),  -- A foreign key to userAcct.id (the recipient)
             type        varchar(128)            null,                               -- NEEDS SIZE (128).
             time        time                null,   -- fixed
@@ -154,17 +131,16 @@ namespace csharp_db_test
 
             INSERT INTO permission (addUser, editUser, deleteUser)
             VALUES
-            ('1', '1', '1'),
-            ('0', '0', '0'),
-            ('0', '0', '0');
+            ('0', '1', '0'),    -- user: permission.id = 0
+            ('1', '1', '1')     -- admin: permission.id = 1
 
             INSERT INTO role (user_id, permission_id, type) 
             VALUES 
             ('1', '1', 'admin'),    -- Vinh
-            ('2', '2', 'user'),     -- Geneva
-            ('3', '3', 'user')      -- Matt
+            ('2', '0', 'user'),     -- Geneva
+            ('3', '0', 'user')      -- Matt
 
-            INSERT into award (sender_role_id, recipient_user_id, type, time, date)
+            INSERT into award (sender_user_id, recipient_user_id, type, time, date)
             VALUES
             ('1', '3', 'service', '12:00:00.0000000', '2019-01-27'),         -- From 1 (Vinh), to 3 (Matt)
             ('2', '1', 'performance', '01:30:00.0000000', '2019-01-28'),     -- From 2 (Geneva), to 1 (Vinh)
@@ -179,24 +155,9 @@ namespace csharp_db_test
           SQL UPDATE FUNCTION
         ************************************/
         // If conditions in MS SQL: https://docs.microsoft.com/en-us/sql/t-sql/language-elements/if-else-transact-sql?view=sql-server-2017
-        static string Build_4_Tsql_UpdateJoin()
+        static string Build_4_Tsql_Update()
         {
             return @"
-        -- DECLARE @DName1  nvarchar(128) = @csharpParmDepartmentName;  --'Accounting';
-
-        -- Promote everyone in one department (see @parm...).
-        -- UPDATE empl
-        -- SET
-        --     empl.EmployeeLevel += 1
-        -- FROM
-        --     tabEmployee   as empl
-        -- INNER JOIN
-        --     tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
-        -- WHERE
-        --     dept.DepartmentName = @DName1;
-
-        -- 
-
 
         -- User can change their name
         UPDATE userAcct
@@ -252,36 +213,23 @@ namespace csharp_db_test
         /***********************************
           SQL SELECT FUNCTION
         ************************************/
-        static string Build_6_Tsql_SelectEmployees()
+        static string Build_6_Tsql_ViewAwards()
         {
                return @"
-        -- Look at all the final Employees.
-        -- SELECT
-        --     empl.EmployeeGuid,
-        --     empl.EmployeeName,
-        --     empl.EmployeeLevel,
-        --     empl.DepartmentCode,
-        --     dept.DepartmentName
-        -- FROM
-        --     tabEmployee   as empl
-        -- LEFT OUTER JOIN
-        --     tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
-        -- ORDER BY
-        --     EmployeeName;
 
         -- View all the awards created (to and from whom)
         SELECT * FROM award;
     ";
         }
 
-        static void Submit_6_Tsql_SelectEmployees(SqlConnection connection)
+        static void Submit_6_Tsql_ViewAwards(SqlConnection connection)
         {
             Console.WriteLine();
             Console.WriteLine("=================================");
             Console.WriteLine("Now, view all awards created.");
-            Console.WriteLine("(award_id, sender_role_id, recipient_user_id, type, time, date:)");
+            Console.WriteLine("(award_id, sender_user_id, recipient_user_id, type, time, date:)");
 
-            string tsql = Build_6_Tsql_SelectEmployees();
+            string tsql = Build_6_Tsql_ViewAwards();
 
             using (var command = new SqlCommand(tsql, connection))
             {
