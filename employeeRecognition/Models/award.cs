@@ -7,7 +7,7 @@ namespace employeeRecognition.Models
 {
     public class award
     {
-        public string sender_role_id { get; set; }
+        public string sender_user_id { get; set; }
         public string recipient_user_id { get; set; }
         public string type { get; set; }
         public string time { get; set; }

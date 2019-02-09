@@ -44,14 +44,15 @@ namespace employeeRecognition.Controllers
             return list;
         }
 
-    public IEnumerable<Models.award> Nominated()
+        [HttpGet("[action]")]
+        public IEnumerable<Models.award> Nominated()
         {
             List<Models.award> list2 = new List<Models.award>();
 
             // runs stored procedure and returns data to main page
             using (SqlConnection con2 = new SqlConnection(connectionString))
             {
-                String sql2 = @"select * from award";
+                String sql2 = @"SELECT * FROM award";
                 //con.ConnectionString = @"Server=comp1630.database.windows.net;Database=pubs;User Id=readonlylogin;Password=;";
 
                 DataTable dt2 = new DataTable();
@@ -63,7 +64,8 @@ namespace employeeRecognition.Controllers
                 foreach (DataRow row in dt2.Rows)
                 {
                     var aw = new Models.award();
-                    aw.sender_role_id = row["sender_role_id"].ToString();
+
+                    aw.sender_user_id = row["sender_user_id"].ToString();
                     aw.recipient_user_id = row["recipient_user_id"].ToString();
                     aw.type = row["type"].ToString();
                     aw.time = row["time"].ToString();
