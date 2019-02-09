@@ -31,7 +31,7 @@ namespace csharp_db_test
 
                     Submit_Tsql_NonQuery(connection, "4 - Update", Build_4_Tsql_Update());
 
-                    //Submit_Tsql_NonQuery(connection, "5 - Delete-Join", Build_5_Tsql_DeleteJoin());
+                    Submit_Tsql_NonQuery(connection, "5 - Delete-Join", Build_5_Tsql_DeleteJoin());
 
                     Submit_6_Tsql_ViewAwards(connection);
                 }
@@ -62,17 +62,20 @@ namespace csharp_db_test
         {
             return @"
 
-        -- Clean the DB:
-        DROP TABLE IF EXISTS [user];
-        DROP TABLE IF EXISTS tabDepartment;
-        DROP TABLE IF EXISTS userAccount;
-
-        -- Here, we create our actual EmployeeDB tables:
+        -- Clean the DB
 
         DROP TABLE IF EXISTS award;
-        DROP TABLE IF EXISTS role;
         DROP TABLE IF EXISTS permission;
         DROP TABLE IF EXISTS userAcct;
+        DROP TABLE IF EXISTS role;  -- role table needs to be created first because userAcct depends on it.
+
+        -- Create the tables
+
+        CREATE TABLE role
+        (
+            id              int IDENTITY(0,1)   not null    PRIMARY KEY,    -- IDENTIY(1,1) is SQL for auto_increment
+            type            varchar(128)        not null                    -- NEEDS SIZE (128)
+        )
 
         CREATE TABLE userAcct
         (
@@ -81,27 +84,11 @@ namespace csharp_db_test
             last_name   varchar(128)       not null,
             password    varchar(128)       not null,
             email       varchar(128)       not null,
+            role        int                not null REFERENCES role (id),   -- A foreign key to role.id
             create_on   datetime2           default CURRENT_TIMESTAMP,          
             signature   image
         
         );
-
-        CREATE TABLE permission
-        (
-            id          int IDENTITY(0,1) not null  PRIMARY KEY,      -- Only two entries in permission: user (0) or admin (1)
-            addUser     bit not null,                                 -- Can be 0, 1, or null       
-            editUser    bit not null,                                   
-            deleteUser  bit not null                                    
-        )
-
-        CREATE TABLE role
-        (
-            id              int IDENTITY(1,1)   not null    PRIMARY KEY,                -- IDENTIY(1,1) is SQL for auto_increment
-            user_id         int                 not null    REFERENCES userAcct (id),   -- A foreign key to userAcct.id
-            permission_id   int                 not null    REFERENCES permission (id), -- A foreign key to permission.id
-            type            varchar(128)             null                                    -- NEEDS SIZE (128)
-        )
-
 
         CREATE TABLE award 
         (
@@ -123,30 +110,24 @@ namespace csharp_db_test
         {
             return @"
 
-            INSERT INTO userAcct(first_name, last_name, password, email, signature)
-            VALUES
-            ('Vinh', 'Dong', 'psw0', 'dongv@oregonstate.edu', null),
-            ('Geneva', 'Lai', 'psw1', 'laig@oregonstate.edu',null ),
-            ('Matt', 'Castillo', 'psw2', 'castimat@oregonstate.edu', null); 
-
-            INSERT INTO permission (addUser, editUser, deleteUser)
-            VALUES
-            ('0', '1', '0'),    -- user: permission.id = 0
-            ('1', '1', '1')     -- admin: permission.id = 1
-
-            INSERT INTO role (user_id, permission_id, type) 
+            INSERT INTO role (type) 
             VALUES 
-            ('1', '1', 'admin'),    -- Vinh
-            ('2', '0', 'user'),     -- Geneva
-            ('3', '0', 'user')      -- Matt
+            ('user'),    -- role.id = 0
+            ('admin')    -- role.id = 1
+        
+            INSERT INTO userAcct(first_name, last_name, password, email, role, signature)
+            VALUES
+            ('Vinh', 'Dong', 'psw0', 'dongv@oregonstate.edu', 1, null),         -- Vinh is admin
+            ('Geneva', 'Lai', 'psw1', 'laig@oregonstate.edu', 0, null ),        -- Geneva is user
+            ('Matt', 'Castillo', 'psw2', 'castimat@oregonstate.edu', 0, null),  -- Matt is user
+            ('Harry', 'Potter', 'psw3', 'potter@email.com', 0, null),           -- Harry Potter is user
+            ('Peter', 'Parker', 'psw4', 'parker@email.com', 0, null);           -- Peter Parker is user
 
             INSERT into award (sender_user_id, recipient_user_id, type, time, date)
             VALUES
             ('1', '3', 'service', '12:00:00.0000000', '2019-01-27'),         -- From 1 (Vinh), to 3 (Matt)
             ('2', '1', 'performance', '01:30:00.0000000', '2019-01-28'),     -- From 2 (Geneva), to 1 (Vinh)
             ('3', '2', 'team worker', '02:45:00.0000000', '2019-01-29')      -- From 3 (Matt), to 2 (Geneva)
-
-
 
     ";
         }
@@ -182,27 +163,13 @@ namespace csharp_db_test
         static string Build_5_Tsql_DeleteJoin()
         {
             return @"
-        -- DECLARE @DName2  nvarchar(128);
-        -- SET @DName2 = @csharpParmDepartmentName;  --'Legal';
-
-        -- Right size the Legal department.
-        -- DELETE empl
-        -- FROM
-        --     tabEmployee   as empl
-        -- INNER JOIN
-        --     tabDepartment as dept ON dept.DepartmentCode = empl.DepartmentCode
-        -- WHERE
-        --     dept.DepartmentName = @DName2
-
-        -- Disband the Legal department.
-        -- DELETE tabDepartment
-        --     WHERE DepartmentName = @DName2;
-
-
 
         -- User can delete, from the system, awards that this user has previously given
 
         -- Admin can delete an account entirely
+        DELETE FROM userAcct
+        WHERE 
+            userAcct.id = 4;
 
 
     ";
