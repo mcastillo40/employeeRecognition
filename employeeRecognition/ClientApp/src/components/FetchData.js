@@ -22,19 +22,19 @@ export class FetchData extends Component {
       <table className='table'>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>E-mail</th>
+            <th>Created on</th>
           </tr>
         </thead>
         <tbody>
           {forecasts.map(forecast =>
             <tr key={forecast.dateFormatted}>
-                <td>{forecast.last_name}</td>
                 <td>{forecast.first_name}</td>
+                <td>{forecast.last_name}</td>
                 <td>{forecast.email}</td>
-                <td>{forecast.summary}</td>
+                <td>{forecast.create_on}</td>
             </tr>
           )}
         </tbody>
@@ -49,7 +49,7 @@ export class FetchData extends Component {
 
     return (
       <div>
-        <h1>Weather forecast</h1>
+        <h1>List of user infomation</h1>
         <p>This component demonstrates fetching data from the server.</p>
         {contents}
       </div>

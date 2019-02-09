@@ -11,10 +11,6 @@ namespace employeeRecognition.Controllers
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
-        private static string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         string connectionString = @"Data Source = tcp:erraisqlserver.database.windows.net,1433;Initial Catalog=EmployeeDB;Persist Security Info=False;User ID=erraiadmin;Password=DBaccess3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
         [HttpGet("[action]")]
@@ -40,35 +36,42 @@ namespace employeeRecognition.Controllers
                     user.first_name = row["first_name"].ToString();
                     user.last_name = row["last_name"].ToString();
                     user.email = row["email"].ToString();
+                    user.create_on = row["create_on"].ToString();
                     list.Add(user);
                 }
             }
 
             return list;
-
-            //var rng = new Random();
-            //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            //{
-            //    DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
-            //    TemperatureC = rng.Next(-20, 55),
-            //    Summary = Summaries[rng.Next(Summaries.Length)],
-            //    Test = ""
-            //});
         }
 
-        public class WeatherForecast
+    public IEnumerable<Models.award> Nominated()
         {
-            public string DateFormatted { get; set; }
-            public int TemperatureC { get; set; }
-            public string Summary { get; set; }
+            List<Models.award> list2 = new List<Models.award>();
 
-            public int TemperatureF
+            // runs stored procedure and returns data to main page
+            using (SqlConnection con2 = new SqlConnection(connectionString))
             {
-                get
+                String sql2 = @"select * from award";
+                //con.ConnectionString = @"Server=comp1630.database.windows.net;Database=pubs;User Id=readonlylogin;Password=;";
+
+                DataTable dt2 = new DataTable();
+                SqlDataAdapter da2 = new SqlDataAdapter();
+                da2.SelectCommand = new SqlCommand(sql2, con2);
+
+                da2.Fill(dt2);
+
+                foreach (DataRow row in dt2.Rows)
                 {
-                    return 32 + (int)(TemperatureC / 0.5556);
+                    var aw = new Models.award();
+                    aw.sender_role_id = row["sender_role_id"].ToString();
+                    aw.recipient_user_id = row["recipient_user_id"].ToString();
+                    aw.type = row["type"].ToString();
+                    aw.time = row["time"].ToString();
+                    aw.date = row["date"].ToString();
+                    list2.Add(aw);
                 }
             }
+            return list2;
         }
     }
 }
