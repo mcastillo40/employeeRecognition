@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from "react-dom";
 
 
@@ -21,7 +21,7 @@ render() {
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
                      </div>
-                    <input name="" class="form-control" placeholder="Email" type="email" value=""/>
+                    <input name="" class="form-control" placeholder="Email" type="email"/>
                 </div> 
                 </div> 
                 <div class="form-group">
@@ -29,7 +29,7 @@ render() {
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                      </div>
-                    <input class="form-control" placeholder="******" type="password" value=""/>
+                    <input class="form-control" placeholder="******" type="password"/>
                 </div> 
                 </div> 
             <div class="row">
