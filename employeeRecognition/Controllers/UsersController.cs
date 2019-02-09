@@ -12,9 +12,9 @@ namespace employeeRecognition.Controllers
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
-        DataTable dt { get; set; }
+        private DataTable dt { get; set; }
 
-        DbConnection sqlConnection = new DbConnection();
+        private DbConnection sqlConnection = new DbConnection();
 
         [HttpGet("[action]")]
         public IEnumerable<Models.UserAcct> Index()
