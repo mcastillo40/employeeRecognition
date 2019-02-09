@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { NavMenu } from './NavMenu';
 import './StyleSheet.css';
+import './NavMenu.css';
 
 export class Layout extends Component {
     displayName = Layout.name
