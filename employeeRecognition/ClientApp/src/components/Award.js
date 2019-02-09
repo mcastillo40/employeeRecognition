@@ -31,7 +31,7 @@ export class Award extends Component {
                 </thead>
                 <tbody>
                     {awards.map(aw =>
-                        <tr key={aw.dateFormatted}>
+                        <tr key={aw.id}>
                             <td>{aw.sender_user_id}</td>
                             <td>{aw.recipient_user_id}</td>
                             <td>{aw.type}</td>
