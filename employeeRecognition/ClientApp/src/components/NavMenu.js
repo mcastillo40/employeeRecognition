@@ -16,11 +16,17 @@ export class NavMenu extends Component {
 
             <div className="collapse navbar-collapse" id="navbarContent">
                 <div className="navbar-nav ml-auto">
+                    <NavLink className="nav-link nav-item" exact to="/login">Login
+                        
+                    </NavLink>
+
                     <NavLink className="nav-link nav-item" exact to="/">Home
                         
                     </NavLink>
+
                    
                     <NavLink className="nav-link nav-item" to="/counter">Counter
+
                         
                     </NavLink>
                    
