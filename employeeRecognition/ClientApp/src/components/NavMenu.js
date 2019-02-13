@@ -23,10 +23,6 @@ export class NavMenu extends Component {
                     <NavLink className="nav-link nav-item" to="/counter">Counter
                         
                     </NavLink>
-                   
-                    <NavLink className="nav-link nav-item" to="/fetchdata">Users
-                        
-                    </NavLink>
 
                     <NavLink className="nav-link nav-item" to="/users">Users
                     </NavLink>

@@ -1,4 +1,6 @@
 ﻿import React, { Component } from 'react';
+import { CreateButton } from '../Shared/CreateButton';
+import { TableButtons } from '../Shared/TableButtons';
 
 export class Award extends Component {
     displayName = Award.name
@@ -6,6 +8,9 @@ export class Award extends Component {
     constructor(props) {
         super(props);
         this.state = { awards: [], loading: true };
+        // This binding is necessary to make "this" work in the callback
+        this.handleDelete = this.handleDelete.bind(this);
+        //this.handleEdit = this.handleEdit.bind(this);  
     }
 
     async componentDidMount() {
@@ -16,9 +21,26 @@ export class Award extends Component {
 
         this.setState({ awards: data1, loading: false });
     }
+    /**/
+   handleDelete(id) {
+        fetch('api/SampleData/Delete/' + id, {
+                method: 'delete'
+            }).then(data => {
+                this.setState(
+                    {
+                        awards: this.state.awards.filter((rec) => {
+                            return (rec.id != id);
+                        })
+                    });
+            });
+    }  
 
     static renderNominated(awards) {
         return (
+            <div>
+                <CreateButton />
+                <br /> <br />
+                <div className="form-border">
             <table className='table'>
                 <thead>
                     <tr>
@@ -37,13 +59,16 @@ export class Award extends Component {
                             <td>{aw.type}</td>
                             <td>{aw.time}</td>
                             <td>{aw.date}</td>
+                            <td><button onClick={(id) => this.handleDelete(aw.id)}>Delete</button></td>
                         </tr>
                     )}
                 </tbody>
             </table>
+            </div>
+            </div>
         );
     }
-
+    //<a className="action" onClick={(id) => this.handleEdit(aw.id)}>Edit</a> |
     render() {
         let contents1 = this.state.loading
             ? <p><em>Loading...</em></p>
