@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
-import { CreateButton } from '../Shared/CreateButton';
-import { TableButtons } from '../Shared/TableButtons';
+import { CreateButton } from '../../Shared/CreateButton';
+import { User } from './User';
 
 export class Users extends Component {
     displayName = Users.name
@@ -8,6 +8,8 @@ export class Users extends Component {
     constructor(props) {
         super(props);
         this.state = { users: [], loading: true };
+
+        this.handleDelete.bind(this);
     }
 
     async componentDidMount() {
@@ -22,7 +24,11 @@ export class Users extends Component {
         }
     }
 
-    static renderUsersTable(users) {
+    handleDelete(id) {
+        console.log("DELETE ME: ", id);
+    }
+
+    static renderUsersTable(users, handleDelete) {
         return (
             <div>
                 <CreateButton />
@@ -37,14 +43,13 @@ export class Users extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map(user =>
-                                <tr key={user.id}>
-                                    <td>{user.first_name}</td>
-                                    <td>{user.last_name}</td>
-                                    <td>{user.email}</td>
-                                    <TableButtons />
-                                </tr>
-                            )}
+                            {users.map(user => (
+                                <User
+                                    key={user.id}
+                                    handleDelete={handleDelete}
+                                    userInfo={user}
+                                />
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -55,7 +60,7 @@ export class Users extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Users.renderUsersTable(this.state.users);
+            : Users.renderUsersTable(this.state.users, this.handleDelete);
 
         return (
             <div>

@@ -4,7 +4,7 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { Settings } from './components/Settings';
 import { BusinessReporting } from './components/BusinessReporting';
-import { Users } from './components/Users';
+import { Users } from './components/Users/Users';
 import { Award } from './components/Award';
 
 export default class App extends Component {

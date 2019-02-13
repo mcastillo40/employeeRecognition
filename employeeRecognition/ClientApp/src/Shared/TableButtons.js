@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 
-const TableButtons = () => {
+const TableButtons = props => {
     return <td className="button-width">
             <div className="btn-group" role="group">
                 <button className="btn btn-primary" title="Edit">
@@ -9,7 +9,11 @@ const TableButtons = () => {
                 <button className="btn btn-success" title="Details">
                     <i className="far fa-list-alt"></i>
                 </button>
-                <button className="btn btn-danger" title="Delete">
+                <button
+                    className="btn btn-danger"
+                    title="Delete"
+                    onClick={id => props.handleDelete(props.userInfo.id)}
+                >
                     <i className="fas fa-trash-alt"></i>
                 </button >
             </div >
