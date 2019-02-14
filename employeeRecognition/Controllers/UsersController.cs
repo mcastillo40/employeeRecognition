@@ -31,6 +31,7 @@ namespace employeeRecognition.Controllers
                 user.id = (int)row["id"];
                 user.first_name = row["first_name"].ToString();
                 user.last_name = row["last_name"].ToString();
+                user.role = (int)row["role"];
                 user.email = row["email"].ToString();
                 list.Add(user);
             }
