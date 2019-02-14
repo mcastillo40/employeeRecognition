@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { CreateButton } from '../../Shared/CreateButton';
 import { User } from './User';
+import { Link } from 'react-router-dom';
 
 export class Users extends Component {
     displayName = Users.name
@@ -31,7 +32,7 @@ export class Users extends Component {
     static renderUsersTable(users, handleDelete) {
         return (
             <div>
-                <CreateButton />
+                <Link to='/addUser'><CreateButton /></Link>
                 <br /> <br />
                 <div className="form-border">
                     <table className='table'>

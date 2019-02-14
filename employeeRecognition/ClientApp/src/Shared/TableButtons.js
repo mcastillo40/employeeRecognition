@@ -3,10 +3,18 @@
 const TableButtons = props => {
     return <td className="button-width">
             <div className="btn-group" role="group">
-                <button className="btn btn-primary" title="Edit">
-                        <i className="fas fa-edit"></i>
+                <button
+                    className="btn btn-primary"
+                    title="Edit"
+                    onClick={id => props.handleEdit(props.userInfo.id)}
+                >
+                    <i className="fas fa-edit"></i>
                 </button>
-                <button className="btn btn-success" title="Details">
+                <button
+                    className="btn btn-success"
+                    title="Details"
+                    onClick={id => props.handleDetails(props.userInfo.id)}
+                >
                     <i className="far fa-list-alt"></i>
                 </button>
                 <button
