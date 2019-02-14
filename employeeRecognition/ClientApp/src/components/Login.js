@@ -45,7 +45,7 @@ render() {
 
                     </div>
 
-                <p class="text-center"><a href="#" class="btn">Forgot password?</a></p>
+                <p class="text-center"><a href="/ForgetPassword" class="btn">Forgot password?</a></p>
                 </form>
             </article>
 
