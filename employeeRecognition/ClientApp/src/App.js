@@ -1,47 +1,40 @@
+
 import React, { Component } from 'react';
-import ReactDOM from "react-dom";
+import { Route } from 'react-router';
+import { Layout } from './components/Layout';
+import { Home } from './components/Home';
+import { FetchData } from './components/FetchData';
+import { Counter } from './components/Counter';
+
+import { Login } from './components/Login';
+import { SignUp } from './components/SignUp';
+
+import { Users } from './components/Users';
+import { Award } from './components/Award';
+
+import { ForgetPassword } from './components/ForgetPassword';
 
 
-export class ForgetPassword extends Component {
-  displayName = ForgetPassword.name
-  
-render() {
+export default class App extends Component {
+  displayName = App.name
+
+  render() {
     return (
+      <Layout>
+        <Route exact path='/' component={Home} />
+        <Route path='/counter' component={Counter} />
+        <Route path='/fetchdata' component={FetchData} />
 
-      <div> {/*JSX ROOT*/}
-        
-        <div class="card">
-            <article class="card-body">
-                <h4 class="card-title text-center mb-4 mt-1">RECOVER PASSWORD</h4>
+        <Route path='/login' component={Login} />
+        <Route path='/signup' component={SignUp} />
+        <Route path='/ForgetPassword' component={ForgetPassword} />
 
-                <p class="text-success text-center">Please enter your email</p>
-                <form action="/login">
-                <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
-                     </div>
-                    <input name="" class="form-control" placeholder="Email" type="email"/>
-                </div> 
-                </div> 
+        <Route path='/users' component={Users} />
+        <Route path='/Award' component={Award} />
 
-            <div class="row">
-                    <div class = "col-md-6">
-
-                        <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block"> Send Recovery Password  </button>
-                        </div>
-                    </div>
+      </Layout>
 
 
-                    </div>
-
-
-                </form>
-            </article>
-
-            </div> 
-      </div> // End of JSX root in render
     );
   }
 }
