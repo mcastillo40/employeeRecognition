@@ -40,30 +40,39 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPost("[action]")]
-        public IEnumerable<UserAcct> Create([FromBody]UserAcct User)
+        public IActionResult Create([FromBody]UserAcct User)
         {
             List<UserAcct> list = new List<UserAcct>();
 
-            String query = $"INSERT INTO userAcct(first_name, last_name, password, email, role, signature) VALUES" +
-                $"('{User.first_name}', '{User.last_name}', '{User.password}', '{User.email}', {User.role}, '{User.signature}')";
+            Console.WriteLine("INFO: " + User);
 
-            String sql = @query;
+            if (ModelState.IsValid)
+            {
+                String query = $"INSERT INTO userAcct(first_name, last_name, password, email, role, signature) VALUES" +
+                    $"('{User.first_name}', '{User.last_name}', '{User.password}', '{User.email}', {User.role}, '{User.signature}')";
 
-            Console.WriteLine("QUERY: " + sql);
+                String sql = @query;
 
-            dt = sqlConnection.Connection(sql);
+                Console.WriteLine("QUERY: " + sql);
 
-            //foreach (DataRow row in dt.Rows)
-            //{
-            //    var user = new UserAcct();
-            //    user.id = (int)row["id"];
-            //    user.first_name = row["first_name"].ToString();
-            //    user.last_name = row["last_name"].ToString();
-            //    user.email = row["email"].ToString();
-            //    list.Add(user);
-            //}
+                dt = sqlConnection.Connection(sql);
 
-            return list;
+                foreach (DataRow row in dt.Rows)
+                {
+                    var user = new UserAcct();
+                    user.id = (int)row["id"];
+                    user.first_name = row["first_name"].ToString();
+                    user.last_name = row["last_name"].ToString();
+                    user.email = row["email"].ToString();
+                    list.Add(user);
+                }
+
+                return CreatedAtAction("Create", list);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("[action]")]

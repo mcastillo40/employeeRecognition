@@ -15,10 +15,10 @@ export class Users extends Component {
 
     async componentDidMount() {
         try {
-        const response = await fetch('api/Users/index');
-        const data = await response.json();
+            const response = await fetch('api/Users/index');
+            const data = await response.json();
 
-        this.setState({ users: data, loading: false });
+            this.setState({ users: data, loading: false });
         }
         catch (err) {
             console.log("ERR: ", err);
