@@ -2,6 +2,7 @@
 import { CreateButton } from '../../Shared/CreateButton';
 import { User } from './User';
 import { Link } from 'react-router-dom';
+import _ from 'lodash'
 
 export class Users extends Component {
     displayName = Users.name
@@ -10,12 +11,12 @@ export class Users extends Component {
         super(props);
         this.state = { users: [], loading: true };
 
-        this.handleDelete.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     async componentDidMount() {
         try {
-            const response = await fetch('api/Users/index');
+            const response = await fetch('api/users/index');
             const data = await response.json();
 
             this.setState({ users: data, loading: false });
@@ -25,8 +26,14 @@ export class Users extends Component {
         }
     }
 
-    handleDelete(id) {
-        console.log("DELETE ME: ", id);
+    async handleDelete(id) {
+        let url = `api/users/delete?id=${id}`;
+        const response = await fetch(url, {
+            method: 'DELETE',
+        });
+
+        if (response.ok)
+            this.setState({ users: _.filter(this.state.users, (user) => user.id !== id) })
     }
 
     static renderUsersTable(users, handleDelete) {
