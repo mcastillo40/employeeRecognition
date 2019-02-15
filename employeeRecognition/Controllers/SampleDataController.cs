@@ -17,9 +17,8 @@ namespace employeeRecognition.Controllers
         //List<Models.UserAcct> list1 = new List<Models.UserAcct>();
         List<Models.award> list2 = new List<Models.award>();
         /*
-        [HttpPost]
-        [Route("api/award/Create")]
-        public void AddAward(int id, string type, string date, string time)
+        [HttpPost("Create/{id}")]
+        public int AddAward(int recipient_user_id, string type, string date, string time)
         {
             using (SqlConnection con2 = new SqlConnection(connectionstring))
             {
@@ -27,15 +26,51 @@ namespace employeeRecognition.Controllers
                 SqlCommand Ins = new SqlCommand(sql2, con2);
 
                 // Create the parameters.
-                Ins.Parameters.Add("@recipient_user_id", SqlDbType.Int, 5, "id");
+                Ins.Parameters.Add("@recipient_user_id", SqlDbType.Int, 5, "recipient_user_id");
                 Ins.Parameters.Add("@type", SqlDbType.VarChar, 40, "type");
                 Ins.Parameters.Add("@date", SqlDbType.VarChar, 40, "date");
                 Ins.Parameters.Add("@time", SqlDbType.VarChar, 40, "time");
 
                 Ins.ExecuteNonQuery;
+                return 1;
+            }
+            finally
+            {
+                con2.Close();
+            }
             }
         }
+
 */
+        [HttpPut("Edit/{id}")]  
+        
+        public int Edit(int id)  
+        {  
+           SqlConnection con2 = new SqlConnection(connectionstring);
+           try
+            {
+                con2.Open();
+                string sql4 = @"UPDATE award SET recipient_user_id = @recipient_user_id, type = @tupe, time = @time, date = @date WHERE id = @id";
+                SqlCommand upd = new SqlCommand(sql4, con2);
+
+                // Add the parameters for the UpdateCommand.
+                upd.Parameters.Add("@recipient_user_id", SqlDbType.NChar, 5, "recipient_user_id");
+                upd.Parameters.Add("@type", SqlDbType.NVarChar, 40, "type");
+                upd.Parameters.Add("@time", SqlDbType.NVarChar, 40, "time");
+                upd.Parameters.Add("@date", SqlDbType.NVarChar, 40, "date");
+                SqlParameter parameter = upd.Parameters.Add("@old", SqlDbType.NChar, 5, "id");
+                parameter.SourceVersion = DataRowVersion.Original;
+
+                upd.CommandType = CommandType.Text;
+                upd.ExecuteNonQuery();
+                return 1;
+            }
+            finally
+            {
+                con2.Close();
+            }  
+        }  
+
         [HttpDelete("Delete/{id}")]
         public int Delete(int id)
         {
@@ -45,7 +80,7 @@ namespace employeeRecognition.Controllers
                 con2.Open();
                 string sql5 = @"DELETE FROM award WHERE id = @" + id;
                 SqlCommand Del = new SqlCommand(sql5, con2);
-                Del.Parameters.Add("@id", SqlDbType.Int, 5, "id").SourceVersion = DataRowVersion.Original;
+                Del.Parameters.Add("@" + id, SqlDbType.Int, 5, "id").SourceVersion = DataRowVersion.Original;
                 Del.CommandType = CommandType.Text;
                 Del.ExecuteNonQuery();
                 return 1;
@@ -73,7 +108,7 @@ namespace employeeRecognition.Controllers
                 foreach (DataRow row in dt.Rows)
                 {
                     var aw = new Models.award();
-                    aw.sender_user_id = (int)row["sender_user_id"];
+                    aw.id = (int)row["id"];
                     aw.recipient_user_id = (int)row["recipient_user_id"];
                     aw.type = row["type"].ToString();
                     aw.time = row["time"].ToString();

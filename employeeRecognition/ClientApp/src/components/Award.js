@@ -1,6 +1,8 @@
 ﻿import React, { Component } from 'react';
+import { RouteComponentProps } from 'react-router';
 import { CreateButton } from '../Shared/CreateButton';
 import { TableButtons } from '../Shared/TableButtons';
+
 
 export class Award extends Component {
     displayName = Award.name
@@ -9,8 +11,8 @@ export class Award extends Component {
         super(props);
         this.state = { awards: [], loading: true };
         // This binding is necessary to make "this" work in the callback
-        this.handleDelete = this.handleDelete.bind(this);
-        //this.handleEdit = this.handleEdit.bind(this);  
+        this.handleDelete.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);  
     }
 
     async componentDidMount() {
@@ -25,17 +27,21 @@ export class Award extends Component {
    handleDelete(id) {
         fetch('api/SampleData/Delete/' + id, {
                 method: 'delete'
-            }).then(data => {
-                this.setState(
-                    {
-                        awards: this.state.awards.filter((rec) => {
-                            return (rec.id != id);
-                        })
-                    });
-            });
+        }).then(data => {
+            this.setState(
+                {
+                    awards: this.state.awards.filter((rec) => {
+                        return (rec.id != id);
+                    })
+                });
+        });
     }  
 
-    static renderNominated(awards) {
+    handleEdit(id) {
+        this.props.history.push("api/SampleData/Edit/" + id);
+    }  
+
+static renderNominated(awards, handleDelete) {
         return (
             <div>
                 <CreateButton />
@@ -54,12 +60,13 @@ export class Award extends Component {
                 <tbody>
                     {awards.map(aw =>
                         <tr key={aw.id}>
-                            <td>{aw.sender_user_id}</td>
+                            <td>{aw.id}</td>
                             <td>{aw.recipient_user_id}</td>
                             <td>{aw.type}</td>
                             <td>{aw.time}</td>
                             <td>{aw.date}</td>
-                            <td><button onClick={(id) => this.handleDelete(aw.id)}>Delete</button></td>
+                            <td><button onClick={(id) => this.handleEdit(aw.id)}>Edit</button></td>
+                            <td><button onClick={this.handleDelete(this, aw.id)}>Delete</button></td>
                         </tr>
                     )}
                 </tbody>
@@ -72,7 +79,7 @@ export class Award extends Component {
     render() {
         let contents1 = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Award.renderNominated(this.state.awards);
+            : Award.renderNominated(this.state.awards, this.handleDelete);
 
         return (
             <div>

@@ -24,7 +24,6 @@ export default class App extends Component {
 
         <Route path='/login' component={Login} />
         <Route path='/signup' component={SignUp} />
-     </Layout>
 
         <Route path='/users' component={Users} />
         <Route path='/Award' component={Award} />
