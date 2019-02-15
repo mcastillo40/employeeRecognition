@@ -42,10 +42,6 @@ namespace employeeRecognition.Controllers
         [HttpPost("[action]")]
         public IActionResult Create([FromBody]UserAcct User)
         {
-            List<UserAcct> list = new List<UserAcct>();
-
-            Console.WriteLine("INFO: " + User);
-
             if (ModelState.IsValid)
             {
                 String query = $"INSERT INTO userAcct(first_name, last_name, password, email, role, signature) VALUES" +
@@ -57,17 +53,7 @@ namespace employeeRecognition.Controllers
 
                 dt = sqlConnection.Connection(sql);
 
-                foreach (DataRow row in dt.Rows)
-                {
-                    var user = new UserAcct();
-                    user.id = (int)row["id"];
-                    user.first_name = row["first_name"].ToString();
-                    user.last_name = row["last_name"].ToString();
-                    user.email = row["email"].ToString();
-                    list.Add(user);
-                }
-
-                return CreatedAtAction("Create", list);
+                return Ok();
             }
             else
             {
@@ -88,29 +74,24 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPut("[action]")]
-        public IEnumerable<UserAcct> Edit(int id, [FromBody]UserAcct User)
+        public IActionResult Edit(int id, [FromBody]UserAcct User)
         {
-            List<UserAcct> list = new List<UserAcct>();
+            if (ModelState.IsValid)
+            {
+                String query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', password='{User.password}', email='{User.email}', role={User.role}, signature='{User.signature}'  WHERE userAcct.id={id}";
 
-            String query = $"Update userAcct set first_name='{User.first_name}' , last_name='{User.last_name}' , password='{User.password}' , email='{User.email}' , role={User.role} , signature='{User.signature}'  WHERE userAcct.id={id}";
+                String sql = @query;
 
-            String sql = @query;
+                Console.WriteLine("QUERY: " + sql);
 
-            Console.WriteLine("QUERY: " + sql);
+                dt = sqlConnection.Connection(sql);
 
-            dt = sqlConnection.Connection(sql);
-
-            //foreach (DataRow row in dt.Rows)
-            //{
-            //    var user = new UserAcct();
-            //    user.id = (int)row["id"];
-            //    user.first_name = row["first_name"].ToString();
-            //    user.last_name = row["last_name"].ToString();
-            //    user.email = row["email"].ToString();
-            //    list.Add(user);
-            //}
-
-            return list;
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

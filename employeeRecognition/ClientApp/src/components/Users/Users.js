@@ -12,6 +12,7 @@ export class Users extends Component {
         this.state = { users: [], loading: true };
 
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
 
     async componentDidMount() {
@@ -36,7 +37,15 @@ export class Users extends Component {
             this.setState({ users: _.filter(this.state.users, (user) => user.id !== id) })
     }
 
-    static renderUsersTable(users, handleDelete) {
+    async handleEdit(user) {
+        this.props.history.push({
+            pathname: '/editUser',
+            state: { user }
+        })
+    }
+
+
+    static renderUsersTable(users, handleDelete, handleEdit) {
         return (
             <div>
                 <Link to='/addUser'><CreateButton /></Link>
@@ -55,6 +64,7 @@ export class Users extends Component {
                                 <User
                                     key={user.id}
                                     handleDelete={handleDelete}
+                                    handleEdit={handleEdit}
                                     userInfo={user}
                                 />
                             ))}
@@ -68,7 +78,7 @@ export class Users extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Users.renderUsersTable(this.state.users, this.handleDelete);
+            : Users.renderUsersTable(this.state.users, this.handleDelete, this.handleEdit);
 
         return (
             <div>

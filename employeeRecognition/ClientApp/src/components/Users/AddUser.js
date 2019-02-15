@@ -15,31 +15,11 @@ export class AddUser extends Component {
         };
 
         this.createUser.bind(this);
-        this.onFirstNameChange = this.onFirstNameChange.bind(this);
-        this.onLastNameChange = this.onLastNameChange.bind(this);
-        this.onEmailChange = this.onEmailChange.bind(this);
-        this.onPasswordChange = this.onPasswordChange.bind(this);
-        this.onRoleChange = this.onRoleChange.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
-    onFirstNameChange(event) {
-        this.setState({ first_name: event.target.value });
-    }
-
-    onLastNameChange(event) {
-        this.setState({ last_name: event.target.value });
-    }
-
-    onEmailChange(event) {
-        this.setState({ email: event.target.value });
-    }
-
-    onPasswordChange(event) {
-        this.setState({ password: event.target.value });
-    }
-
-    onRoleChange(event) {
-        this.setState({ role: event.target.value });
+    onChange(event) {
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     async createUser(e) {
@@ -90,7 +70,7 @@ export class AddUser extends Component {
                                 type="text"
                                 className="form-control"
                                 value={this.state.first_name}
-                                onChange={this.onFirstNameChange}
+                                onChange={this.onChange}
                                 name="first_name"
                                 placeholder="First Name"
                                 autoFocus
@@ -102,7 +82,7 @@ export class AddUser extends Component {
                                 type="text"
                                 className="form-control"
                                 value={this.state.last_name}
-                                onChange={this.onLastNameChange}
+                                onChange={this.onChange}
                                 name="last_name"
                                 placeholder="Last Name"
                             />
@@ -113,7 +93,7 @@ export class AddUser extends Component {
                                 type="text"
                                 className="form-control"
                                 value={this.state.email}
-                                onChange={this.onEmailChange}
+                                onChange={this.onChange}
                                 name="email"
                                 placeholder="Email"
                             />
@@ -124,14 +104,14 @@ export class AddUser extends Component {
                                 type="password"
                                 className="form-control"
                                 value={this.state.password}
-                                onChange={this.onPasswordChange}
+                                onChange={this.onChange}
                                 name="password"
                                 placeholder="Password"
                             />
                         </div>
                         <div className="form-group">
                             <label htmlFor="roleSelect">Role:</label>
-                            <select className="form-control" id="roleSelect" value={this.state.role} onChange={this.onRoleChange}>
+                            <select className="form-control" name="role" id="roleSelect" value={this.state.role} onChange={this.onChange}>
                                 <option value={0}>User</option>
                                 <option value={1}>Admin</option>
                             </select>

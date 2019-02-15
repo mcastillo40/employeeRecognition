@@ -6,17 +6,11 @@ const TableButtons = props => {
                 <button
                     className="btn btn-primary"
                     title="Edit"
-                    onClick={id => props.handleEdit(props.userInfo.id)}
+                    onClick={id => props.handleEdit(props.userInfo)}
                 >
                     <i className="fas fa-edit"></i>
-                </button>
-                <button
-                    className="btn btn-success"
-                    title="Details"
-                    onClick={id => props.handleDetails(props.userInfo.id)}
-                >
-                    <i className="far fa-list-alt"></i>
-                </button>
+            </button>
+            &nbsp;
                 <button
                     className="btn btn-danger"
                     title="Delete"

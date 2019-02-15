@@ -7,6 +7,7 @@ import { BusinessReporting } from './components/BusinessReporting';
 import { Users } from './components/Users/Users';
 import { Award } from './components/Award';
 import { AddUser } from './components/Users/AddUser';
+import { EditUser } from './components/Users/EditUser';
 
 export default class App extends Component {
   displayName = App.name
@@ -20,6 +21,7 @@ export default class App extends Component {
         <Route path='/award' component={Award} />
         <Route path='/settings' component={Settings} />
         <Route path='/addUser' component={AddUser} />
+        <Route path='/editUser' component={EditUser} />
       </Layout>
     );
   }

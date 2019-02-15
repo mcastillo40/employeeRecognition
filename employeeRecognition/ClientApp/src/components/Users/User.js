@@ -2,7 +2,6 @@ import React from "react";
 import { TableButtons } from '../../Shared/TableButtons';
 
 const User = props => {
-    console.log("PROPS: ", props);
     return (
         <tr key={props.userInfo.id}>
             <td>{props.userInfo.first_name}</td>
@@ -10,6 +9,7 @@ const User = props => {
             <td>{props.userInfo.email}</td>
             <TableButtons
                 handleDelete={props.handleDelete}
+                handleEdit={props.handleEdit}
                 userInfo={props.userInfo}
             />
         </tr>
