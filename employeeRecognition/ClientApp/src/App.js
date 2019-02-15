@@ -7,8 +7,10 @@ import { Login } from './components/Login';
 import { SignUp } from './components/SignUp';
 import { Settings } from './components/Settings';
 import { BusinessReporting } from './components/BusinessReporting';
-import { Users } from './components/Users';
+import { Users } from './components/Users/Users';
 import { Award } from './components/Award';
+import { AddUser } from './components/Users/AddUser';
+import { EditUser } from './components/Users/EditUser';
 
 import { ForgetPassword } from './components/ForgetPassword';
 
@@ -29,6 +31,8 @@ export default class App extends Component {
         <Route path='/users' component={Users} />
         <Route path='/award' component={Award} />
         <Route path='/settings' component={Settings} />
+        <Route path='/addUser' component={AddUser} />
+        <Route path='/editUser' component={EditUser} />
       </Layout>
 
 
