@@ -44,7 +44,6 @@ export class Users extends Component {
         })
     }
 
-
     static renderUsersTable(users, handleDelete, handleEdit) {
         return (
             <div>
