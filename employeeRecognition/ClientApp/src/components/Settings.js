@@ -5,53 +5,13 @@ export class Settings extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { forecasts: [], loading: true };
-    }
-
-    async componentDidMount() {
-        const response = await fetch('api/SampleData/WeatherForecasts');
-        const data = await response.json();
-
-        console.log("DATA: ", data)
-
-        this.setState({ forecasts: data, loading: false });
-    }
-
-  static renderForecastsTable(forecasts) {
-    return (
-      <table className='table'>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>E-mail</th>
-            <th>Created on</th>
-          </tr>
-        </thead>
-        <tbody>
-          {forecasts.map(forecast =>
-            <tr key={forecast.dateFormatted}>
-                <td>{forecast.first_name}</td>
-                <td>{forecast.last_name}</td>
-                <td>{forecast.email}</td>
-                <td>{forecast.create_on}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    );
+    this.state = { };
   }
 
   render() {
-    let contents = this.state.loading
-      ? <p><em>Loading...</em></p>
-      : Settings.renderForecastsTable(this.state.forecasts);
-
     return (
       <div>
         <h1>Settings</h1>
-        <p>This component demonstrates fetching data from the server.</p>
-        {contents}
       </div>
     );
   }
