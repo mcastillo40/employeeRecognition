@@ -3,12 +3,10 @@ import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
-
 import { Login } from './components/Login';
 import { SignUp } from './components/SignUp';
-
+import { Settings } from './components/Settings';
+import { BusinessReporting } from './components/BusinessReporting';
 import { Users } from './components/Users';
 import { Award } from './components/Award';
 
@@ -22,16 +20,15 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetchdata' component={FetchData} />
-
         <Route path='/login' component={Login} />
         <Route path='/signup' component={SignUp} />
         <Route path='/ForgetPassword' component={ForgetPassword} />
-
         <Route path='/users' component={Users} />
         <Route path='/Award' component={Award} />
-
+        <Route path='/businessreporting' component={BusinessReporting} />
+        <Route path='/users' component={Users} />
+        <Route path='/award' component={Award} />
+        <Route path='/settings' component={Settings} />
       </Layout>
 
 
