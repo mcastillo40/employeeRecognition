@@ -62,7 +62,7 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpDelete("[action]")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             String query = $"DELETE FROM userAcct WHERE userAcct.id = {id}";
 
@@ -71,6 +71,8 @@ namespace employeeRecognition.Controllers
             Console.WriteLine("QUERY: " + sql);
 
             dt = sqlConnection.Connection(sql);
+
+            return Ok();
         }
 
         [HttpPut("[action]")]
