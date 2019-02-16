@@ -27,7 +27,6 @@ export default class App extends Component {
 
         <Route path='/users' component={Users} />
         <Route path='/Award' component={Award} />
- 
       </Layout>
 
     );

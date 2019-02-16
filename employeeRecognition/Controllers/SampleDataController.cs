@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
-using System.Data;
+using employeeRecognition.Extensions;
 using employeeRecognition.Models;
 
 namespace employeeRecognition.Controllers
@@ -12,9 +13,31 @@ namespace employeeRecognition.Controllers
     [Route("api/[controller]")]
     public class SampleDataController : Controller
     {
+        public class DbConnection
+        {
+            private string connectionString = @"Data Source = tcp:erraisqlserver.database.windows.net,1433;Initial Catalog=EmployeeDB;Persist Security Info=False;User ID=erraiadmin;Password=DBaccess3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
 
-        string connectionstring = @"Data Source = tcp:erraisqlserver.database.windows.net,1433;Initial Catalog=EmployeeDB;Persist Security Info=False;User ID=erraiadmin;Password=DBaccess3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
+            private DataTable dt { get; set; }
+
+            // runs stored procedure and returns data to main page
+            public DataTable Connection(String sql)
+            {
+                SqlConnection con = new SqlConnection(connectionString);
+
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = new SqlCommand(sql, con);
+
+                da.Fill(dt);
+
+                return dt;
+            }
+        }
+
         //List<Models.UserAcct> list1 = new List<Models.UserAcct>();
+        private DataTable dt { get; set; }
+
+        private DbConnection sqlConnection = new DbConnection();
         List<Models.award> list2 = new List<Models.award>();
         /*
         [HttpPost("Create/{id}")]
@@ -43,14 +66,13 @@ namespace employeeRecognition.Controllers
 
 */
         [HttpPut("Edit/{id}")]  
-        
-        public int Edit(int id)  
-        {  
-           SqlConnection con2 = new SqlConnection(connectionstring);
+        public int Edit()  
+        {
+
            try
             {
                 con2.Open();
-                string sql4 = @"UPDATE award SET recipient_user_id = @recipient_user_id, type = @tupe, time = @time, date = @date WHERE id = @id";
+                string sql4 = @"UPDATE award SET recipient_user_id = @recipient_user_id, type = @type, time = @time, date = @date WHERE id = @id";
                 SqlCommand upd = new SqlCommand(sql4, con2);
 
                 // Add the parameters for the UpdateCommand.
@@ -58,9 +80,7 @@ namespace employeeRecognition.Controllers
                 upd.Parameters.Add("@type", SqlDbType.NVarChar, 40, "type");
                 upd.Parameters.Add("@time", SqlDbType.NVarChar, 40, "time");
                 upd.Parameters.Add("@date", SqlDbType.NVarChar, 40, "date");
-                SqlParameter parameter = upd.Parameters.Add("@old", SqlDbType.NChar, 5, "id");
-                parameter.SourceVersion = DataRowVersion.Original;
-
+                upd.Parameters.Add("@id", SqlDbType.NChar, 5, "id").SourceVersion = DataRowVersion.Original;
                 upd.CommandType = CommandType.Text;
                 upd.ExecuteNonQuery();
                 return 1;
@@ -69,27 +89,21 @@ namespace employeeRecognition.Controllers
             {
                 con2.Close();
             }  
-        }  
-
-        [HttpDelete("Delete/{id}")]
-        public int Delete(int id)
-        {
-           SqlConnection con2 = new SqlConnection(connectionstring);
-           try
-            {
-                con2.Open();
-                string sql5 = @"DELETE FROM award WHERE id = @" + id;
-                SqlCommand Del = new SqlCommand(sql5, con2);
-                Del.Parameters.Add("@" + id, SqlDbType.Int, 5, "id").SourceVersion = DataRowVersion.Original;
-                Del.CommandType = CommandType.Text;
-                Del.ExecuteNonQuery();
-                return 1;
-            }
-            finally
-            {
-                con2.Close();
-            }
         }
+
+
+        [HttpDelete("[action]")]
+        public void Delete(int id)
+        {
+            String query = $"DELETE FROM award WHERE userAcct.id = {id}";
+
+            String sql = @query;
+
+            Console.WriteLine("QUERY: " + sql);
+
+            dt = SqlConnection.Connection(sql);
+        }
+    
 
         [HttpGet("[action]")]
         public IEnumerable<Models.award> Nominated()

@@ -1,15 +1,9 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Award } from '/award';
-interface AddawardDataState {
- 
-    recipient_user_id: int;
-    type: string;
-    name: string;
-    date: string;
-    empData: EmployeeData;
-}
-export class AddEmployee extends React.Component<RouteComponentProps<{}>, AddawardDataState> {
+
+
+export class AddEmployee extends Component {
     constructor(props) {
         super(props);
         this.state = { recipient_user_id: 0, type: "", time: "", date: ""};
@@ -41,7 +35,7 @@ export class AddEmployee extends React.Component<RouteComponentProps<{}>, Addawa
             {contents}
         </div>;
     }
-    // This will handle the submit form event.  
+    /* This will handle the submit form event.  
     handleSave(event) {
         event.preventDefault();
         const data = new FormData(event.target);
@@ -52,52 +46,49 @@ export class AddEmployee extends React.Component<RouteComponentProps<{}>, Addawa
                 body: data,
             }).then((response) => response.json())
                 .then((responseJson) => {
-                    this.props.history.push("/award");
+                    this.props.history.push("/SampleData");
                 })
-        }
+        }*/
         // POST request for Add employee.  
         else {
-            fetch('api/award/Create', {
+            fetch('api/SampleData/Create', {
                 method: 'POST',
                 body: data,
             }).then((response) => response.json())
                 .then((responseJson) => {
-                    this.props.history.push("/award");
+                    this.props.history.push("/SampleData");
                 })
         }
     }
     // This will handle Cancel button click event.  
     handleCancel(e) {
         e.preventDefault();
-        this.props.history.push("/award");
+        this.props.history.push("/SampleData");
     }
     // Returns the HTML Form to the render() method.  
     renderCreateForm(cityList: Array<any>) {
         return (
             <form onSubmit={this.handleSave} >
                 <div className="form-group row" >
-                    <input type="hidden" name="employeeId" value={this.state.empData.employeeId} />
+                    <input type="hidden" name="aId" value=1 />
                 </div>
                 < div className="form-group row" >
-                    <label className=" control-label col-md-12" htmlFor="Name">Name</label>
+                    <label className=" control-label col-md-12" htmlFor="type">Type</label>
                     <div className="col-md-4">
-                        <input className="form-control" type="text" name="name" defaultValue={this.state.empData.name} required />
+                        <input className="form-control" type="text" name="type" defaultValue="" required />
                     </div>
                 </div >
                 <div className="form-group row">
-                    <label className="control-label col-md-12" htmlFor="Gender">Gender</label>
+                    <label className="control-label col-md-12" htmlFor="date">Date</label>
                     <div className="col-md-4">
-                        <select className="form-control" data-val="true" name="gender" defaultValue={this.state.empData.gender} required>
-                            <option value="">-- Select Gender --</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                        <select className="form-control" data-val="true" name="date" defaultValue="01/01/2001" required>
                         </select>
                     </div>
                 </div >
                 <div className="form-group row">
-                    <label className="control-label col-md-12" htmlFor="Department" >Department</label>
+                    <label className="control-label col-md-12" htmlFor="time" >Time</label>
                     <div className="col-md-4">
-                        <input className="form-control" type="text" name="Department" defaultValue={this.state.empData.department} required />
+                        <input className="form-control" type="text" name="Department" defaultValue="12:00" required />
                     </div>
                 </div>
                 <div className="form-group row">
