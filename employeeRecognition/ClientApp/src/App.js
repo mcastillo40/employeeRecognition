@@ -8,7 +8,9 @@ import { SignUp } from './components/SignUp';
 import { Settings } from './components/Settings';
 import { BusinessReporting } from './components/BusinessReporting';
 import { Users } from './components/Users/Users';
-import { Award } from './components/Award';
+import { Award } from './components/Awards/Award';
+import { Addaward } from './components/Awards/Addaward';
+import { Editaward } from './components/Awards/Editaward';
 import { AddUser } from './components/Users/AddUser';
 import { EditUser } from './components/Users/EditUser';
 
@@ -31,9 +33,9 @@ export default class App extends Component {
         <Route path='/settings' component={Settings} />
         <Route path='/addUser' component={AddUser} />
         <Route path='/editUser' component={EditUser} />
+        <Route path='/Addaward' component={Addaward} />
+        <Route path='/Editaward' component={Editaward} />
       </Layout>
-
-
     );
   }
 }

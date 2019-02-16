@@ -78,7 +78,6 @@ export class Users extends Component {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : Users.renderUsersTable(this.state.users, this.handleDelete, this.handleEdit);
-
         return (
             <div>
                 <h1>Employees</h1>
