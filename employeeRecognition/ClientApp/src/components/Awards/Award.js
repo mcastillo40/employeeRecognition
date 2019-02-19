@@ -32,7 +32,7 @@ export class Award extends Component {
             method: 'DELETE',
         });
         if (response.ok)
-            this.setState({ awards: _.filter(this.state.awards, (aw) => aw.id !== id) })
+            this.setState({ awards: _.filter(this.state.awards, (award) => award.id !== id) })
     }
 
     async handleEdit(award) {

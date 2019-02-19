@@ -78,7 +78,7 @@ namespace employeeRecognition.Controllers
         {
             if (ModelState.IsValid)
             {
-                String query = $"Update award set sender='{A.sender_user_id}', recipient_user_id='{A.recipient_user_id}', type='{A.type}', time={A.time}, date='{A.date}'  WHERE award.id={id}";
+                String query = $"Update award set sender_user_id='{A.sender_user_id}', recipient_user_id='{A.recipient_user_id}', type='{A.type}', time={A.time}, date='{A.date}'  WHERE award.id={id}";
 
                 String sql = @query;
 
