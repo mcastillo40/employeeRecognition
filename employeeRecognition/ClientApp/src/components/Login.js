@@ -45,7 +45,8 @@ export class Login extends Component {
             this.props.history.push('/');
         }
         catch (err) {
-            console.log("ERROR: ", err);
+            var mySpan = document.getElementById('incorrect_info');
+            mySpan.style.display = "";
         }
     }
   
@@ -85,7 +86,13 @@ render() {
                         </div>
                     </div>
                     <p className="text-center"><a href="/ForgetPassword" className="btn">Forgot password?</a></p>
-                </form>
+                    </form>
+
+                    <span id="incorrect_info" style={{ display: "none" }}>
+                        <br />
+                        <span className="alert alert-danger col" role="alert">Incorrect UserName/Password</span>
+                        <br /> <br />
+                    </span>
             </article>
         </div> 
       </div> // End of JSX root in render
