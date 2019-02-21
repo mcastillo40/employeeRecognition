@@ -6,7 +6,7 @@ const TableAwards = props => {
                 <button
                     className="btn btn-primary"
                     title="Edit"
-                onClick={id => props.handleEdit(props.awardInfo)}
+                    onClick={id => props.handleEdit(props.awardInfo)}
                 >
                     <i className="fas fa-edit"></i>
             </button>
@@ -14,12 +14,11 @@ const TableAwards = props => {
                 <button
                     className="btn btn-danger"
                     title="Delete"
-                onClick={id => props.handleDelete(props.awardInfo.info)}
+                    onClick={id => props.handleDelete(props.awardInfo.id)}
                 >
                     <i className="fas fa-trash-alt"></i>
                 </button >
             </div >
         </td >
 }
-
 export { TableAwards };

@@ -32,7 +32,6 @@ export class Users extends Component {
         const response = await fetch(url, {
             method: 'DELETE',
         });
-
         if (response.ok)
             this.setState({ users: _.filter(this.state.users, (user) => user.id !== id) })
     }

@@ -6,9 +6,9 @@ export class Addaward extends Component {
         super(props);
 
         this.state = {
-            sender_user_id: '',
-            recipient_user_id: '',
-            type: "",
+            sender_user_id: 1,
+            recipient_user_id: 2,
+            type: '',
             time: '',
             date: '',
             reRoute: false,
@@ -26,7 +26,7 @@ export class Addaward extends Component {
         e.preventDefault();
 
         try {
-            let detailInfo = {
+            let awardInfo = {
                 sender_user_id: this.state.sender_user_id,
                 recipient_user_id: this.state.recipient_user_id,
                 type: this.state.type,
@@ -34,10 +34,10 @@ export class Addaward extends Component {
                 date: this.state.date,
             }
 
-            const url = 'api/Award/create';
+            const url = 'api/awards/create';
             const response = await fetch(url, {
                 method: 'POST',
-                body: JSON.stringify(detailInfo),
+                body: JSON.stringify(awardInfo),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -73,7 +73,6 @@ export class Addaward extends Component {
                                 onChange={this.onChange}
                                 name="SID"
                                 placeholder="Sender ID"
-                                autoFocus
                             />
                         </div>
                         <div className="form-group">
@@ -90,9 +89,9 @@ export class Addaward extends Component {
                         <div className="form-group">
                             <label htmlFor="TypeSelect">Type:</label>
                             <select className="form-control" name="Type" id="TypeSelect" value={this.state.type} onChange={this.onChange}>
-                                <option value={0}>Service</option>
-                                <option value={1}>Performance</option>
-                                <option value={2}>Team Work</option>
+                                <option value="Service">Service</option>
+                                <option value="Performance">Performance</option>
+                                <option value="Team Work">Team Work</option>
                             </select>
                         </div>
                         <div className="form-group">

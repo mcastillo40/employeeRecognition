@@ -8,7 +8,7 @@ import { SignUp } from './components/SignUp';
 import { Settings } from './components/Settings';
 import { BusinessReporting } from './components/BusinessReporting';
 import { Users } from './components/Users/Users';
-import { Award } from './components/Awards/Award';
+import { Awards } from './components/Awards/Awards';
 import { Addaward } from './components/Awards/Addaward';
 import { Editaward } from './components/Awards/Editaward';
 import { AddUser } from './components/Users/AddUser';
@@ -29,7 +29,7 @@ export default class App extends Component {
         <Route path='/ForgetPassword' component={ForgetPassword} />
         <Route path='/businessreporting' component={BusinessReporting} />
         <Route path='/users' component={Users} />
-        <Route path='/award' component={Award} />
+        <Route path='/award' component={Awards} />
         <Route path='/settings' component={Settings} />
         <Route path='/addUser' component={AddUser} />
         <Route path='/editUser' component={EditUser} />

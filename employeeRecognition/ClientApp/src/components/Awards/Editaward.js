@@ -6,11 +6,11 @@ export class Editaward extends Component {
         super(props);
 
         this.state = {
-            sender_user_id: props.location.state.sender_user_id,
-            recipient_user_id: props.location.state.recipient_user_id,
-            type: props.location.state.type,
-            time: props.location.state.time,
-            date: props.location.state.date,
+            sender_user_id: props.location.state.award.sender_user_id,
+            recipient_user_id: props.location.state.award.recipient_user_id,
+            type: props.location.state.award.type,
+            time: props.location.state.award.time,
+            date: props.location.state.award.date,
             reRoute: false,
         };
 
@@ -26,7 +26,7 @@ export class Editaward extends Component {
         e.preventDefault();
 
         try {
-            let detailInfo = {
+            let awardInfo = {
                 sender_user_id: this.state.sender_user_id,
                 recipient_user_id: this.state.recipient_user_id,
                 type: this.state.type,
@@ -34,10 +34,10 @@ export class Editaward extends Component {
                 date: this.state.date,
             }
 
-            const url = `api/Award/edit?id=${this.props.location.state.award.id}`;
+            const url = `api/Awards/edit?id=${this.props.location.state.award.id}`;
             const response = await fetch(url, {
                 method: 'PUT',
-                body: JSON.stringify(detailInfo),
+                body: JSON.stringify(awardInfo),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -90,9 +90,9 @@ export class Editaward extends Component {
                         <div className="form-group">
                             <label htmlFor="TypeSelect">Type:</label>
                             <select className="form-control" name="type" id="TypeSelect" value={this.state.type} onChange={this.onChange}>
-                                <option value={0}>Service</option>
-                                <option value={1}>Performance</option>
-                                <option value={2}>Team Work</option>
+                                <option value="Service">Service</option>
+                                <option value="Performance">Performance</option>
+                                <option value="Team Work">Team Work</option>
                             </select>
                         </div>
                         <div className="form-group">

@@ -110,7 +110,7 @@ export class EditUser extends Component {
                                 value={this.state.password}
                                 onChange={this.onChange}
                                 name="password"
-                                placeholder=""
+                                placeholder="********"
                             />
                         </div>
                         <div className="form-group">

@@ -18,34 +18,34 @@ namespace employeeRecognition.Controllers
         private DbConnection sqlConnection = new DbConnection();
 
         [HttpGet("[action]")]
-        public IEnumerable<Models.award> Nominated()
+        public IEnumerable<award> Nominated()
         {
-            List<Models.award> list = new List<Models.award>();
+            List<award> list = new List<award>();
                 String sql = @"SELECT * FROM award";
                 //con.ConnectionString = @"Server=comp1630.database.windows.net;Database=pubs;User Id=readonlylogin;Password=;";
                 dt = sqlConnection.Connection(sql);
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    var aw = new Models.award();
-
-                    aw.sender_user_id = (int)row["sender_user_id"];
-                    aw.recipient_user_id = (int)row["recipient_user_id"];
-                    aw.type = row["type"].ToString();
-                    aw.time = row["time"].ToString();
-                    aw.date = row["date"].ToString();
-                    list.Add(aw);
+                    var award = new award();
+                    award.id = (int)row["id"];
+                    award.sender_user_id = (int)row["sender_user_id"];
+                    award.recipient_user_id = (int)row["recipient_user_id"];
+                    award.type = row["type"].ToString();
+                    award.time = row["time"].ToString();
+                    award.date = row["date"].ToString();
+                    list.Add(award);
                 }
             return list;
         }
 
         [HttpPost("[action]")]
-        public IActionResult Create([FromBody]award A)
+        public IActionResult Create([FromBody]award award)
         {
             if (ModelState.IsValid)
             {
                 String query = $"INSERT INTO award(sender_user_id, recipient_user_id, type, time, date) VALUES" +
-                    $"('{A.sender_user_id}', '{A.recipient_user_id}', '{A.type}', '{A.time}', {A.date})";
+                    $"({award.sender_user_id}, {award.recipient_user_id}, '{award.type}', '{award.time}', '{award.date}')";
 
                 String sql = @query;
 
@@ -74,11 +74,11 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPut("[action]")]
-        public IActionResult Edit(int id, [FromBody]award A)
+        public IActionResult Edit(int id, [FromBody]award award)
         {
             if (ModelState.IsValid)
             {
-                String query = $"Update award set sender_user_id='{A.sender_user_id}', recipient_user_id='{A.recipient_user_id}', type='{A.type}', time={A.time}, date='{A.date}'  WHERE award.id={id}";
+                String query = $"Update award set sender_user_id={award.sender_user_id}, recipient_user_id={award.recipient_user_id}, type='{award.type}', time='{award.time}', date='{award.date}'  WHERE award.id={id}";
 
                 String sql = @query;
 
