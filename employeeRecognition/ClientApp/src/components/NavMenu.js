@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AUTH_MODEL } from '../Shared/Auth/Auth';
+import _ from 'lodash';
 import './NavMenu.css';
 
 export class NavMenu extends Component {
