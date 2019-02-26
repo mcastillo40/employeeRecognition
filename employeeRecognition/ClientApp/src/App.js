@@ -12,7 +12,8 @@ import { Award } from './components/Award';
 import { AddUser } from './components/Users/AddUser';
 import { EditUser } from './components/Users/EditUser';
 
-import AuthenticatedComponent from './components/Auth/AuthenticatedComponent';
+//import AuthenticatedComponent from './components/Auth/AuthenticatedComponent';
+import { PrivateRoute } from './Shared/Auth/PrivateRoute';
 
 import { ForgetPassword } from './components/ForgetPassword';
 
@@ -24,17 +25,15 @@ export default class App extends Component {
         <Layout>
             <Switch>
                 <Route path='/login' component={Login} />
-                <AuthenticatedComponent>
-                    <Route exact path='/' component={Home} />
-                    <Route path='/signup' component={SignUp} />
-                    <Route path='/ForgetPassword' component={ForgetPassword} />
-                    <Route path='/businessreporting' component={BusinessReporting} />
-                    <Route path='/users' component={Users} />
-                    <Route path='/award' component={Award} />
-                    <Route path='/settings' component={Settings} />
-                    <Route path='/addUser' component={AddUser} />
-                    <Route path='/editUser' component={EditUser} />
-                </AuthenticatedComponent>
+                <PrivateRoute exact path='/' component={Home} />
+                <PrivateRoute path='/signup' roles={['Admin']} component={SignUp} />
+                <PrivateRoute path='/ForgetPassword' component={ForgetPassword} />
+                <PrivateRoute path='/businessreporting' roles={['Admin']} component={BusinessReporting} />
+                <PrivateRoute path='/users' roles={['Admin']} component={Users} />
+                <PrivateRoute path='/award' roles={['User']} component={Award} />
+                <PrivateRoute path='/settings' component={Settings} />
+                <PrivateRoute path='/addUser' roles={['Admin']} component={AddUser} />
+                <PrivateRoute path='/editUser' roles={['Admin']} component={EditUser} />
             </Switch>
       </Layout>
     );

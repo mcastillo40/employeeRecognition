@@ -12,7 +12,7 @@ const USERS_DB = [
         "first_name": "Wonder",
         "last_name": "Woman",
         "email": "fly@gmail.com",
-        "role": "Admin",
+        "role": "User",
         "create_on": "10-05-2018",
         "signature": "img",
         "password": "amazonians"

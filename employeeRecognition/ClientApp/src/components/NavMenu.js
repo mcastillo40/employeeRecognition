@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AUTH_MODEL } from '../Shared/Auth/Auth';
+import { ROLES } from '../Shared/Roles';
 import _ from 'lodash';
 import './NavMenu.css';
 
@@ -11,20 +12,41 @@ export class NavMenu extends Component {
         super(props);
 
         this.NavbarLinks.bind(this);
+        this.LogOut.bind(this);
+    }
+
+    LogOut() {
+        AUTH_MODEL.remove();
     }
 
     NavbarLinks() {
         if (!_.isNil(AUTH_MODEL.get().token)) {
-            return (
-                <div className="navbar-nav ml-auto">
-                    <NavLink className="nav-link nav-item" exact to="/login">Login</NavLink>
-                    <NavLink className="nav-link nav-item" exact to="/">Home</NavLink>
-                    <NavLink className="nav-link nav-item" to="/businessreporting">Business Reporting</NavLink>
-                    <NavLink className="nav-link nav-item" to="/users">Users</NavLink>
-                    <NavLink className="nav-link nav-item" to="/award">Awards</NavLink>
-                    <NavLink className="nav-link nav-item" to="/settings">Settings</NavLink>
-                </div>
-            );
+            const { role } = AUTH_MODEL.get().userInfo;
+
+            if (_.isEqual(role, ROLES.Admin)) {
+                return (
+                    <div className="navbar-nav ml-auto">
+                        <NavLink className="nav-link nav-item" exact to="/">Home</NavLink>
+                        <NavLink className="nav-link nav-item" to="/businessreporting">Business Reporting</NavLink>
+                        <NavLink className="nav-link nav-item" to="/users">Users</NavLink>
+                        <NavLink className="nav-link nav-item" to="/settings">Settings</NavLink>
+                        <NavLink className="nav-link nav-item" to="/login" onClick={this.LogOut}>LogOut</NavLink>
+                    </div>
+                );
+            }
+            else if (_.isEqual(role, ROLES.User)) {
+                return (
+                    <div className="navbar-nav ml-auto">
+                        <NavLink className="nav-link nav-item" exact to="/">Home</NavLink>
+                        <NavLink className="nav-link nav-item" to="/award">Awards</NavLink>
+                        <NavLink className="nav-link nav-item" to="/settings">Settings</NavLink>
+                        <NavLink className="nav-link nav-item" to="/login" onClick={this.LogOut}>LogOut</NavLink>
+                    </div>
+                );
+            }
+            else {
+                return (<div></div>)
+            }
         }
         else {
             return (<div></div>)
