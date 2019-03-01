@@ -55,7 +55,5 @@ export class ServerSide {
                 }
             }
         }
-
-        console.log("email Found: ", email_found);
     }
 }

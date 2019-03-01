@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 export class AddUser extends Component {
     constructor(props) {
@@ -11,6 +12,7 @@ export class AddUser extends Component {
             email: "",
             password: '',
             role: 0,
+            signature: '',
             reRoute: false,
         };
 
@@ -115,6 +117,16 @@ export class AddUser extends Component {
                                 <option value={0}>User</option>
                                 <option value={1}>Admin</option>
                             </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="roleSelect">Upload Signature:</label>
+                            <input
+                                id="signature"
+                                name="signature"
+                                type="file"
+                                className="form-control"
+                                onChange={this.onChange}
+                            />
                         </div>
                         <button className="btn btn-primary" type="submit">
                             Add Employee
