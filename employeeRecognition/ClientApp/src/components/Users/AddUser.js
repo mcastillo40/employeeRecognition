@@ -18,16 +18,27 @@ export class AddUser extends Component {
 
         this.createUser.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.signatureOnChange = this.signatureOnChange.bind(this);
     }
 
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    signatureOnChange(event) {
+        event.preventDefault();
+        console.log(event.target.files[0]);
+
+        this.setState({
+            signature: event.target.files[0]
+        })
+    }
+
     async createUser(e) {
         e.preventDefault();
 
         try {
+            // Upload user information
             let userInfo = {
                 first_name: this.state.first_name,
                 last_name: this.state.last_name,
@@ -36,14 +47,27 @@ export class AddUser extends Component {
                 role: this.state.role,
             }
 
-            const url = 'api/users/create';
-            const response = await fetch(url, {
+            let url = 'api/users/create';
+            let response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(userInfo),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
+
+            console.log("RESPONSE: ", response);
+
+            //url = 'api/users/uploadsignature'
+            //// Upload user's signature
+            //let formData = new FormData();
+
+            //formData.append('signature', this.state.signature, this.state.signature.name);
+
+            //response = await fetch(url, {
+            //    method: 'POST',
+            //    body: formData,
+            //});
 
             if (response.ok)
                 this.setState({ reRoute: true });
@@ -121,12 +145,15 @@ export class AddUser extends Component {
                         <div className="form-group">
                             <label htmlFor="roleSelect">Upload Signature:</label>
                             <input
+                                style={{ display: 'none'}}
                                 id="signature"
                                 name="signature"
                                 type="file"
                                 className="form-control"
-                                onChange={this.onChange}
+                                onChange={this.signatureOnChange}
+                                ref={fileInput => this.fileInput = fileInput}
                             />
+                            <button type="button" className="btn btn-secondary" onClick={() => this.fileInput.click()}>Pick Image</button>
                         </div>
                         <button className="btn btn-primary" type="submit">
                             Add Employee
