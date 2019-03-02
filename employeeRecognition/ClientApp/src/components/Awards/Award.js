@@ -6,6 +6,8 @@ const Award = props => {
         <tr key={props.awardInfo.id}>
             <td>{props.awardInfo.sender_user_id}</td>
             <td>{props.awardInfo.recipient_user_id}</td>
+            <td>{props.awardInfo.first_name}</td>
+            <td>{props.awardInfo.last_name}</td>
             <td>{props.awardInfo.type}</td>
             <td>{props.awardInfo.time}</td>
             <td>{props.awardInfo.date}</td>

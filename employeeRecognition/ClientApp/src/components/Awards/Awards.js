@@ -53,6 +53,8 @@ export class Awards extends Component {
                     <tr>
                         <th>Sender id</th>
                         <th>Recipient id</th>
+                        <th>First name</th>
+                        <th>Last name</th>
                         <th>Type</th>
                         <th>Time</th>
                         <th>Date</th>

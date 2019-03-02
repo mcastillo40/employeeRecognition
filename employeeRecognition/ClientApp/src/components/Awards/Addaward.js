@@ -16,6 +16,7 @@ export class Addaward extends Component {
 
         this.createAward.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     onChange(event) {
@@ -42,7 +43,7 @@ export class Addaward extends Component {
                     'Content-Type': 'application/json'
                 }
             });
-
+            console.log("data: ", awardInfo);
             if (response.ok)
                 this.setState({ reRoute: true });
         }
@@ -73,22 +74,20 @@ export class Addaward extends Component {
                                 onChange={this.onChange}
                                 name="SID"
                                 placeholder="Sender ID"
+                                autoFocus
                             />
                         </div>
                         <div className="form-group">
-                            <input
-                                id="RID"
-                                type="number"
-                                className="form-control"
-                                value={this.state.recipient_user_id}
-                                onChange={this.onChange}
-                                name="RID"
-                                placeholder="Recipient ID"
-                            />
+                            <label htmlFor="TypeSelect">Select ID from Name:</label>
+                            <select className="form-control" name="RID" id="TypeSelect" value={this.state.recipient_user_id} onChange={this.onChange}>
+                                <option value={1}>Vinh Dong</option>
+                                <option value={2}>Geneva Lai</option>
+                                <option value={3}>Matt Castillo</option>
+                            </select>
                         </div>
                         <div className="form-group">
                             <label htmlFor="TypeSelect">Type:</label>
-                            <select className="form-control" name="Type" id="TypeSelect" value={this.state.type} onChange={this.onChange}>
+                            <select className="form-control" name="type" id="TypeSelect" value={this.state.type} onChange={this.onChange}>
                                 <option value="Service">Service</option>
                                 <option value="Performance">Performance</option>
                                 <option value="Team Work">Team Work</option>
