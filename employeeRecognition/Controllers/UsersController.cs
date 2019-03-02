@@ -43,7 +43,6 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPost("[action]")]
-        [Produces("application/json")]
         public IActionResult Create([FromBody]UserAcct User)
         {
             if (ModelState.IsValid)
@@ -52,11 +51,9 @@ namespace employeeRecognition.Controllers
 
                 String query = $"INSERT INTO userAcct(first_name, last_name, password, email, role) VALUES" +
                     $"('{User.first_name}', '{User.last_name}', '{User.password}', '{User.email}', {User.role})" +
-                    " SELECT * FROM userAcct WHERE id = SCOPE_IDENTITY()";
+                    " SELECT id FROM userAcct WHERE id = SCOPE_IDENTITY()";
 
                 String sql = @query;
-
-                Console.WriteLine("QUERY: " + sql);
 
                 dt = sqlConnection.Connection(sql);
 
@@ -64,16 +61,13 @@ namespace employeeRecognition.Controllers
                 {
                     var user = new UserAcct();
                     user.id = (int)row["id"];
-                    user.first_name = row["first_name"].ToString();
-                    user.last_name = row["last_name"].ToString();
-                    user.email = row["email"].ToString();
                     list.Add(user);
                 }
 
-                Console.WriteLine("LIST: " + list);
-                var newItem = new { test = "new" }; // create the object to return
+                Console.WriteLine("LIST: " + list[0].id);
+                var userId = new { list[0].id }; // create the object to return
 
-                return StatusCode(201, newItem);
+                return new ObjectResult(new { Id = list[0].id }) { StatusCode = 201 };
             }
             else
             {
@@ -84,8 +78,8 @@ namespace employeeRecognition.Controllers
         [HttpPost("[action]")]
         public IActionResult UploadSignature(int id, IList<IFormFile> files)
         {
-            Console.WriteLine("USER: ", User);
-            Console.WriteLine("Files: ", files);
+            Console.WriteLine("USER: " + id);
+            Console.WriteLine("Files: " + files);
 
             if (ModelState.IsValid)
             {

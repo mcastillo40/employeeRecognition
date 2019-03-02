@@ -55,19 +55,19 @@ export class AddUser extends Component {
                     'Content-Type': 'application/json'
                 }
             });
+            const data = await response.json();
+            const id = data.id;
 
-            console.log("RESPONSE: ", response);
+            // Upload user's signature
+            url = `api/users/uploadsignature?id=${id}`
+            let formData = new FormData();
 
-            //url = 'api/users/uploadsignature'
-            //// Upload user's signature
-            //let formData = new FormData();
+            formData.append('signature', this.state.signature, this.state.signature.name);
 
-            //formData.append('signature', this.state.signature, this.state.signature.name);
-
-            //response = await fetch(url, {
-            //    method: 'POST',
-            //    body: formData,
-            //});
+            response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+            });
 
             if (response.ok)
                 this.setState({ reRoute: true });
