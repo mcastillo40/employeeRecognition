@@ -37,8 +37,6 @@ namespace employeeRecognition.Controllers
                 list.Add(user);
             }
 
-            Console.WriteLine("LIST 12345: " + list);
-
             return list;
         }
 
@@ -63,10 +61,6 @@ namespace employeeRecognition.Controllers
                     user.id = (int)row["id"];
                     list.Add(user);
                 }
-
-                Console.WriteLine("LIST: " + list[0].id);
-                var userId = new { list[0].id }; // create the object to return
-
                 return new ObjectResult(new { Id = list[0].id }) { StatusCode = 201 };
             }
             else
@@ -76,7 +70,10 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPost("[action]")]
+        //[HttpPost("content/upload-image")]
+        //public IActionResult UploadSignature(int id, IFormFile files)
         public IActionResult UploadSignature(int id, IList<IFormFile> files)
+        //public IActionResult UploadSignature(int id, IFormFile files)
         {
             Console.WriteLine("USER: " + id);
             Console.WriteLine("Files: " + files);

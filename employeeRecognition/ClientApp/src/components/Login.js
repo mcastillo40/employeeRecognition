@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from "react-dom";
 import { AUTH_MODEL } from '../Shared/Auth/Auth';
-import axios from 'axios';
 import { ServerSide } from '../TestData/testUsers';
 
 export class Login extends Component {
