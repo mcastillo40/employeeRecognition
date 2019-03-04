@@ -7,7 +7,7 @@ export class Home extends Component {
     return (
         <div>
             <h1>Welcome to the Employee Recognition Portal!</h1>
-            <p>Welcome to your new single-page application, built with:</p>
+
             <div className="row">
                 <div className="col-md-6">
                     <a href="/users" className="btn btn-primary btn-block">View Accounts</a>

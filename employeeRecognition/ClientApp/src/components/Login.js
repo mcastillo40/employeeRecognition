@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AUTH_MODEL } from '../Shared/Auth/Auth';
-import { ServerSide } from '../TestData/testUsers'; 
+//import { ServerSide } from '../TestData/testUsers'; 
 import jwt from 'jsonwebtoken';
 
 
@@ -15,7 +15,7 @@ export class Login extends Component {
             password: ''
         };
 
-        this.server = new ServerSide();
+        //this.server = new ServerSide();
 
         this.change = this.change.bind(this);
         this.submit = this.submit.bind(this);
