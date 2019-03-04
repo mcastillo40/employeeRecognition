@@ -22,23 +22,29 @@ namespace employeeRecognition.Controllers
         {
             List<award> list = new List<award>();
 
-            String sql = @"SELECT award.id, award.sender_user_id, award.recipient_user_id, userAcct.first_name, userAcct.last_name, award.type, award.time, award.date FROM userAcct
-JOIN award ON (userAcct.id = award.recipient_user_id)";
-                //con.ConnectionString = @"Server=comp1630.database.windows.net;Database=pubs;User Id=readonlylogin;Password=;";
-                dt = sqlConnection.Connection(sql);
+            String sql = @"SELECT award.id, award.sender_user_id, award.recipient_user_id, sender.first_name as sfn, sender.last_name as sln, recipient.first_name as rfn, recipient.last_name as rln, award.type, CONVERT(VarChar(7), award.time, 0) as time, format(award.date, 'd') as date
+FROM award
+JOIN userAcct AS sender ON sender.id = award.sender_user_id
+JOIN userAcct AS recipient ON recipient.id = award.recipient_user_id";
+            
+//SELECT award.id, award.sender_user_id, award.recipient_user_id, userAcct.first_name, userAcct.last_name, award.type, award.time, award.date FROM userAcct
+//JOIN award ON (userAcct.id = award.recipient_user_id)
+            dt = sqlConnection.Connection(sql);
 
-                foreach (DataRow row in dt.Rows)
-                {
-                    var Award = new award();
-                    Award.id = (int)row["id"];
-                    Award.sender_user_id = (int)row["sender_user_id"];
-                    Award.recipient_user_id = (int)row["recipient_user_id"];
-                    Award.first_name = row["first_name"].ToString();
-                    Award.last_name = row["last_name"].ToString();
-                    Award.type = row["type"].ToString();
-                    Award.time = row["time"].ToString();
-                    Award.date = row["date"].ToString();
-                    list.Add(Award);
+            foreach (DataRow row in dt.Rows)
+            {
+                var Award = new award();
+                Award.id = (int)row["id"];
+                Award.sender_user_id = (int)row["sender_user_id"];
+                Award.recipient_user_id = (int)row["recipient_user_id"];
+                Award.sfn = row["sfn"].ToString();
+                Award.sln = row["sln"].ToString();
+                Award.rfn = row["rfn"].ToString();
+                Award.rln = row["rln"].ToString();
+                Award.type = row["type"].ToString();
+                Award.time = row["time"].ToString();
+                Award.date = row["date"].ToString();
+                list.Add(Award);
             }
             return list;
         }

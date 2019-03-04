@@ -11,7 +11,7 @@ export class BusinessReporting extends Component {
   render() {
     return (
       <div>
-        <h1>Business Reporting</h1>
+ 
       </div>
     );
   }

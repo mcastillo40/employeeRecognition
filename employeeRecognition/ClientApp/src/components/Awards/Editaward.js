@@ -6,6 +6,7 @@ export class Editaward extends Component {
         super(props);
 
         this.state = {
+            users: [],
             sender_user_id: props.location.state.award.sender_user_id,
             recipient_user_id: props.location.state.award.recipient_user_id,
             type: props.location.state.award.type,
@@ -16,6 +17,12 @@ export class Editaward extends Component {
 
         this.editAward.bind(this);
         this.onChange = this.onChange.bind(this);
+    }
+
+    async componentDidMount() {
+        let response = await fetch('api/users/index')
+        const data = await response.json();
+        this.setState({ users: data });
     }
 
     onChange(event) {
@@ -65,27 +72,24 @@ export class Editaward extends Component {
                         onSubmit={this.editAward.bind(this)}
                     >
                         <div className="form-group">
-                            <input
-                                id="SID"
-                                type="number"
-                                className="form-control"
-                                value={this.state.sender_user_id}
-                                onChange={this.onChange}
-                                name="first_name"
-                                placeholder="Sender ID"
-                                autoFocus
-                            />
+                            <label htmlFor="TypeSelect">Select Sender ID from Name:</label>
+                            <select className="form-control" name="sender_user_id" id="sender_user_id" value={this.state.sender_user_id} onChange={this.onChange}>
+                                {this.state.users.map(user => (
+                                    <option value={user.id}>
+                                        {user.first_name} {user.last_name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="form-group">
-                            <input
-                                id="RID"
-                                type="number"
-                                className="form-control"
-                                value={this.state.recipient_user_id}
-                                onChange={this.onChange}
-                                name="last_name"
-                                placeholder="Recipient ID"
-                            />
+                            <label htmlFor="TypeSelect">Select Recipient ID from Name:</label>
+                            <select className="form-control" name="recipient_user_id" id="recipient_user_id" value={this.state.recipient_user_id} onChange={this.onChange}>
+                                {this.state.users.map(user => (
+                                    <option value={user.id}>
+                                        {user.first_name} {user.last_name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="form-group">
                             <label htmlFor="TypeSelect">Type:</label>

@@ -19,7 +19,6 @@ export class Users extends Component {
         try {
             const response = await fetch('api/users/index');
             const data = await response.json();
-
             this.setState({ users: data, loading: false });
         }
         catch (err) {

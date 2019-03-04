@@ -4,10 +4,8 @@ import { TableAwards } from '../../Shared/TableAwards';
 const Award = props => {
     return (
         <tr key={props.awardInfo.id}>
-            <td>{props.awardInfo.sender_user_id}</td>
-            <td>{props.awardInfo.recipient_user_id}</td>
-            <td>{props.awardInfo.first_name}</td>
-            <td>{props.awardInfo.last_name}</td>
+            <td>{props.awardInfo.sfn} {props.awardInfo.sln}</td>
+            <td>{props.awardInfo.rfn} {props.awardInfo.rln}</td>
             <td>{props.awardInfo.type}</td>
             <td>{props.awardInfo.time}</td>
             <td>{props.awardInfo.date}</td>

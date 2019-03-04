@@ -51,10 +51,8 @@ export class Awards extends Component {
             <table className='table'>
                 <thead>
                     <tr>
-                        <th>Sender id</th>
-                        <th>Recipient id</th>
-                        <th>First name</th>
-                        <th>Last name</th>
+                        <th>Sender Name</th>
+                        <th>Recipient Name</th>
                         <th>Type</th>
                         <th>Time</th>
                         <th>Date</th>
