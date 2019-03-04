@@ -10,9 +10,9 @@ export class Addaward extends Component {
             users: [],
             sender_user_id: 1,
             recipient_user_id: 2,
-            type: '',
-            time: '',
-            date: '',
+            type: "Service",
+            time: '12:00 AM',
+            date: '2000/01/01',
             reRoute: false,
         };
 

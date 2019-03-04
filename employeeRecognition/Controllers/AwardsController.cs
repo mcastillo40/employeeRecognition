@@ -22,10 +22,9 @@ namespace employeeRecognition.Controllers
         {
             List<award> list = new List<award>();
 
-            String sql = @"SELECT award.id, award.sender_user_id, award.recipient_user_id, sender.first_name as sfn, sender.last_name as sln, recipient.first_name as rfn, recipient.last_name as rln, award.type, CONVERT(VarChar(7), award.time, 0) as time, format(award.date, 'd') as date
-FROM award
-JOIN userAcct AS sender ON sender.id = award.sender_user_id
-JOIN userAcct AS recipient ON recipient.id = award.recipient_user_id";
+            String sql = @"SELECT award.id, award.sender_user_id, award.recipient_user_id, sender.first_name as sfn, sender.last_name as sln, 
+recipient.first_name as rfn, recipient.last_name as rln, award.type, CONVERT(VarChar(7), award.time, 0) as time, format(award.date, 'd') as date
+FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN userAcct AS recipient ON recipient.id = award.recipient_user_id";
             
 //SELECT award.id, award.sender_user_id, award.recipient_user_id, userAcct.first_name, userAcct.last_name, award.type, award.time, award.date FROM userAcct
 //JOIN award ON (userAcct.id = award.recipient_user_id)
