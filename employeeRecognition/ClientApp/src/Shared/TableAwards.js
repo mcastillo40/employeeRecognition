@@ -1,12 +1,12 @@
 ﻿import React from 'react';
 
-const TableButtons = props => {
+const TableAwards = props => {
     return <td className="button-width">
             <div className="btn-group" role="group">
                 <button
                     className="btn btn-primary"
                     title="Edit"
-                    onClick={id => props.handleEdit(props.userInfo)}
+                    onClick={id => props.handleEdit(props.awardInfo)}
                 >
                     <i className="fas fa-edit"></i>
             </button>
@@ -14,12 +14,11 @@ const TableButtons = props => {
                 <button
                     className="btn btn-danger"
                     title="Delete"
-                    onClick={id => props.handleDelete(props.userInfo.id)}
+                    onClick={id => props.handleDelete(props.awardInfo.id)}
                 >
                     <i className="fas fa-trash-alt"></i>
                 </button >
             </div >
         </td >
 }
-export { TableButtons };
-
+export { TableAwards };
