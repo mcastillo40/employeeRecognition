@@ -21,9 +21,9 @@ export class NavMenu extends Component {
 
     NavbarLinks() {
         if (!_.isNil(AUTH_MODEL.get().token)) {
-            const { role } = AUTH_MODEL.get().userInfo;
+            const { Role } = AUTH_MODEL.get().userInfo;
 
-            if (_.isEqual(role, ROLES.Admin)) {
+            if (_.isEqual(Role, ROLES.Admin)) {
                 return (
                     <div className="navbar-nav ml-auto">
                         <NavLink className="nav-link nav-item" exact to="/">Home</NavLink>
@@ -34,7 +34,7 @@ export class NavMenu extends Component {
                     </div>
                 );
             }
-            else if (_.isEqual(role, ROLES.User)) {
+            else if (_.isEqual(Role, ROLES.User)) {
                 return (
                     <div className="navbar-nav ml-auto">
                         <NavLink className="nav-link nav-item" exact to="/">Home</NavLink>

@@ -1,7 +1,7 @@
 // https://stackoverflow.com/questions/51811282/using-redux-instead-of-cookie-and-local-storage
 
 export const AUTH_MODEL = {
-    set: ( token, userInfo ) => {
+    set: ( token, userInfo='' ) => {
         localStorage.setItem('id_token', token);
         localStorage.setItem('user_info', JSON.stringify(userInfo));
     },

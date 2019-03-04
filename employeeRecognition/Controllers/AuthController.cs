@@ -27,10 +27,11 @@ namespace employeeRecognition.Controllers
 
         private DbConnection sqlConnection = new DbConnection();
 
-        [HttpPost("token")]   //CHANGED FROM /auth/token to ""; So to access: api/auth/token to access this endpoint of our api
-        public ActionResult GetToken([FromBody]UserAcct User)
+        [HttpPost("[action]")]   //CHANGED FROM /auth/token to ""; So to access: api/auth/token to access this endpoint of our api
+        public IActionResult GetToken([FromBody]UserAcct User)
         {
-            // pass in email/psw
+            Console.WriteLine("This is authcontroller");
+             // pass in email/psw
             // query of all users and see if there is a match
             // if no match, error message 
             // if match, then send the security key
@@ -56,7 +57,7 @@ namespace employeeRecognition.Controllers
 
             else
             {
-                String roleQuery = $"SELECT role FROM userAcct WHERE email='{User.email}'";
+                String roleQuery = $"SELECT role, id FROM userAcct WHERE email='{User.email}'";
                 String checkRole = @roleQuery;
 
                 Console.WriteLine("Query: " + checkRole);
@@ -87,21 +88,29 @@ namespace employeeRecognition.Controllers
 
                 DataRow row = dt.Rows[0];
                 int roleID = (int)row["role"];
+                //string user_id = (int)row["id"].ToString();
+                int user_id = (int)row["id"];
+                string string_user_id = user_id.ToString();
 
                 Console.WriteLine("roleID is: " + roleID);
 
                 if (roleID == 1)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));  // Don't forget to assign this claim to the token body, in #4.    
+                    claims.Add(new Claim("Role", "Admin"));  // Don't forget to assign this claim to the token body, in #4.    
                 }
 
                 else
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, "User"));
+                    claims.Add(new Claim("Role", "User"));
                 }
+
+
 
                 //claims.Add(new Claim("Custom_Claim", "Custom_value"));  ADD MORE CLAIMS: FIRST, last name, email
                 //claims.Add(new Claim("first_name:", dt.first)), first name will be grabbed from DB
+
+                claims.Add(new Claim("UserId", string_user_id));
+
 
                 // 4. Need to create the token
                 var token = new JwtSecurityToken(
@@ -116,7 +125,13 @@ namespace employeeRecognition.Controllers
                 // 5. Return token
                 // We need the JWT SecurityTokenHandler to return, from this token, a string that can be used in request to our API
                 // The WriteToken will return string version of token, which we return to the client
-                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                //return new ObjectResult(new { Id = list[0].id }) { StatusCode = 201 };
+                //return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+
+                return new ObjectResult(new { token = new JwtSecurityTokenHandler().WriteToken(token) }) { StatusCode = 201 };
+                //return new JwtSecurityTokenHandler().WriteToken(token));
+
+
             }
         }
     }
