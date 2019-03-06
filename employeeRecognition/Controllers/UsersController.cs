@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using employeeRecognition.Extensions;
 using employeeRecognition.Models;
 using Microsoft.AspNetCore.Http;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace employeeRecognition.Controllers
 {
@@ -72,14 +73,15 @@ namespace employeeRecognition.Controllers
         [HttpPost("[action]")]
         //[HttpPost("content/upload-image")]
         //public IActionResult UploadSignature(int id, IFormFile files)
-        public IActionResult UploadSignature(int id, IList<IFormFile> files)
+        public IActionResult UploadSignature(int id, [FromBody]Byte[] files)
         //public IActionResult UploadSignature(int id, IFormFile files)
         {
             Console.WriteLine("USER: " + id);
             Console.WriteLine("Files: " + files);
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
+            try { 
                 String query = $"UPDATE userAcct set signature='{files}' WHERE userAcct.id={id}";
 
                 String sql = @query;
@@ -90,10 +92,14 @@ namespace employeeRecognition.Controllers
 
                 return Ok();
             }
-            else
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(new { Error = e });
             }
+            //else
+            //{
+            //    return BadRequest();
+            //}
         }
 
         [HttpDelete("[action]")]
