@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
+//import axios from 'axios';
 var util = require('util');
 
 export class AddUser extends Component {
@@ -145,6 +145,7 @@ export class AddUser extends Component {
                                 name="first_name"
                                 placeholder="First Name"
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -156,6 +157,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="last_name"
                                 placeholder="Last Name"
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -167,6 +169,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="email"
                                 placeholder="Email"
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -178,6 +181,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="password"
                                 placeholder="Password"
+                                required
                             />
                         </div>
                         <div className="form-group">
