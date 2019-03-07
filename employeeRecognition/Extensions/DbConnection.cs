@@ -22,6 +22,8 @@ namespace employeeRecognition.Extensions
             SqlDataAdapter da = new SqlDataAdapter();
             da.SelectCommand = new SqlCommand(sql, con);
 
+            Console.WriteLine("DT 1: " + da);
+
             da.Fill(dt);
 
             return dt;

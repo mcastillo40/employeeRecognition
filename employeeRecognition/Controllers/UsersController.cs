@@ -71,18 +71,19 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPost("[action]")]
+        public IActionResult UploadSignature(int id)
         //[HttpPost("content/upload-image")]
         //public IActionResult UploadSignature(int id, IFormFile files)
-        public IActionResult UploadSignature(int id, [FromBody]Byte[] files)
+        //public IActionResult UploadSignature(int id, [FromBody]Byte[] files)
         //public IActionResult UploadSignature(int id, IFormFile files)
         {
+
+            var files = HttpContext.Request.Form.Files;
             Console.WriteLine("USER: " + id);
             Console.WriteLine("Files: " + files);
 
-            //if (ModelState.IsValid)
-            //{
             try { 
-                String query = $"UPDATE userAcct set signature='{files}' WHERE userAcct.id={id}";
+                String query = $"UPDATE userAcct set signature='{files[0]}' WHERE userAcct.id={id}";
 
                 String sql = @query;
 
@@ -90,16 +91,14 @@ namespace employeeRecognition.Controllers
 
                 dt = sqlConnection.Connection(sql);
 
+                Console.WriteLine("DT 2: " + dt);
+
                 return Ok();
             }
             catch (Exception e)
             {
                 return BadRequest(new { Error = e });
             }
-            //else
-            //{
-            //    return BadRequest();
-            //}
         }
 
         [HttpDelete("[action]")]

@@ -14,7 +14,7 @@ namespace employeeRecognition.Models
         public string password { get; set; }
         public string email { get; set; }
         public string create_on { get; set; }
-        public Byte[] signature { get; set; }
+        public IFormFile signature { get; set; }
         public int role { get; set; }
     }
 }
