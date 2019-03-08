@@ -41,6 +41,28 @@ namespace employeeRecognition.Controllers
             return list;
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<UserAcct> getUser(int id)
+        {
+            List<UserAcct> list = new List<UserAcct>();
+
+            String sql = $"SELECT * FROM userAcct WHERE userAcct.id={id}";
+
+            dt = sqlConnection.Connection(sql);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                var user = new UserAcct();
+                user.id = (int)row["id"];
+                user.first_name = row["first_name"].ToString();
+                user.last_name = row["last_name"].ToString();
+                user.email = row["email"].ToString();
+                list.Add(user);
+            }
+
+            return list;
+        }
+
         [HttpPost("[action]")]
         public IActionResult Create([FromBody]UserAcct User)
         {
