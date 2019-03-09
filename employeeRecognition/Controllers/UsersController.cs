@@ -42,25 +42,21 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<UserAcct> getUser(int id)
+        public IActionResult getUser(int id)
         {
-            List<UserAcct> list = new List<UserAcct>();
-
-            String sql = $"SELECT * FROM userAcct WHERE userAcct.id={id}";
+            string sql = $"SELECT userAcct.id, userAcct.first_name, userAcct.last_name, userAcct.email FROM userAcct WHERE userAcct.id={id}";
 
             dt = sqlConnection.Connection(sql);
+           
+            DataRow row = dt.Rows[0];
 
-            foreach (DataRow row in dt.Rows)
-            {
-                var user = new UserAcct();
-                user.id = (int)row["id"];
-                user.first_name = row["first_name"].ToString();
-                user.last_name = row["last_name"].ToString();
-                user.email = row["email"].ToString();
-                list.Add(user);
-            }
+            var user_info = new {
+                first_name = row["first_name"].ToString(),
+                last_name = row["last_name"].ToString(),
+                email = row["email"].ToString()
+            };
 
-            return list;
+            return new ObjectResult(user_info) { StatusCode = 200 };
         }
 
         [HttpPost("[action]")]
@@ -138,7 +134,7 @@ namespace employeeRecognition.Controllers
         {
             if (ModelState.IsValid)
             {
-                String query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', password='{User.password}', email='{User.email}', role={User.role}, signature='{User.signature}' WHERE userAcct.id={id}";
+                String query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', password='{User.password}', email='{User.email}', role={User.role} WHERE userAcct.id={id}";
 
                 String sql = @query;
 

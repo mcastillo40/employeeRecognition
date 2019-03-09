@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { PasswordReset } from './PasswordReset';
 
 export class EditUser extends Component {
     constructor(props) {
@@ -12,14 +13,33 @@ export class EditUser extends Component {
             password: '',
             role: props.location.state.role,
             reRoute: false,
+            passwordChanged: false,
+            passwordOpenEdit: false,
         };
 
         this.editUser.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.passwordEdit = this.passwordEdit.bind(this);
+        this.passwordIsOpen = this.passwordIsOpen.bind(this);
     }
 
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
+    }
+
+    // Checks to see if password has been changed or canceled to edit
+    passwordEdit(changed) {
+        if (changed) {
+            this.setState({ passwordChanged: true });
+        }
+        else{
+            this.setState({ passwordChanged: false });
+        }
+    }
+
+    // Ensures that password edit is closed
+    passwordIsOpen() {
+        this.setState({ passwordOpenEdit: !this.state.passwordOpenEdit });
     }
 
     async editUser(e) {
@@ -102,16 +122,7 @@ export class EditUser extends Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label>Password:</label>
-                            <input
-                                id="password"
-                                type="password"
-                                className="form-control"
-                                value={this.state.password}
-                                onChange={this.onChange}
-                                name="password"
-                                placeholder=""
-                            />
+                            <PasswordReset password={this.state.password} changed={this.state.passwordChanged} onChange={this.onChange} />
                         </div>
                         <div className="form-group">
                             <label htmlFor="roleSelect">Role:</label>
