@@ -144,6 +144,7 @@ export class AddUser extends Component {
                                 name="first_name"
                                 placeholder="First Name"
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -155,6 +156,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="last_name"
                                 placeholder="Last Name"
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -166,6 +168,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="email"
                                 placeholder="Email"
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -177,6 +180,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="password"
                                 placeholder="Password"
+                                required
                             />
                         </div>
                         <div className="form-group">

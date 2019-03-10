@@ -11,18 +11,11 @@ import { Users } from './components/Users/Users';
 import { Awards } from './components/Awards/Awards';
 import { Addaward } from './components/Awards/Addaward';
 import { Editaward } from './components/Awards/Editaward';
-import { showAward } from './components/Awards/showAward';
 import { AddUser } from './components/Users/AddUser';
 import { EditUser } from './components/Users/EditUser';
 
 import { ForgetPassword } from './components/ForgetPassword';
-
-
-//import AuthenticatedComponent from './components/Auth/AuthenticatedComponent';
 import { PrivateRoute } from './Shared/Auth/PrivateRoute';
-
-
-import { ForgetPassword } from './components/ForgetPassword';
 
 export default class App extends Component {
   displayName = App.name
@@ -38,7 +31,7 @@ export default class App extends Component {
                 <PrivateRoute path='/ForgetPassword' component={ForgetPassword} />
                 <PrivateRoute path='/businessreporting' roles={['Admin']} component={BusinessReporting} />
                 <PrivateRoute path='/users' roles={['Admin']} component={Users} />
-                <PrivateRoute path='/award' roles={['User']} component={Award} />
+                <PrivateRoute path='/award' roles={['User']} component={Awards} />
                 <PrivateRoute path='/settings' component={Settings} />
                 <PrivateRoute path='/addUser' roles={['Admin']} component={AddUser} />
                 <PrivateRoute path='/editUser' roles={['Admin']} component={EditUser} />
