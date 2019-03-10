@@ -148,7 +148,7 @@ namespace employeeRecognition.Controllers
             try
             {
                 //String query = $"UPDATE userAcct set signature='{bytes}' WHERE userAcct.id={id}";
-                string query = $"UPDATE dbo.userAcct set signature=@binaryValue WHERE userAcct.id={id}";
+                string query = $"UPDATE userAcct set signature=@binaryValue WHERE userAcct.id={id}";
                 string connectionString = @"Data Source = tcp:erraisqlserver.database.windows.net,1433;Initial Catalog=EmployeeDB;Persist Security Info=False;User ID=erraiadmin;Password=DBaccess3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
                 SqlConnection con = new SqlConnection(connectionString);
                 string sql = @query;
@@ -165,7 +165,7 @@ namespace employeeRecognition.Controllers
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     // Replace 8000, below, with the correct size of the field
-                    cmd.Parameters.AddWithValue("@binaryValue", SqlDbType.VarBinary).Value = bytes;
+                    cmd.Parameters.AddWithValue("(@binaryValue)", SqlDbType.VarBinary).Value = bytes;
                     cmd.ExecuteNonQuery();
                 }
 
