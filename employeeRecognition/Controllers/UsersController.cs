@@ -162,16 +162,19 @@ namespace employeeRecognition.Controllers
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    //cmd.CommandType = CommandType.StoredProcedure;
 
                     // Replace 8000, below, with the correct size of the field
-                    cmd.Parameters.AddWithValue("(@binaryValue)", SqlDbType.VarBinary).Value = bytes;
+                    //cmd.Parameters.AddWithValue("(@binaryValue)", SqlDbType.VarBinary).Value = bytes;
+                    //cmd.ExecuteNonQuery();
+                    SqlParameter sqlParam = cmd.Parameters.AddWithValue("@binaryValue", bytes);
+                    sqlParam.DbType = DbType.Binary;
                     cmd.ExecuteNonQuery();
                 }
 
                 con.Close();
 
-                return Ok();
+                return StatusCode(201);
             }
             catch (Exception e)
             {
