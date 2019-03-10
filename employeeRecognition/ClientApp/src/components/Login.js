@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { AUTH_MODEL } from '../Shared/Auth/Auth';
-//import { ServerSide } from '../TestData/testUsers'; 
 import jwt from 'jsonwebtoken';
-
 
 export class Login extends Component {
     displayName = Login.name
@@ -14,8 +12,6 @@ export class Login extends Component {
             email: '',
             password: ''
         };
-
-        //this.server = new ServerSide();
 
         this.change = this.change.bind(this);
         this.submit = this.submit.bind(this);
@@ -35,8 +31,6 @@ export class Login extends Component {
         }
 
         try {
-            //const response = await fetch.post('/api/auth/GetToken', data, { headers: { 'Content-Type': 'application/json' } });
-            //const response = this.server.login(data)
             const response = await fetch('api/auth/GetToken',  {
                 method: 'POST',
                 body: JSON.stringify(data),
@@ -48,30 +42,16 @@ export class Login extends Component {
 
             const dataResponse = await response.json();
             const token = dataResponse.token;
-             
-             // get the decoded payload ignoring signature, no secretOrPrivateKey needed
-            //var decoded = jwt.decode(token);
- 
-                // get the decoded payload and header
-                let decoded = jwt.decode(token, {complete: true});
-                console.log(decoded.header);
-                console.log(decoded.payload);  
+
+            // get the decoded payload and header
+            let decoded = jwt.decode(token, {complete: true});
+
             const {Role} = decoded.payload;
             const {UserId} = decoded.payload;
             const user = {Role, UserId};
-            console.log("Response is: ", token);
-
-            console.log("Response is: ", dataResponse);
-
-            //const { token } = response.data;
-            //const { token } = dataResponse;
-            //const { user } = dataResponse;
-
-            
 
             AUTH_MODEL.set(token, user);
             this.props.history.push('/');
-        
         }
         catch (err) {
             var mySpan = document.getElementById('incorrect_info');

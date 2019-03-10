@@ -1,60 +1,46 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import { PasswordReset } from './PasswordReset';
+import { Redirect, Link } from 'react-router-dom';
+import { PasswordReset } from '../Update/PasswordReset';
 
 export class EditUser extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            id: props.location.state.user.id,
             first_name: props.location.state.user.first_name,
             last_name: props.location.state.user.last_name,
             email: props.location.state.user.email,
-            password: '',
-            role: props.location.state.role,
+            role: props.location.state.user.role,
             reRoute: false,
-            passwordChanged: false,
-            passwordOpenEdit: false,
+            showPasswordUpdate: false
         };
 
         this.editUser.bind(this);
         this.onChange = this.onChange.bind(this);
-        this.passwordEdit = this.passwordEdit.bind(this);
-        this.passwordIsOpen = this.passwordIsOpen.bind(this);
+        this.showEditPassword = this.showEditPassword.bind(this);
     }
 
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    // Checks to see if password has been changed or canceled to edit
-    passwordEdit(changed) {
-        if (changed) {
-            this.setState({ passwordChanged: true });
-        }
-        else{
-            this.setState({ passwordChanged: false });
-        }
-    }
-
-    // Ensures that password edit is closed
-    passwordIsOpen() {
-        this.setState({ passwordOpenEdit: !this.state.passwordOpenEdit });
+    showEditPassword() {
+        this.setState({ showPasswordUpdate: !this.state.showPasswordUpdate });
     }
 
     async editUser(e) {
         e.preventDefault();
 
-        try {
-            let userInfo = {
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                email: this.state.email,
-                password: this.state.password,
-                role: this.state.role,
-            }
+        let userInfo = {
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
+            email: this.state.email,
+            role: this.state.role,
+        }
 
-            const url = `api/users/edit?id=${this.props.location.state.user.id}`;
+        try {
+            const url = `api/users/AdminEdit?id=${this.props.location.state.user.id}`;
             const response = await fetch(url, {
                 method: 'PUT',
                 body: JSON.stringify(userInfo),
@@ -66,9 +52,10 @@ export class EditUser extends Component {
             if (response.ok)
                 this.setState({ reRoute: true });
         }
-        catch (err) {
-            console.log("err: ", err);
+        catch (e) {
+            console.log("ERROR: ", e);
         }
+
     }
 
     render() {
@@ -95,6 +82,7 @@ export class EditUser extends Component {
                                 name="first_name"
                                 placeholder="First Name"
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -107,22 +95,33 @@ export class EditUser extends Component {
                                 onChange={this.onChange}
                                 name="last_name"
                                 placeholder="Last Name"
+                                required
                             />
                         </div>
                         <div className="form-group">
                             <label>Email:</label>
                             <input
                                 id="email"
-                                type="text"
+                                type="email"
                                 className="form-control"
                                 value={this.state.email}
                                 onChange={this.onChange}
                                 name="email"
                                 placeholder="Email"
+                                required
                             />
                         </div>
                         <div className="form-group">
-                            <PasswordReset password={this.state.password} changed={this.state.passwordChanged} onChange={this.onChange} />
+                            <div className="form-group">
+                                <label>Password:</label>
+                                <br />
+                                <span style={{ display: this.state.showPasswordUpdate ? 'none' : 'block' }}>
+                                    <button type="button" className="btn btn-secondary" onClick={this.showEditPassword}>Change Password</button>
+                                </span>
+                                <span style={{ display: this.state.showPasswordUpdate ? 'block' : 'none' }}>
+                                    <PasswordReset id={this.state.id} showEditPassword={this.showEditPassword}/>
+                                </span>
+                            </div>
                         </div>
                         <div className="form-group">
                             <label htmlFor="roleSelect">Role:</label>
@@ -131,9 +130,10 @@ export class EditUser extends Component {
                                 <option value={1}>Admin</option>
                             </select>
                         </div>
-                        <button className="btn btn-primary" type="submit">
+                        <button className="btn btn-primary" type="submit" style={{ marginRight: '10px' }}>
                             Submit Changes
                         </button>
+                        <Link to="/Users"><button type="button" className="btn btn-danger">Cancel</button></Link>
                     </form>
                 </div>
             )

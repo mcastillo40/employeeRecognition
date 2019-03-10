@@ -16,17 +16,28 @@ namespace employeeRecognition.Extensions
         // runs stored procedure and returns data to main page
         public DataTable Connection(String sql)
         {
-            SqlConnection con = new SqlConnection(connectionString);
+            try
+            {
+                SqlConnection con = new SqlConnection(connectionString);
 
-            DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter();
-            da.SelectCommand = new SqlCommand(sql, con);
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = new SqlCommand(sql, con);
 
-            Console.WriteLine("DT 1: " + da);
+                Console.WriteLine("DT 1: " + da);
 
-            da.Fill(dt);
+                da.Fill(dt);
 
-            return dt;
+                Console.WriteLine("DA Fill: " + da);
+
+                return dt;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine("Error 1: " + error);
+                DataTable dt = new DataTable();
+                return dt;
+            }
         }
     }
 }
