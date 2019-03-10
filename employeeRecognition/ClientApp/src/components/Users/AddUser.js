@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import axios from 'axios';
+import { Redirect, Link } from 'react-router-dom';
 var util = require('util');
 
 export class AddUser extends Component {
@@ -198,11 +197,12 @@ export class AddUser extends Component {
                                 onChange={this.signatureOnChange}
                                 ref={fileInput => this.fileInput = fileInput}
                             />
-                            <button type="button" className="btn btn-secondary" onClick={() => this.fileInput.click()}>Pick Image</button>
+                            <button type="button" className="btn btn-secondary" style={{ marginLeft: '10px' }} onClick={() => this.fileInput.click()}>Pick Image</button>
                         </div>
-                        <button className="btn btn-primary" type="submit">
+                        <button className="btn btn-primary" type="submit" style={{ marginRight: '10px' }}>
                             Add Employee
                         </button>
+                        <Link to="/Users"><button type="button" className="btn btn-danger">Cancel</button></Link>
                     </form>
                 </div>
             )

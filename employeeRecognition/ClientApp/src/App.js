@@ -5,7 +5,7 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { Login } from './components/Login';
 import { SignUp } from './components/SignUp';
-import { Settings } from './components/Settings';
+import { Settings } from './components/Settings/Settings';
 import { BusinessReporting } from './components/BusinessReporting';
 import { Users } from './components/Users/Users';
 import { Awards } from './components/Awards/Awards';
