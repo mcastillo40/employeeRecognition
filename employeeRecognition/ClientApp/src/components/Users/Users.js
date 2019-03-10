@@ -19,7 +19,6 @@ export class Users extends Component {
         try {
             const response = await fetch('api/users/index');
             const data = await response.json();
-
             this.setState({ users: data, loading: false });
         }
         catch (err) {
@@ -32,7 +31,6 @@ export class Users extends Component {
         const response = await fetch(url, {
             method: 'DELETE',
         });
-
         if (response.ok)
             this.setState({ users: _.filter(this.state.users, (user) => user.id !== id) })
     }
@@ -78,7 +76,6 @@ export class Users extends Component {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : Users.renderUsersTable(this.state.users, this.handleDelete, this.handleEdit);
-
         return (
             <div>
                 <h1>Employees</h1>

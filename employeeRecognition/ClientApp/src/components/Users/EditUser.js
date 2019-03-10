@@ -93,7 +93,7 @@ export class EditUser extends Component {
                             <label>Email:</label>
                             <input
                                 id="email"
-                                type="text"
+                                type="email"
                                 className="form-control"
                                 value={this.state.email}
                                 onChange={this.onChange}
@@ -110,7 +110,7 @@ export class EditUser extends Component {
                                 value={this.state.password}
                                 onChange={this.onChange}
                                 name="password"
-                                placeholder=""
+                                placeholder="********"
                             />
                         </div>
                         <div className="form-group">
