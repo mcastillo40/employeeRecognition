@@ -160,7 +160,7 @@ export class AddUser extends Component {
                         <div className="form-group">
                             <input
                                 id="email"
-                                type="text"
+                                type="email"
                                 className="form-control"
                                 value={this.state.email}
                                 onChange={this.onChange}
