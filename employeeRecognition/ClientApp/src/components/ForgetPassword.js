@@ -12,23 +12,11 @@ export class ForgetPassword extends Component {
   }
 
 
-  //change(e) {
-        //this.setState({email: e.target.email});
-        //this.setState({
-          //  [e.target.name]: e.target.value
-        //});
-    //}
 handleChange(event){
     this.setState({email: event.target.value});
 }
 
-//handleSubmit(event){
-//    console.log("email submitted is: ", this.state.email);
-//    const data = {email: this.state.email};
 
-//    console.log("data is: ", data);
-//    event.preventDefault();
-//}
 
 async handleSubmit(event){
     event.preventDefault();
@@ -45,41 +33,29 @@ async handleSubmit(event){
          });
 
         console.log("Response is: ", response);
+        const responseOK = response.ok;
+        console.log("response.ok is: ", responseOK);
+        if (response.ok){
+            var mySpan = document.getElementById('sent_confirm');
+            mySpan.style.display = "";
+        }
+        else{
+              var mySpan = document.getElementById('incorrect_info');
+              mySpan.style.display = "";
+        }
 
+    
     }
 
     catch (err){
         console.log("ERR: ", err);
+//        var mySpan = document.getElementById('incorrect_info');
+  //      mySpan.style.display = "";
     }
 }
 
 
-//async submit(e) {
-  //      e.preventDefault();
-  //      const data = {
-  //          email: this.state.email
-   //     }
 
-     //   try {
-       //     const response = await fetch('api/email/index',  {
-         //       method: 'POST',
-           //     body: JSON.stringify(data),
-            //    headers: {
-              //      'Content-Type': 'application/json'
-               // }
-            //});
-            //console.log('this.state.value before async submit(e) is: ' + this.state.value);
-            //console.log("data is: ", data);
-            //console.log("response is: ", response);
-
-
-
-
-       // }
-       // catch (err) {
-     //       console.log("ERR: ", err);
-   //     }
- //   }
 
 render() {
     return (
@@ -111,9 +87,21 @@ render() {
 
 
                     </div>
-
-
+                    
                 </form>
+
+                <span id="sent_confirm" style={{ display: "none" }}>
+                        <br />
+                        <span className="alert alert-info col" role="alert">Password sent. Please check your email for recovered password.</span>
+                        <br /> <br />
+                </span>
+
+                <span id="incorrect_info" style={{ display: "none" }}>
+                        <br />
+                        <span className="alert alert-danger col" role="alert">Invalid email</span>
+                        <br /> <br />
+                </span>
+
             </article>
 
             </div> 
