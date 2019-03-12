@@ -24,7 +24,7 @@ async handleSubmit(event){
 
     try{
         console.log("data is: ", data); 
-        const response = await fetch('api/email/index', {
+        const response = await fetch('api/email/sendPassword', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {

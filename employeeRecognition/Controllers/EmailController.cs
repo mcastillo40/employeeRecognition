@@ -52,11 +52,11 @@ namespace employeeRecognition.Controllers
 
 
         /*****************
-         TO WORK ON: METHOD FOR EMAILING RECOVERED PASSWORD
+         METHOD FOR EMAILING RECOVERED PASSWORD
         *****************/
 
         [HttpPost("[action]")]
-        public IActionResult Index([FromBody]UserAcct User)
+        public IActionResult sendPassword([FromBody]UserAcct User)
         {
             Console.WriteLine("This is emailcontroller");
 
@@ -75,55 +75,65 @@ namespace employeeRecognition.Controllers
 
             Console.WriteLine(sql);
 
-
-            DataRow row = dt.Rows[0];
-            string email = row["email"].ToString();
-            string password = row["password"].ToString();
-
-            Console.WriteLine("Email is: " + email);
-            Console.WriteLine("Password is: " + password);
-
-
-            //Email part
-
-            var message = new MimeMessage();
-
-            // Specify sender email
-            message.From.Add(new MailboxAddress("employeerecognition3@gmail.com"));
-
-            // Specify recipient email
-            message.To.Add(new MailboxAddress(email)); // replace recipient with {User.email}
-
-            // Subject
-            message.Subject = "EmployeeRecognition: Password Recovery Email";
-
-            // Body, will be formatted in HTML format
-            message.Body = new TextPart("html")
+            if (dt.Rows.Count == 0) 
             {
-                Text = "Your password is: " + password + "<br>" +
-                    "Please log in here: https://employeerecognitionproject.azurewebsites.net/"
-            };
-            // Specify info about the service, how we're going to connect to it
-            // Note: this SmtpClient is the one from Mailkit, not the deprecated one from .NET framework. They were named the same.
-
-            try {
-                using (var client = new SmtpClient()) {
-                    client.Connect("smtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
-                    client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
-                    client.Send(message);
-                    client.Disconnect(true);
-                }
-               
-                Console.WriteLine("Send Mail Success.");
-
-                return Ok();
-            }
-            catch (Exception e) {
-                Console.WriteLine("Send Mail Failed : " + e.Message);
+                Console.WriteLine("No such email found.");
                 return BadRequest();
             }
 
+            else 
+            {
+                DataRow row = dt.Rows[0];
+                string email = row["email"].ToString();
+                string password = row["password"].ToString();
+
+                Console.WriteLine("Email is: " + email);
+                Console.WriteLine("Password is: " + password);
+
+
+                //Email part
+
+                var message = new MimeMessage();
+
+                // Specify sender email
+                message.From.Add(new MailboxAddress("employeerecognition3@gmail.com"));
+
+                // Specify recipient email
+                message.To.Add(new MailboxAddress(email)); // replace recipient with {User.email}
+
+                // Subject
+                message.Subject = "EmployeeRecognition: Password Recovery Email";
+
+                // Body, will be formatted in HTML format
+                message.Body = new TextPart("html")
+                {
+                    Text = "Your password is: " + password + "<br>" +
+                        "Please log in here: https://employeerecognitionproject.azurewebsites.net/"
+                };
+                // Specify info about the service, how we're going to connect to it
+                // Note: this SmtpClient is the one from Mailkit, not the deprecated one from .NET framework. They were named the same.
+
+                try
+                {
+                    using (var client = new SmtpClient())
+                    {
+                        client.Connect("smtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
+                        client.AuthenticationMechanisms.Remove("XOAUTH2");
+                        client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
+                        client.Send(message);
+                        client.Disconnect(true);
+                    }
+
+                    Console.WriteLine("Send Mail Success.");
+
+                    return Ok();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Send Mail Failed : " + e.Message);
+                    return BadRequest();
+                }
+            }
 
 
         }
@@ -135,105 +145,6 @@ namespace employeeRecognition.Controllers
 
 
 
-        /*****************
-        // TESTER METHOD TO SEE IF EMAILING WORKS AT ALL.
-        // UPDATE: EMAILS CAN BE SENT!
-        *****************/
-        [HttpGet("[action]")]
-        public ActionResult<IEnumerable<string>> testEmail()
-        //public IActionResult testEmail()
-        {
-            var message = new MimeMessage();
-
-            // Specify sender email
-            message.From.Add(new MailboxAddress("employeerecognition3@gmail.com"));
-
-            // Specify recipient email
-            message.To.Add(new MailboxAddress("laig@oregonstate.edu")); // replace recipient with {User.email}
-
-            // Subject
-            message.Subject = "EmployeeRecognition: Password Recovery Email";
-
-            // Body, will be formatted in HTML format
-            message.Body = new TextPart("html")
-            {
-                Text = @"Test email body. " 
-            };
-            // Specify info about the service, how we're going to connect to it
-            // Note: this SmtpClient is the one from Mailkit, not the deprecated one from .NET framework. They were named the same.
-
-            try
-            {
-                using (var client = new SmtpClient())
-                {
-                    client.Connect("smtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
-
-                    // Note: since we don't have an OAuth2 token, disable
-                    // the XOAUTH2 authentication mechanism.
-                    client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                    client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
-                    client.Send(message);
-                    client.Disconnect(true);
-
-                }
-
-                Console.WriteLine("Send Mail Success.");
-
-                return new string[] { "email sent" };
-             
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Send Mail Failed : " + e.Message);
-                return new string[] { "email failed to send" };
-            }
-
-        }
-
-
-        // DUMMY METHOD, CAN REMOVE LATER
-        public IActionResult Contact() {
-            ViewData["Message"] = "Your contact page";
-            return View();
-        }
-
-
-        /*****************
-         DEMO EMAIL METHOD. DON'T NEED THIS, CAN REMOVE LATER.
-        *****************/
-        public IActionResult SendMail(string name, string email, string msg)
-        {
-            var message = new MimeMessage();
-
-            // Specify sender email
-            message.From.Add(new MailboxAddress("employeerecognition3@gmail.com"));
-
-            // Specify recipient email
-            message.To.Add(new MailboxAddress("laig@oregonstate.edu")); // replace recipient with {User.email}
-
-            // Subject
-            message.Subject = name;
-
-            // Body, will be formatted in HTML format
-            message.Body = new TextPart("html")
-            {
-                Text = "From: " + name + "<br>" +
-                "Contact information " + email + "<br>" +
-                "Message: " + msg
-            };
-            // Specify info about the service, how we're going to connect to it
-            // Note: this SmtpClient is the one from Mailkit, not the deprecated one from .NET framework. They were named the same.
-              using (var client = new SmtpClient()) {
-                client.Connect("asmtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
-                client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
-                client.Send(message);
-                client.Disconnect(false);
-              }
-
-              //When we've sent the mail, then return back to the contact page, or whatever
-            return View("Contact");
-        }
 
     }
 }
