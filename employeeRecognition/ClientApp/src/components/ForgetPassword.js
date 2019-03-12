@@ -1,6 +1,4 @@
 ﻿import React, { Component } from 'react';
-import ReactDOM from "react-dom";
-
 
 export class ForgetPassword extends Component {
   displayName = ForgetPassword.name
