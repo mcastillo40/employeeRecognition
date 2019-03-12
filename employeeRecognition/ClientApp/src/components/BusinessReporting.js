@@ -13,7 +13,7 @@ export class BusinessReporting extends Component {
             reRoute: false,
             loading: true
         };
-        this.showAward = this.showAward.bind(this);
+        this.showAward.bind(this);
         this.onChange = this.onChange.bind(this);
     }
 
@@ -50,7 +50,7 @@ export class BusinessReporting extends Component {
 
     async componentDidMount() {
         try {
-            const response = await fetch('api/users/users');
+            const response = await fetch('api/users/index');
             const data = await response.json();
             this.setState({ users: data, loading: false });
         }
