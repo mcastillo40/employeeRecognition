@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using employeeRecognition.Extensions;
 using employeeRecognition.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace employeeRecognition.Controllers
 {
@@ -19,6 +20,7 @@ namespace employeeRecognition.Controllers
         private DbConnection sqlConnection = new DbConnection();
 
         [HttpGet("[action]")]
+        [Authorize(Roles ="Admin")]
         public IEnumerable<UserAcct> Index()
         {
             List<UserAcct> list = new List<UserAcct>();
@@ -41,6 +43,7 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody]UserAcct User)
         {
             if (ModelState.IsValid)
@@ -70,6 +73,7 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize]
         //[HttpPost("content/upload-image")]
         //public IActionResult UploadSignature(int id, IFormFile files)
         public IActionResult UploadSignature(int id, IList<IFormFile> files)
@@ -97,16 +101,25 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpDelete("[action]")]
-        public void Delete(int id)
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(int id)
         {
-            String query = $"DELETE FROM userAcct WHERE userAcct.id = {id}";
+            try {
+                String query = $"DELETE FROM userAcct WHERE userAcct.id = {id}";
 
-            String sql = @query;
+                String sql = @query;
 
-            dt = sqlConnection.Connection(sql);
+                dt = sqlConnection.Connection(sql);
+                return Ok();
+            }
+            catch (Exception e) {
+                return BadRequest(new {error=e});
+            }
+
         }
 
         [HttpPut("[action]")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id, [FromBody]UserAcct User)
         {
             if (ModelState.IsValid)

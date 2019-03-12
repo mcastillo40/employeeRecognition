@@ -3,6 +3,7 @@ import { CreateButton } from '../../Shared/CreateButton';
 import { Award } from './Award';
 import { Link } from 'react-router-dom';
 import _ from 'lodash'
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class Awards extends Component {
     displayName = Awards.name
@@ -17,7 +18,8 @@ export class Awards extends Component {
 
     async componentDidMount() {
         try {
-            const response = await fetch('api/awards/nominated');
+            const {token} = AUTH_MODEL.get();
+            const response = await fetch('api/awards/nominated',  {headers: {authorization: `Bearer ${token}`}});
             const data = await response.json();
             this.setState({ awards: data, loading: false });
         }
@@ -27,12 +29,19 @@ export class Awards extends Component {
     }
 
     async handleDelete(id) {
-        let url = `api/awards/delete?id=${id}`;
-        const response = await fetch(url, {
-            method: 'DELETE',
-        });
-        if (response.ok)
-            this.setState({ awards: _.filter(this.state.awards, (award) => award.id !== id) })
+        try{
+            let url = `api/awards/delete?id=${id}`;
+            const {token} = AUTH_MODEL.get();
+            const response = await fetch(url, {
+                method: 'DELETE', headers: {authorization: `Bearer ${token}`
+            }});
+            if (response.ok)
+                this.setState({ awards: _.filter(this.state.awards, (award) => award.id !== id) })
+        }
+        catch(err){
+            console.log("ERR: ", err);
+            }
+            
     }
 
     async handleEdit(award) {

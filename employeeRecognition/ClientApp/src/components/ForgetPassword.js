@@ -1,33 +1,82 @@
 ﻿import React, { Component } from 'react';
 
 export class ForgetPassword extends Component {
-  displayName = ForgetPassword.name
-  
+    displayName = ForgetPassword.name
+
+    constructor(props){
+    super(props);
+    this.state = {
+        email: ''
+    };
+
+    this.change = this.change.bind(this);
+    this.submit = this.submit.bind(this);
+  }
+
+
+  change(e) {
+        this.setState({email: e.target.email});
+        //this.setState({
+          //  [e.target.name]: e.target.value
+        //});
+    }
+
+
+
+
+
+async submit(e) {
+        e.preventDefault();
+        const data = {
+            email: this.state.email
+        }
+
+        try {
+            const response = await fetch('api/email/index',  {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log('this.state.value before async submit(e) is: ' + this.state.value);
+            console.log("data is: ", data);
+            console.log("response is: ", response);
+
+
+
+
+        }
+        catch (err) {
+            console.log("ERR: ", err);
+        }
+    }
+
 render() {
     return (
 
       <div> {/*JSX ROOT*/}
         
-        <div class="card">
-            <article class="card-body">
-                <h4 class="card-title text-center mb-4 mt-1">RECOVER PASSWORD</h4>
+        <div className="card">
+            <article className="card-body">
+                <h4 className="card-title text-center mb-4 mt-1">RECOVER PASSWORD</h4>
 
-                <p class="text-success text-center">Please enter your email</p>
-                <form action="/login">
-                <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                <p className="text-success text-center">Please enter your email</p>
+                <form onSubmit={e => this.submit(e)}>
+                <div className="form-group">
+                <div className="input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-envelope"></i> </span>
                      </div>
-                    <input name="" class="form-control" placeholder="Email" type="email"/>
+                    <input name="" className="form-control" placeholder="Email" type="email" onChange={e => this.change(e)} value={this.state.email}/>
                 </div> 
                 </div> 
 
-            <div class="row">
-                    <div class = "col-md-6">
+            <div className="row">
+                    <div className = "col-md-6">
 
-                        <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block"> Send Recovery Password  </button>
+                        <div className="form-group">
+                        <button type="submit" className="btn btn-primary btn-block"> Send Recovery Password  </button>
                         </div>
                     </div>
 
