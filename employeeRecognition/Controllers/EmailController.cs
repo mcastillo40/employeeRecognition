@@ -21,7 +21,7 @@ using employeeRecognition.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlClient;
 using System.Data;
-
+using System.Net.Sockets;
 
 
 // https://www.youtube.com/watch?v=Y2X5wtuzuX4
@@ -100,19 +100,21 @@ namespace employeeRecognition.Controllers
             // Body, will be formatted in HTML format
             message.Body = new TextPart("html")
             {
-                Text = "Your password is: " + password
+                Text = "Your password is: " + password + "<br>" +
+                    "Please log in here: https://employeerecognitionproject.azurewebsites.net/"
             };
             // Specify info about the service, how we're going to connect to it
             // Note: this SmtpClient is the one from Mailkit, not the deprecated one from .NET framework. They were named the same.
 
             try {
-                var client = new SmtpClient();
-                
-                    client.Connect("asmtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
+                using (var client = new SmtpClient()) {
+                    client.Connect("smtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
                     client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
                     client.Send(message);
-                    client.Disconnect(false);
-                
+                    client.Disconnect(true);
+                }
+               
                 Console.WriteLine("Send Mail Success.");
 
                 return Ok();
