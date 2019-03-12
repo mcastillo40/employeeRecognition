@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-var Latex = require('react-latex');
 
 export class Addaward extends Component {
     constructor(props) {
@@ -61,7 +60,7 @@ export class Addaward extends Component {
 
     render() {
         if (this.state.reRoute) {
-            return <Redirect to="/award" />
+            return <Redirect to="/awards" />
         }
         else {
             return (
@@ -122,15 +121,8 @@ export class Addaward extends Component {
                                 placeholder="date"
                             />
                         </div>
-                        <button className="btn btn-primary" type="submit">
-                            Add Award
-                        </button>
-                    </form>
-                    <div>
-                        <h2>
-                            <Latex displayMode={true}>{this.state.type}</Latex>
-                        </h2>
-                    </div>
+                        <button className="btn btn-primary" type="submit">Add Award</button>
+                    </form>          
                 </div>
             )
         }

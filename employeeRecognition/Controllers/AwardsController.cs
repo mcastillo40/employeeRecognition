@@ -48,6 +48,31 @@ FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN user
             return list;
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<award> Business([FromBody]award Aw)
+        {
+            List<award> list2 = new List<award>();
+            String sql = $"SELECT sender.first_name as sfn, sender.last_name as sln, recipient.first_name as rfn, recipient.last_name as rln, award.type, format(award.date, 'd') as date FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN userAcct AS recipient ON recipient.id = award.recipient_user_id"
+                + $"({Aw.sender_user_id}, {Aw.recipient_user_id}, '{Aw.type}', '{Aw.date}')";
+            dt = sqlConnection.Connection(sql);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                var Award = new award();
+                Award.id = (int)row["id"];
+                Award.sender_user_id = (int)row["sender_user_id"];
+                Award.recipient_user_id = (int)row["recipient_user_id"];
+                Award.sfn = row["sfn"].ToString();
+                Award.sln = row["sln"].ToString();
+                Award.rfn = row["rfn"].ToString();
+                Award.rln = row["rln"].ToString();
+                Award.type = row["type"].ToString();
+                Award.date = row["date"].ToString();
+                list2.Add(Award);
+            }
+            return list2;
+        }
+
         [HttpPost("[action]")]
         public IActionResult Create([FromBody]award Award)
         {

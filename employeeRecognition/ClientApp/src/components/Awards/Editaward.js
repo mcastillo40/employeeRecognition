@@ -20,7 +20,7 @@ export class Editaward extends Component {
     }
 
     async componentDidMount() {
-        let response = await fetch('api/users/index')
+        let response = await fetch('api/awards/index')
         const data = await response.json();
         this.setState({ users: data });
     }
@@ -60,7 +60,7 @@ export class Editaward extends Component {
 
     render() {
         if (this.state.reRoute) {
-            return <Redirect to="/award" />
+            return <Redirect to="/awards" />
         }
         else {
             return (

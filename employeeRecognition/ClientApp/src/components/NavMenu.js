@@ -18,9 +18,9 @@ export class NavMenu extends Component {
                 <div className="navbar-nav ml-auto">
                     <NavLink className="nav-link nav-item" exact to="/login">Login</NavLink>
                     <NavLink className="nav-link nav-item" exact to="/">Home</NavLink>
-                    <NavLink className="nav-link nav-item" to="/businessreporting">Business Reporting</NavLink>
+                    <NavLink className="nav-link nav-item" to="/BusinessReporting">Business Reporting</NavLink>
                     <NavLink className="nav-link nav-item" to="/users">Users</NavLink>
-                    <NavLink className="nav-link nav-item" to="/award">Awards</NavLink>
+                    <NavLink className="nav-link nav-item" to="/awards">Awards</NavLink>
                     <NavLink className="nav-link nav-item" to="/settings">Settings</NavLink>
                 </div>
             </div>
