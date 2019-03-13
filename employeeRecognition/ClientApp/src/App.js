@@ -10,7 +10,6 @@ import { Users } from './components/Users/Users';
 import { Awards } from './components/Awards/Awards';
 import { Addaward } from './components/Awards/Addaward';
 import { Editaward } from './components/Awards/Editaward';
-import { showAward } from './components/Awards/showAward';
 import { AddUser } from './components/Users/AddUser';
 import { EditUser } from './components/Users/EditUser';
 
