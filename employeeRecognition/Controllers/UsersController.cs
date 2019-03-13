@@ -95,16 +95,11 @@ namespace employeeRecognition.Controllers
         [Authorize]
         [HttpPost("[action]")]
         public async Task<IActionResult> UploadSignature(int id)
-
-
         //[HttpPost("content/upload-image")]
         //public IActionResult UploadSignature(int id, IFormFile files)
         //public IActionResult UploadSignature(int id, [FromBody]Byte[] files)
         //public IActionResult UploadSignature(int id, [FromBody]IFormFile files)
         //public IActionResult UploadSignature(int id, IFormFile files)
-
-        [HttpDelete("[action]")]
-        public IActionResult Delete(int id)
         {
 
             var files = HttpContext.Request.Form.Files;
