@@ -30,9 +30,7 @@ export class AddUser extends Component {
         event.preventDefault();
         console.log(event.target.files[0]);
 
-        this.setState({
-            signature: event.target.files[0] 
-        })
+        this.setState({ signature: event.target.files[0] })
 
         //let reader = new FileReader();
         //let file = event.target.files[0];

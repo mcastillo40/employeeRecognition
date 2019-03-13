@@ -36,6 +36,8 @@ namespace employeeRecognition.Controllers
                 user.first_name = row["first_name"].ToString();
                 user.last_name = row["last_name"].ToString();
                 user.email = row["email"].ToString();
+                if(!Convert.IsDBNull(row["signature"]))
+                    user.signature = (Byte[])row["signature"];
                 list.Add(user);
             }
 

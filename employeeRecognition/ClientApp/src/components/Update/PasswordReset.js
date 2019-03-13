@@ -57,20 +57,18 @@ export class PasswordReset extends Component {
     render() {
         return (
             <div>
-               
-                    <input
-                        id="password"
-                        type="password"
-                        className="form-control"
-                        value={this.state.password}
-                        onChange={this.onChange}
-                        name="password"
-                        placeholder=""
-                        style={{ marginBottom: '10px' }}
-                    />
-                    <button type="submit" className="btn btn-info" onClick={this.editPassword.bind(this)} style={{ marginRight: '10px' }}>Change Password</button>
-                    <button type="button" className="btn btn-danger" onClick={this.cancelPassword}>Cancel</button>
-                
+                <input
+                    id="password"
+                    type="password"
+                    className="form-control"
+                    value={this.state.password}
+                    onChange={this.onChange}
+                    name="password"
+                    placeholder=""
+                    style={{ marginBottom: '10px' }}
+                />
+                <button type="submit" className="btn btn-info" onClick={this.editPassword.bind(this)} style={{ marginRight: '10px' }}>Change Password</button>
+                <button type="button" className="btn btn-danger" onClick={this.cancelPassword}>Cancel</button>
             </div>
         );
     }

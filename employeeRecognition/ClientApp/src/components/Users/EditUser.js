@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { PasswordReset } from '../Update/PasswordReset';
+import { ImageReset } from '../Update/ImageReset';
 
 export class EditUser extends Component {
     constructor(props) {
@@ -13,12 +14,14 @@ export class EditUser extends Component {
             email: props.location.state.user.email,
             role: props.location.state.user.role,
             reRoute: false,
-            showPasswordUpdate: false
+            showPasswordUpdate: false,
+            showImageUpdate: false
         };
 
         this.editUser.bind(this);
         this.onChange = this.onChange.bind(this);
         this.showEditPassword = this.showEditPassword.bind(this);
+        this.showEditImage = this.showEditImage.bind(this);
     }
 
     onChange(event) {
@@ -27,6 +30,10 @@ export class EditUser extends Component {
 
     showEditPassword() {
         this.setState({ showPasswordUpdate: !this.state.showPasswordUpdate });
+    }
+
+    showEditImage() {
+        this.setState({ showImageUpdate: !this.state.showImageUpdate });
     }
 
     async editUser(e) {
@@ -120,6 +127,18 @@ export class EditUser extends Component {
                                 </span>
                                 <span style={{ display: this.state.showPasswordUpdate ? 'block' : 'none' }}>
                                     <PasswordReset id={this.state.id} showEditPassword={this.showEditPassword}/>
+                                </span>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <div className="form-group">
+                                <label>Image:</label>
+                                <br />
+                                <span style={{ display: this.state.showImageUpdate ? 'none' : 'block' }}>
+                                    <button type="button" className="btn btn-secondary" onClick={this.showEditImage}>Change Image</button>
+                                </span>
+                                <span style={{ display: this.state.showImageUpdate ? 'block' : 'none' }}>
+                                    <ImageReset id={this.state.id} showEditImage={this.showEditImage} />
                                 </span>
                             </div>
                         </div>
