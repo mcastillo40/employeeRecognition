@@ -200,10 +200,6 @@ namespace employeeRecognition.Controllers
             catch (Exception e) {
                 return BadRequest(new {error=e});
             }
-
-            dt = sqlConnection.Connection(sql);
-
-            return Ok();
         }
 
         [HttpPut("[action]")]
