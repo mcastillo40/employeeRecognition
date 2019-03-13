@@ -20,7 +20,7 @@ export class Editaward extends Component {
     }
 
     async componentDidMount() {
-        let response = await fetch('api/awards/index')
+        let response = await fetch('api/users/index')
         const data = await response.json();
         this.setState({ users: data });
     }
