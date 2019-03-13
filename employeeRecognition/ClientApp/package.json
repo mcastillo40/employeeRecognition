@@ -9,6 +9,7 @@
     "lodash": "^4.17.11",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-latex": "^1.2.0",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",

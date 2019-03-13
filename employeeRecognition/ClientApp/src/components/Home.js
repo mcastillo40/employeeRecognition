@@ -13,7 +13,7 @@ export class Home extends Component {
                     <a href="/users" className="btn btn-primary btn-block">View Accounts</a>
                 </div>
                 <div className="col-md-6">
-                    <a href="/Award" className="btn btn-primary btn-block">View Awards</a>
+                    <a href="/Awards" className="btn btn-primary btn-block">View Awards</a>
                 </div>
             </div>
         </div>
