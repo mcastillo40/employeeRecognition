@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-var Latex = require('react-latex');
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class Addaward extends Component {
     constructor(props) {
@@ -25,9 +25,15 @@ export class Addaward extends Component {
     }
 
     async componentDidMount() {
-            let response = await fetch('api/users/index')
+        try {
+            const { token } = AUTH_MODEL.get();
+            const response = await fetch('api/users/index', { headers: { authorization: `Bearer ${token}` } });
             const data = await response.json();
-            this.setState({users: data});
+            this.setState({ users: data });
+        }
+        catch (err) {
+            console.log("ERR: ", err);
+        }
     }
 
     async createAward(e) {
@@ -41,13 +47,13 @@ export class Addaward extends Component {
                 time: this.state.time,
                 date: this.state.date,
             }
-
+            const { token } = AUTH_MODEL.get();
             const url = 'api/awards/create';
             const response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(awardInfo),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json', authorization: `Bearer ${token}`
                 }
             });
             console.log("data: ", awardInfo);
@@ -61,7 +67,7 @@ export class Addaward extends Component {
 
     render() {
         if (this.state.reRoute) {
-            return <Redirect to="/award" />
+            return <Redirect to="/awards" />
         }
         else {
             return (
@@ -122,15 +128,8 @@ export class Addaward extends Component {
                                 placeholder="date"
                             />
                         </div>
-                        <button className="btn btn-primary" type="submit">
-                            Add Award
-                        </button>
-                    </form>
-                    <div>
-                        <h2>
-                            <Latex displayMode={true}>{this.state.type}</Latex>
-                        </h2>
-                    </div>
+                        <button className="btn btn-primary" type="submit">Add Award</button>
+                    </form>          
                 </div>
             )
         }

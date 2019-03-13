@@ -12,6 +12,7 @@ const Award = props => {
             <TableAwards
                 handleDelete={props.handleDelete}
                 handleEdit={props.handleEdit}
+                onPrint={props.onPrint}
                 awardInfo={props.awardInfo}
             />
         </tr>
