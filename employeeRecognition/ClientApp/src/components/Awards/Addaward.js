@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class Addaward extends Component {
     constructor(props) {
@@ -24,9 +25,15 @@ export class Addaward extends Component {
     }
 
     async componentDidMount() {
-            let response = await fetch('api/users/index')
+        try {
+            const { token } = AUTH_MODEL.get();
+            const response = await fetch('api/users/index', { headers: { authorization: `Bearer ${token}` } });
             const data = await response.json();
-            this.setState({users: data});
+            this.setState({ users: data });
+        }
+        catch (err) {
+            console.log("ERR: ", err);
+        }
     }
 
     async createAward(e) {
@@ -40,13 +47,13 @@ export class Addaward extends Component {
                 time: this.state.time,
                 date: this.state.date,
             }
-
+            const { token } = AUTH_MODEL.get();
             const url = 'api/awards/create';
             const response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(awardInfo),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json', authorization: `Bearer ${token}`
                 }
             });
             console.log("data: ", awardInfo);

@@ -2,6 +2,7 @@
 import { CreateButton } from '../../Shared/CreateButton';
 import { Award } from './Award';
 import { Link } from 'react-router-dom';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 import _ from 'lodash'
 import jsPDF from 'jspdf';
 
@@ -19,7 +20,8 @@ export class Awards extends Component {
 
     async componentDidMount() {
         try {
-            const response = await fetch('api/awards/nominated');
+            const { token } = AUTH_MODEL.get();
+            const response = await fetch('api/awards/nominated', { headers: { authorization: `Bearer ${token}` } });
             const data = await response.json();
             this.setState({ awards: data, loading: false });
         }

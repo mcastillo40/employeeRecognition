@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using employeeRecognition.Extensions;
 using employeeRecognition.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace employeeRecognition.Controllers
 {
@@ -18,6 +20,7 @@ namespace employeeRecognition.Controllers
         private DbConnection sqlConnection = new DbConnection();
 
         [HttpGet("[action]")]
+        [Authorize(Roles = "User")]
         public IEnumerable<award> Nominated()
         {
             List<award> list = new List<award>();
@@ -74,6 +77,7 @@ FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN user
         }
 
         [HttpPost("[action]")]
+        [Authorize(Roles = "User")]
         public IActionResult Create([FromBody]award Award)
         {
             if (ModelState.IsValid)
@@ -96,6 +100,7 @@ FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN user
         }
 
         [HttpDelete("[action]")]
+        [Authorize(Roles = "User")]
         public void Delete(int id)
         {
             String query = $"DELETE FROM award WHERE award.id = {id}";
@@ -108,6 +113,7 @@ FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN user
         }
 
         [HttpPut("[action]")]
+        [Authorize(Roles = "User")]
         public IActionResult Edit(int id, [FromBody]award Award)
         {
             if (ModelState.IsValid)

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
+
 var util = require('util');
 
 export class AddUser extends Component {
@@ -78,7 +80,7 @@ export class AddUser extends Component {
             }
 
             console.log("PRINT: ", util.inspect(userInfo, { showHidden: false, depth: null }))
-
+            const { token } = AUTH_MODEL.get();
             let url = 'api/users/create';
             //let response = await axios.request({
             //    method: 'POST',
@@ -90,7 +92,7 @@ export class AddUser extends Component {
                 method: 'POST',
                 body: JSON.stringify(userInfo),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json', authorization: `Bearer ${token}`
                 }
             });
             const data = await response.json();
@@ -108,7 +110,7 @@ export class AddUser extends Component {
             response = await fetch(url, {
                 method: 'POST',
                 body: formData,
-                //headers: {'content-type': 'multipart/form-data' }
+                headers: { 'content-type': 'multipart/form-data' }, authorization: `Bearer ${token}`
             });
 
             //response = await axios.post(url, this.state.signature)

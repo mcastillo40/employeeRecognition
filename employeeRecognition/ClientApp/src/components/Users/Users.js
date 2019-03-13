@@ -2,6 +2,7 @@
 import { CreateButton } from '../../Shared/CreateButton';
 import { User } from './User';
 import { Link } from 'react-router-dom';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 import _ from 'lodash'
 
 export class Users extends Component {
@@ -17,7 +18,8 @@ export class Users extends Component {
 
     async componentDidMount() {
         try {
-            const response = await fetch('api/users/index');
+            const { token } = AUTH_MODEL.get();
+            const response = await fetch('api/users/index', { headers: { authorization: `Bearer ${token}` } });
             const data = await response.json();
             this.setState({ users: data, loading: false });
         }
@@ -27,12 +29,22 @@ export class Users extends Component {
     }
 
     async handleDelete(id) {
-        let url = `api/users/delete?id=${id}`;
-        const response = await fetch(url, {
-            method: 'DELETE',
-        });
-        if (response.ok)
-            this.setState({ users: _.filter(this.state.users, (user) => user.id !== id) })
+        try {
+            let url = `api/users/delete?id=${id}`;
+            const { token } = AUTH_MODEL.get();
+            const response = await fetch(url, {
+                method: 'DELETE', headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            console.log("handledelete method response is: ", response);
+            if (response.ok)
+                this.setState({ users: _.filter(this.state.users, (user) => user.id !== id) })
+        }
+
+        catch (err) {
+            console.log("ERR: ", err);
+        }
     }
 
     async handleEdit(user) {

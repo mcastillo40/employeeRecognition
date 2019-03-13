@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { PasswordReset } from '../Update/PasswordReset';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class EditUser extends Component {
     constructor(props) {
@@ -38,17 +39,23 @@ export class EditUser extends Component {
             email: this.state.email,
             role: this.state.role,
         }
-
+        
         try {
             const url = `api/users/AdminEdit?id=${this.props.location.state.user.id}`;
+            const { token } = AUTH_MODEL.get();
+
             const response = await fetch(url, {
                 method: 'PUT',
                 body: JSON.stringify(userInfo),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json', authorization: `Bearer ${token}`
                 }
             });
 
+            console.log("token is: ", token);
+            console.log("userInfo is: ", userInfo);
+            console.log("Response is: ", response);
+            
             if (response.ok)
                 this.setState({ reRoute: true });
         }
@@ -102,7 +109,7 @@ export class EditUser extends Component {
                             <label>Email:</label>
                             <input
                                 id="email"
-                                type="email"
+                                type="text"
                                 className="form-control"
                                 value={this.state.email}
                                 onChange={this.onChange}
@@ -112,6 +119,7 @@ export class EditUser extends Component {
                             />
                         </div>
                         <div className="form-group">
+
                             <div className="form-group">
                                 <label>Password:</label>
                                 <br />
@@ -122,6 +130,7 @@ export class EditUser extends Component {
                                     <PasswordReset id={this.state.id} showEditPassword={this.showEditPassword}/>
                                 </span>
                             </div>
+
                         </div>
                         <div className="form-group">
                             <label htmlFor="roleSelect">Role:</label>
@@ -139,4 +148,4 @@ export class EditUser extends Component {
             )
         }
     }
-}
+} 

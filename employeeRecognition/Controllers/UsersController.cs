@@ -10,6 +10,8 @@ using employeeRecognition.Models;
 using Microsoft.AspNetCore.Http;
 using static System.Net.Mime.MediaTypeNames;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace employeeRecognition.Controllers
 {
@@ -21,6 +23,7 @@ namespace employeeRecognition.Controllers
         private DbConnection sqlConnection = new DbConnection();
 
         [HttpGet("[action]")]
+        [Authorize]
         public IEnumerable<UserAcct> Index()
         {
             List<UserAcct> list = new List<UserAcct>();
@@ -61,6 +64,7 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody]UserAcct User)
         {
             if (ModelState.IsValid)
@@ -88,9 +92,10 @@ namespace employeeRecognition.Controllers
                 return BadRequest();
             }
         }
-
+        [Authorize]
         [HttpPost("[action]")]
         public async Task<IActionResult> UploadSignature(int id)
+
         //[HttpPost("content/upload-image")]
         //public IActionResult UploadSignature(int id, IFormFile files)
         //public IActionResult UploadSignature(int id, [FromBody]Byte[] files)
@@ -181,16 +186,26 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpDelete("[action]")]
-        public void Delete(int id)
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(int id)
         {
-            string query = $"DELETE FROM userAcct WHERE userAcct.id = {id}";
-            string sql = @query;
+            try {
+                String query = $"DELETE FROM userAcct WHERE userAcct.id = {id}";
 
-            dt = sqlConnection.Connection(sql);
+                String sql = @query;
+
+                dt = sqlConnection.Connection(sql);
+                return Ok();
+            }
+            catch (Exception e) {
+                return BadRequest(new {error=e});
+            }
         }
 
         [HttpPut("[action]")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AdminEdit(int id, [FromBody]UserAcct User)
+
         {
             if (ModelState.IsValid)
             {
@@ -209,6 +224,7 @@ namespace employeeRecognition.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("[action]")]
         public IActionResult UserEdit(int id, [FromBody]UserAcct User)
         {
@@ -229,6 +245,7 @@ namespace employeeRecognition.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("[action]")]
         public IActionResult EditPassword(int id, [FromBody]UserAcct User)
         {
