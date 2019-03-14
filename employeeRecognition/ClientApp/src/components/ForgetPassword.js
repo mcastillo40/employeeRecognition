@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 
 export class ForgetPassword extends Component {
     displayName = ForgetPassword.name
@@ -38,10 +38,14 @@ async handleSubmit(event){
         if (response.ok){
             var mySpan = document.getElementById('sent_confirm');
             mySpan.style.display = "";
+            mySpan = document.getElementById('incorrect_info');
+            mySpan.style.display = 'none';
         }
         else{
               var mySpan = document.getElementById('incorrect_info');
-              mySpan.style.display = "";
+            mySpan.style.display = "";
+              mySpan = document.getElementById('sent_confirm');
+            mySpan.style.display = 'none';
         }
 
     
