@@ -15,12 +15,9 @@ using MimeKit;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 
-using employeeRecognition.Extensions;
+
 using employeeRecognition.Models;
 
-using Microsoft.AspNetCore.Authorization;
-using System.Data.SqlClient;
-using System.Data;
 using System.Net.Sockets;
 
 
@@ -142,7 +139,70 @@ namespace employeeRecognition.Controllers
         /*****************
          TO WORK ON: METHOD FOR EMAILING ATTACHMENT (SEND CERTIFICATE)
         *****************/
+        //Test url:  /api/email/attach
+        [HttpGet("[action]")]
+        public ActionResult<IEnumerable<string>> attach()
+        //public IActionResult testEmail()
+        {
+            var message = new MimeMessage();
 
+            // Specify sender email
+            message.From.Add(new MailboxAddress("employeerecognition3@gmail.com"));
+
+            // Specify recipient email
+            message.To.Add(new MailboxAddress("laig@oregonstate.edu")); // replace recipient with {User.email}
+
+            // Subject
+            message.Subject = "EmployeeRecognition: Password Recovery Email";
+
+
+            // Builder: Set plain-text version of the message text
+            var builder = new BodyBuilder();
+
+            // Body, will be formatted in HTML format
+            builder.TextBody = @"This is the text body";
+
+            // Attachment
+            builder.Attachments.Add(@"/Users/Geneva/Desktop/CS467/award.pdf");
+
+            message.Body = builder.ToMessageBody();
+
+            //message.Body = new TextPart("html")
+            //{
+            //    Text = @"Test email body. "
+            //};
+
+            // Specify info about the service, how we're going to connect to it
+            // Note: this SmtpClient is the one from Mailkit, not the deprecated one from .NET framework. They were named the same.
+
+            try
+            {
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
+
+                    // Note: since we don't have an OAuth2 token, disable
+                    // the XOAUTH2 authentication mechanism.
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
+
+                    client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
+                    client.Send(message);
+                    client.Disconnect(true);
+
+                }
+
+                Console.WriteLine("Send Mail Success.");
+
+                return new string[] { "email sent" };
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Send Mail Failed : " + e.Message);
+                return new string[] { "email failed to send" };
+            }
+
+        }
 
 
 
