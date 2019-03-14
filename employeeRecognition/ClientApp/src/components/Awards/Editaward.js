@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class Editaward extends Component {
     constructor(props) {
@@ -20,9 +21,15 @@ export class Editaward extends Component {
     }
 
     async componentDidMount() {
-        let response = await fetch('api/users/index')
-        const data = await response.json();
-        this.setState({ users: data });
+        try {
+            const { token } = AUTH_MODEL.get();
+            const response = await fetch('api/users/index', { headers: { authorization: `Bearer ${token}` } });
+            const data = await response.json();
+            this.setState({ users: data });
+        }
+        catch (err) {
+            console.log("ERR: ", err);
+        }
     }
 
     onChange(event) {
@@ -40,13 +47,13 @@ export class Editaward extends Component {
                 time: this.state.time,
                 date: this.state.date,
             }
-
+            const { token } = AUTH_MODEL.get();
             const url = `api/Awards/edit?id=${this.props.location.state.award.id}`;
             const response = await fetch(url, {
                 method: 'PUT',
                 body: JSON.stringify(awardInfo),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json', authorization: `Bearer ${token}`
                 }
             });
 
@@ -60,7 +67,7 @@ export class Editaward extends Component {
 
     render() {
         if (this.state.reRoute) {
-            return <Redirect to="/award" />
+            return <Redirect to="/awards" />
         }
         else {
             return (

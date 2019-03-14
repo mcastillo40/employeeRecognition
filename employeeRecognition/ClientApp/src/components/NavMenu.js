@@ -66,5 +66,5 @@ export class NavMenu extends Component {
                 </div>
             </nav>
         );
-  }
+    }
 }

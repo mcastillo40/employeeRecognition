@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using employeeRecognition.Extensions;
 using employeeRecognition.Models;
 using Microsoft.AspNetCore.Http;
+using static System.Net.Mime.MediaTypeNames;
+using System.IO;
 using Microsoft.AspNetCore.Authorization;
 
 namespace employeeRecognition.Controllers
@@ -20,12 +22,12 @@ namespace employeeRecognition.Controllers
         private DbConnection sqlConnection = new DbConnection();
 
         [HttpGet("[action]")]
-        [Authorize(Roles ="Admin")]
+        [Authorize]
         public IEnumerable<UserAcct> Index()
         {
             List<UserAcct> list = new List<UserAcct>();
 
-            String sql = @"SELECT * FROM userAcct";
+            string sql = @"SELECT * FROM userAcct";
 
             dt = sqlConnection.Connection(sql);
 
@@ -42,6 +44,24 @@ namespace employeeRecognition.Controllers
             return list;
         }
 
+        [HttpGet("[action]")]
+        public IActionResult getUser(int id)
+        {
+            string sql = $"SELECT userAcct.id, userAcct.first_name, userAcct.last_name, userAcct.email FROM userAcct WHERE userAcct.id={id}";
+
+            dt = sqlConnection.Connection(sql);
+           
+            DataRow row = dt.Rows[0];
+
+            var user_info = new {
+                first_name = row["first_name"].ToString(),
+                last_name = row["last_name"].ToString(),
+                email = row["email"].ToString(),
+            };
+
+            return new ObjectResult(user_info) { StatusCode = 200 };
+        }
+
         [HttpPost("[action]")]
         [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody]UserAcct User)
@@ -50,11 +70,11 @@ namespace employeeRecognition.Controllers
             {
                 List<UserAcct> list = new List<UserAcct>();
 
-                String query = $"INSERT INTO userAcct(first_name, last_name, password, email, role) VALUES" +
+                string query = $"INSERT INTO userAcct(first_name, last_name, password, email, role) VALUES" +
                     $"('{User.first_name}', '{User.last_name}', '{User.password}', '{User.email}', {User.role})" +
                     " SELECT id FROM userAcct WHERE id = SCOPE_IDENTITY()";
 
-                String sql = @query;
+                string sql = @query;
 
                 dt = sqlConnection.Connection(sql);
 
@@ -72,31 +92,60 @@ namespace employeeRecognition.Controllers
             }
         }
 
-        [HttpPost("[action]")]
         [Authorize]
-        //[HttpPost("content/upload-image")]
-        //public IActionResult UploadSignature(int id, IFormFile files)
-        public IActionResult UploadSignature(int id, IList<IFormFile> files)
-        //public IActionResult UploadSignature(int id, IFormFile files)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UploadSignature(int id)
         {
-            Console.WriteLine("USER: " + id);
-            Console.WriteLine("Files: " + files);
+            var files = HttpContext.Request.Form.Files;
 
-            if (ModelState.IsValid)
+            long size = files.Sum(f => f.Length);
+
+            //// full path to file in temp location
+            var filePath = Path.GetTempFileName();
+
+            try
             {
-                String query = $"UPDATE userAcct set signature='{files}' WHERE userAcct.id={id}";
-
-                String sql = @query;
-
-                Console.WriteLine("QUERY: " + sql);
-
-                dt = sqlConnection.Connection(sql);
-
-                return Ok();
+                foreach (var formFile in files)
+                {
+                    if (formFile.Length > 0)
+                    {
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await formFile.CopyToAsync(stream);
+                        }
+                    }
+                }
             }
-            else
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(new { Error = e });
+            }
+
+            byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+
+            try
+            {
+                string query = $"UPDATE userAcct set signature=@binaryValue WHERE userAcct.id={id}";
+                string connectionString = @"Data Source = tcp:erraisqlserver.database.windows.net,1433;Initial Catalog=EmployeeDB;Persist Security Info=False;User ID=erraiadmin;Password=DBaccess3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
+                SqlConnection con = new SqlConnection(connectionString);
+                string sql = @query;
+
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    SqlParameter sqlParam = cmd.Parameters.AddWithValue("@binaryValue", bytes);
+                    sqlParam.DbType = DbType.Binary;
+                    cmd.ExecuteNonQuery();
+                }
+
+                con.Close();
+
+                return StatusCode(201);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Error = e });
             }
         }
 
@@ -115,20 +164,16 @@ namespace employeeRecognition.Controllers
             catch (Exception e) {
                 return BadRequest(new {error=e});
             }
-
         }
 
         [HttpPut("[action]")]
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(int id, [FromBody]UserAcct User)
+        public IActionResult AdminEdit(int id, [FromBody]UserAcct User)
         {
             if (ModelState.IsValid)
             {
-                String query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', password='{User.password}', email='{User.email}', role={User.role}, signature='{User.signature}' WHERE userAcct.id={id}";
-
-                String sql = @query;
-
-                Console.WriteLine("QUERY: " + sql);
+                string query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', email='{User.email}', role={User.role} WHERE userAcct.id={id}";
+                string sql = @query;
 
                 dt = sqlConnection.Connection(sql);
 
@@ -140,5 +185,42 @@ namespace employeeRecognition.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPut("[action]")]
+        public IActionResult UserEdit(int id, [FromBody]UserAcct User)
+        {
+            if (ModelState.IsValid)
+            {
+                string query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', email='{User.email}' WHERE userAcct.id={id}";
+                string sql = @query;
+
+                dt = sqlConnection.Connection(sql);
+
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPut("[action]")]
+        public IActionResult EditPassword(int id, [FromBody]UserAcct User)
+        {
+            try 
+            {
+                string query = $"Update userAcct set password='{User.password}' WHERE userAcct.id={id}";
+                string sql = @query;
+
+                dt = sqlConnection.Connection(sql);
+
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return BadRequest(new { Error = e });
+            }
+        }
     }
 }

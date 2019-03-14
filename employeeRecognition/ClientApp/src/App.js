@@ -1,17 +1,15 @@
-
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { Login } from './components/Login';
 import { SignUp } from './components/SignUp';
-import { Settings } from './components/Settings';
+import { Settings } from './components/Settings/Settings';
 import { BusinessReporting } from './components/BusinessReporting';
 import { Users } from './components/Users/Users';
 import { Awards } from './components/Awards/Awards';
 import { Addaward } from './components/Awards/Addaward';
 import { Editaward } from './components/Awards/Editaward';
-import { showAward } from './components/Awards/showAward';
 import { AddUser } from './components/Users/AddUser';
 import { EditUser } from './components/Users/EditUser';
 
@@ -21,6 +19,7 @@ import { ForgetPassword } from './components/ForgetPassword';
 
 //import AuthenticatedComponent from './components/Auth/AuthenticatedComponent';
 import { PrivateRoute } from './Shared/Auth/PrivateRoute';
+
 
 
 
@@ -50,4 +49,5 @@ export default class App extends Component {
       </Layout>
     );
   }
+
 }
