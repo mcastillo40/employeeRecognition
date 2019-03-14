@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class PasswordReset extends Component {
     constructor(props) {
@@ -28,12 +29,15 @@ export class PasswordReset extends Component {
             let data = { password: this.state.password };
 
             try {
+                const { token } = AUTH_MODEL.get();
                 const url = `api/users/editpassword?id=${this.props.id}`;
+
                 const response = await fetch(url, {
                     method: 'PUT',
                     body: JSON.stringify(data),
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        authorization: `Bearer ${token}`
                     }
                 });
 
@@ -57,20 +61,18 @@ export class PasswordReset extends Component {
     render() {
         return (
             <div>
-               
-                    <input
-                        id="password"
-                        type="password"
-                        className="form-control"
-                        value={this.state.password}
-                        onChange={this.onChange}
-                        name="password"
-                        placeholder=""
-                        style={{ marginBottom: '10px' }}
-                    />
-                    <button type="submit" className="btn btn-info" onClick={this.editPassword.bind(this)} style={{ marginRight: '10px' }}>Change Password</button>
-                    <button type="button" className="btn btn-danger" onClick={this.cancelPassword}>Cancel</button>
-                
+                <input
+                    id="password"
+                    type="password"
+                    className="form-control"
+                    value={this.state.password}
+                    onChange={this.onChange}
+                    name="password"
+                    placeholder=""
+                    style={{ marginBottom: '10px' }}
+                />
+                <button type="submit" className="btn btn-info" onClick={this.editPassword.bind(this)} style={{ marginRight: '10px' }}>Change Password</button>
+                <button type="button" className="btn btn-danger" onClick={this.cancelPassword}>Cancel</button>
             </div>
         );
     }

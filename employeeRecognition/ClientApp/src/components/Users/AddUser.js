@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 var util = require('util');
@@ -16,7 +16,8 @@ export class AddUser extends Component {
             role: 0,
             signature: '',
             imagePreviewUrl: '',
-            reRoute: false,
+           // reRoute: false,
+            loading: false
         };
 
         this.createUser.bind(this);
@@ -35,38 +36,13 @@ export class AddUser extends Component {
         this.setState({
             signature: event.target.files[0] 
         })
-
-        //let reader = new FileReader();
-        //let file = event.target.files[0];
-
-        //reader.onloadend = () => {
-        //    this.setState({
-        //        signature: file,
-        //        imagePreviewUrl: reader.result
-        //    })
-        //}
-        //reader.readAsDataURL(file);
     }
 
     async createUser(e) {
         e.preventDefault();
 
-        console.log("SIGNATURE 1: ", this.state.signature)
-
         try {
-            // Modify image to be uploaded
-            //const data = this.state.imagePreviewUrl.split(',')[1];
-            //let raw = window.atob(data);
-            //let rawLength = raw.length;
-            //let array = new Uint8Array(new ArrayBuffer(rawLength));
-            //for (let i = 0; i < rawLength; i++)
-            //    array[i] = raw.charCodeAt(i);
-
-            //let image = [];
-
-            //for (let i = 0; i < rawLength; i++)
-            //    image.push((array[i]));
-
+            this.setState({ loading: true });
 
             // Upload user information
             let userInfo = {
@@ -75,24 +51,17 @@ export class AddUser extends Component {
                 email: this.state.email,
                 password: this.state.password,
                 role: this.state.role,
-                //signature: this.state.signature,
-                //signature: image
             }
 
-            console.log("PRINT: ", util.inspect(userInfo, { showHidden: false, depth: null }))
             const { token } = AUTH_MODEL.get();
             let url = 'api/users/create';
-            //let response = await axios.request({
-            //    method: 'POST',
-            //    url: url,
-            //    data: userInfo
-            //});
 
             let response = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(userInfo),
                 headers: {
-                    'Content-Type': 'application/json', authorization: `Bearer ${token}`
+                    'Content-Type': 'application/json',
+                    authorization: `Bearer ${token}`
                 }
             });
             const data = await response.json();
@@ -102,21 +71,19 @@ export class AddUser extends Component {
             url = `api/users/uploadsignature?id=${id}`
             let formData = new FormData();
 
-            //console.log("PRINT Signature: ", util.inspect(this.state.signature, { showHidden: false, depth: null }))
-            //console.log("PRINT Signature: ", util.inspect(this.state.signature.name, { showHidden: false, depth: null }))
-
             formData.append('signature', this.state.signature, this.state.signature.name);
 
             response = await fetch(url, {
                 method: 'POST',
                 body: formData,
-                headers: { 'content-type': 'multipart/form-data' }, authorization: `Bearer ${token}`
+                headers: { authorization: `Bearer ${token}` }
             });
 
-            //response = await axios.post(url, this.state.signature)
-
-            if (response.status === 201)
-                this.setState({ reRoute: true });
+            if (response.status === 201) {
+                this.props.history.push({
+                    pathname: '/users'
+                })
+            }
         }
         catch (err) {
             console.log("err: ", err);
@@ -124,8 +91,8 @@ export class AddUser extends Component {
     }
 
     render() {
-        if (this.state.reRoute) {
-            return <Redirect to="/users" />
+        if (this.state.loading) {
+            return ( <div> <p><em>Creating Employee...</em></p> </div> )
         }
         else {
             return (
@@ -146,6 +113,7 @@ export class AddUser extends Component {
                                 name="first_name"
                                 placeholder="First Name"
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -157,6 +125,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="last_name"
                                 placeholder="Last Name"
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -168,6 +137,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="email"
                                 placeholder="Email"
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -179,6 +149,7 @@ export class AddUser extends Component {
                                 onChange={this.onChange}
                                 name="password"
                                 placeholder="Password"
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -191,7 +162,7 @@ export class AddUser extends Component {
                         <div className="form-group">
                             <label htmlFor="roleSelect">Upload Signature:</label>
                             <input
-                                style={{ display: 'none'}}
+                                style={{ display: 'none' }}
                                 id="signature"
                                 name="signature"
                                 type="file"
@@ -199,11 +170,12 @@ export class AddUser extends Component {
                                 onChange={this.signatureOnChange}
                                 ref={fileInput => this.fileInput = fileInput}
                             />
-                            <button type="button" className="btn btn-secondary" onClick={() => this.fileInput.click()}>Pick Image</button>
+                            <button type="button" className="btn btn-secondary" style={{ marginLeft: '10px' }} onClick={() => this.fileInput.click()}>Pick Image</button>
                         </div>
-                        <button className="btn btn-primary" type="submit">
+                        <button className="btn btn-primary" type="submit" style={{ marginRight: '10px' }}>
                             Add Employee
                         </button>
+                        <Link to="/Users"><button type="button" className="btn btn-danger">Cancel</button></Link>
                     </form>
                 </div>
             )

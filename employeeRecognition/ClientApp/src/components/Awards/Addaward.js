@@ -27,7 +27,9 @@ export class Addaward extends Component {
     async componentDidMount() {
         try {
             const { token } = AUTH_MODEL.get();
-            const response = await fetch('api/users/index', { headers: { authorization: `Bearer ${token}` } });
+            const response = await fetch('api/users/index', {
+                    headers: { authorization: `Bearer ${token}` }
+                });
             const data = await response.json();
             this.setState({ users: data });
         }
@@ -53,7 +55,8 @@ export class Addaward extends Component {
                 method: 'POST',
                 body: JSON.stringify(awardInfo),
                 headers: {
-                    'Content-Type': 'application/json', authorization: `Bearer ${token}`
+                    'Content-Type': 'application/json',
+                    authorization: `Bearer ${token}`
                 }
             });
             console.log("data: ", awardInfo);

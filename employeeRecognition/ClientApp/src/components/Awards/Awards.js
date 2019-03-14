@@ -3,8 +3,8 @@ import { CreateButton } from '../../Shared/CreateButton';
 import { Award } from './Award';
 import { Link } from 'react-router-dom';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
-import _ from 'lodash'
 import jsPDF from 'jspdf';
+import _ from 'lodash';
 
 export class Awards extends Component {
     displayName = Awards.name
@@ -22,6 +22,7 @@ export class Awards extends Component {
         try {
             const { token } = AUTH_MODEL.get();
             const response = await fetch('api/awards/nominated', { headers: { authorization: `Bearer ${token}` } });
+
             const data = await response.json();
             this.setState({ awards: data, loading: false });
         }
@@ -29,6 +30,7 @@ export class Awards extends Component {
             console.log("ERR: ", err);
         }
     }
+
     async onPrint(award) {
         // Use http://dataurl.net/#dataurlmaker
 
@@ -46,10 +48,14 @@ export class Awards extends Component {
     }
 
     async handleDelete(id) {
+        const { token } = AUTH_MODEL.get();
         let url = `api/awards/delete?id=${id}`;
+
         const response = await fetch(url, {
             method: 'DELETE',
+            headers: { authorization: `Bearer ${token}` }
         });
+
         if (response.ok)
             this.setState({ awards: _.filter(this.state.awards, (award) => award.id !== id) })
     }

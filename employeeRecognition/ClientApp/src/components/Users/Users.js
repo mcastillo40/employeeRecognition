@@ -20,6 +20,7 @@ export class Users extends Component {
         try {
             const { token } = AUTH_MODEL.get();
             const response = await fetch('api/users/index', { headers: { authorization: `Bearer ${token}` } });
+
             const data = await response.json();
             this.setState({ users: data, loading: false });
         }
@@ -32,12 +33,12 @@ export class Users extends Component {
         try {
             let url = `api/users/delete?id=${id}`;
             const { token } = AUTH_MODEL.get();
+
             const response = await fetch(url, {
-                method: 'DELETE', headers: {
-                    authorization: `Bearer ${token}`
-                }
+                method: 'DELETE',
+                headers: { authorization: `Bearer ${token}` }
             });
-            console.log("handledelete method response is: ", response);
+
             if (response.ok)
                 this.setState({ users: _.filter(this.state.users, (user) => user.id !== id) })
         }

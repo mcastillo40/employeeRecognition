@@ -92,36 +92,20 @@ namespace employeeRecognition.Controllers
                 return BadRequest();
             }
         }
+
         [Authorize]
         [HttpPost("[action]")]
         public async Task<IActionResult> UploadSignature(int id)
-        //[HttpPost("content/upload-image")]
-        //public IActionResult UploadSignature(int id, IFormFile files)
-        //public IActionResult UploadSignature(int id, [FromBody]Byte[] files)
-        //public IActionResult UploadSignature(int id, [FromBody]IFormFile files)
-        //public IActionResult UploadSignature(int id, IFormFile files)
         {
-
             var files = HttpContext.Request.Form.Files;
-            Console.WriteLine("USER: " + id);
-            Console.WriteLine("Files: " + files[0].FileName);
 
             long size = files.Sum(f => f.Length);
-
 
             //// full path to file in temp location
             var filePath = Path.GetTempFileName();
 
-            //using (FileStream fs = new FileStream(filePath, FileMode.Open)
-            //{
-            //     BinaryReader fileReader = new BinaryReader(filePath);
-            //    data = fileReader.ReadBytes((int)document.Length);
-            //    fs.Close(); // don't forget to close file stream
-            //}
-
             try
             {
-
                 foreach (var formFile in files)
                 {
                     if (formFile.Length > 0)
@@ -132,55 +116,36 @@ namespace employeeRecognition.Controllers
                         }
                     }
                 }
-
-                Console.WriteLine("PATH: " + filePath);   
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR: " + e);
                 return BadRequest(new { Error = e });
             }
 
             byte[] bytes = System.IO.File.ReadAllBytes(filePath);
-            //byte[] fileData = null;
-
-            //using (FileStream fs = System.IO.File.OpenRead(files))
-            //{
-            //    var binaryReader = new BinaryReader(fs);
-            //    fileData = binaryReader.ReadBytes((int)fs.Length);
-            //}
 
             try
             {
-                //String query = $"UPDATE userAcct set signature='{bytes}' WHERE userAcct.id={id}";
-                string query = $"UPDATE dbo.userAcct set signature=@binaryValue WHERE userAcct.id={id}";
+                string query = $"UPDATE userAcct set signature=@binaryValue WHERE userAcct.id={id}";
                 string connectionString = @"Data Source = tcp:erraisqlserver.database.windows.net,1433;Initial Catalog=EmployeeDB;Persist Security Info=False;User ID=erraiadmin;Password=DBaccess3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
                 SqlConnection con = new SqlConnection(connectionString);
                 string sql = @query;
 
-                Console.WriteLine("QUERY: " + sql);
-
-                //dt = sqlConnection.Connection(sql);
-
-                //Console.WriteLine("DT 2: " + dt);
                 con.Open();
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    // Replace 8000, below, with the correct size of the field
-                    cmd.Parameters.AddWithValue("@binaryValue", SqlDbType.VarBinary).Value = bytes;
+                    SqlParameter sqlParam = cmd.Parameters.AddWithValue("@binaryValue", bytes);
+                    sqlParam.DbType = DbType.Binary;
                     cmd.ExecuteNonQuery();
                 }
 
                 con.Close();
 
-                return Ok();
+                return StatusCode(201);
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR: " + e);
                 return BadRequest(new { Error = e });
             }
         }
@@ -212,8 +177,6 @@ namespace employeeRecognition.Controllers
                 string query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', email='{User.email}', role={User.role} WHERE userAcct.id={id}";
                 string sql = @query;
 
-                Console.WriteLine("QUERY: " + sql);
-
                 dt = sqlConnection.Connection(sql);
 
                 return Ok();
@@ -232,8 +195,6 @@ namespace employeeRecognition.Controllers
             {
                 string query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', email='{User.email}' WHERE userAcct.id={id}";
                 string sql = @query;
-
-                Console.WriteLine("QUERY: " + sql);
 
                 dt = sqlConnection.Connection(sql);
 
