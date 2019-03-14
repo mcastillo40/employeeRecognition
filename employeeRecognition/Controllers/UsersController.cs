@@ -118,7 +118,6 @@ namespace employeeRecognition.Controllers
 
             try
             {
-
                 foreach (var formFile in files)
                 {
                     if (formFile.Length > 0)
