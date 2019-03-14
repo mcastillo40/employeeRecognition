@@ -4,7 +4,6 @@ import { User } from './User';
 import { Link } from 'react-router-dom';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 import _ from 'lodash'
-import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class Users extends Component {
     displayName = Users.name
