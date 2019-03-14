@@ -4,6 +4,7 @@ import { User } from './User';
 import { Link } from 'react-router-dom';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 import _ from 'lodash'
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class Users extends Component {
     displayName = Users.name
@@ -18,6 +19,7 @@ export class Users extends Component {
 
     async componentDidMount() {
         try {
+
             const { token } = AUTH_MODEL.get();
             const response = await fetch('api/users/index', { headers: { authorization: `Bearer ${token}` } });
 
@@ -49,10 +51,23 @@ export class Users extends Component {
     }
 
     async handleEdit(user) {
-        this.props.history.push({
-            pathname: '/editUser',
-            state: { user }
-        })
+        try{
+            let url = `api/users/edit?id=${user.id}`;
+            const {token} = AUTH_MODEL.get();
+            const response = await fetch(url, {
+                headers: {authorization: `Bearer ${token}`
+                }});
+            console.log("handleEdit method response is: ", response);
+            if (response.ok)
+                this.props.history.push({
+                pathname: '/editUser',
+                state: { user }})
+            
+        }
+
+        catch(err){
+            console.log("ERR: ", err);
+            }
     }
 
     static renderUsersTable(users, handleDelete, handleEdit) {

@@ -13,35 +13,41 @@ import { Editaward } from './components/Awards/Editaward';
 import { AddUser } from './components/Users/AddUser';
 import { EditUser } from './components/Users/EditUser';
 
+
 import { ForgetPassword } from './components/ForgetPassword';
 
 
 //import AuthenticatedComponent from './components/Auth/AuthenticatedComponent';
 import { PrivateRoute } from './Shared/Auth/PrivateRoute';
 
+
+
+
+
 export default class App extends Component {
-    displayName = App.name
+  displayName = App.name
 
-    render() {
-        return (
+  render() {
+    return (
 
-            <Layout>
-                <Switch>
-                    <Route path='/login' component={Login} />
-                    <PrivateRoute exact path='/' component={Home} />
-                    <PrivateRoute path='/signup' roles={['Admin']} component={SignUp} />
-                    <PrivateRoute path='/ForgetPassword' component={ForgetPassword} />
-                    <PrivateRoute path='/businessreporting' roles={['Admin']} component={BusinessReporting} />
-                    <PrivateRoute path='/users' roles={['Admin']} component={Users} />
-                    <PrivateRoute path='/awards' roles={['User']} component={Awards} />
-                    <PrivateRoute path='/settings' component={Settings} />
-                    <PrivateRoute path='/addUser' roles={['Admin']} component={AddUser} />
-                    <PrivateRoute path='/editUser' roles={['Admin']} component={EditUser} />
-                    <PrivateRoute path='/Addaward' roles={['User']} component={Addaward} />
-                    <PrivateRoute path='/Editaward' roles={['User']} component={Editaward} />
-                </Switch>
+        <Layout>
+            <Switch>
+                <Route path='/login' component={Login} />
+                <PrivateRoute exact path='/' component={Home} />
+                <PrivateRoute path='/signup' roles={['Admin']} component={SignUp} />
+                <Route path='/ForgetPassword' component={ForgetPassword} />
+                <PrivateRoute path='/businessreporting' roles={['Admin']} component={BusinessReporting} />
+                <PrivateRoute path='/users' roles={['Admin']} component={Users} />
+                <PrivateRoute path='/awards' roles={['User']} component={Awards} />
+                <PrivateRoute path='/settings' component={Settings} />
+                <PrivateRoute path='/addUser' roles={['Admin']} component={AddUser} />
+                <PrivateRoute path='/editUser' roles={['Admin']} component={EditUser} />
+                <PrivateRoute path='/Addaward' roles={['User']} component={Addaward} />
+                <PrivateRoute path='/Editaward' roles={['User']} component={Editaward} />
+            </Switch>
 
-            </Layout>
-        );
-    }
+      </Layout>
+    );
+  }
+
 }

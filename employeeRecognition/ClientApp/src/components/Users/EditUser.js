@@ -44,6 +44,8 @@ export class EditUser extends Component {
             const url = `api/users/AdminEdit?id=${this.props.location.state.user.id}`;
             const { token } = AUTH_MODEL.get();
 
+
+
             const response = await fetch(url, {
                 method: 'PUT',
                 body: JSON.stringify(userInfo),

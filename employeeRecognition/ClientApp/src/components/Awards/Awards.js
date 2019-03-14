@@ -2,9 +2,11 @@
 import { CreateButton } from '../../Shared/CreateButton';
 import { Award } from './Award';
 import { Link } from 'react-router-dom';
+
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 import jsPDF from 'jspdf';
 import _ from 'lodash';
+
 
 export class Awards extends Component {
     displayName = Awards.name
@@ -20,6 +22,7 @@ export class Awards extends Component {
 
     async componentDidMount() {
         try {
+
             const { token } = AUTH_MODEL.get();
             const response = await fetch('api/awards/nominated', { headers: { authorization: `Bearer ${token}` } });
 
@@ -48,6 +51,7 @@ export class Awards extends Component {
     }
 
     async handleDelete(id) {
+
         const { token } = AUTH_MODEL.get();
         let url = `api/awards/delete?id=${id}`;
 

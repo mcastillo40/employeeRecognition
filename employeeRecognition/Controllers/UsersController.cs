@@ -12,7 +12,6 @@ using static System.Net.Mime.MediaTypeNames;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace employeeRecognition.Controllers
 {
     [Route("api/[controller]")]
@@ -170,7 +169,6 @@ namespace employeeRecognition.Controllers
         [HttpPut("[action]")]
         [Authorize(Roles = "Admin")]
         public IActionResult AdminEdit(int id, [FromBody]UserAcct User)
-
         {
             if (ModelState.IsValid)
             {
