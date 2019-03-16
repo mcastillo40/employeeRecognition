@@ -99,9 +99,9 @@ export class BusinessReporting extends Component {
                     id="filtersender"
                     onSubmit={this.showAward}
                 >
-                    <div classname="form-group">
-                        <label htmlfor="typeselect">Select sender id from name:</label>
-                        <select classname="form-control" name="sender_user_id" id="sender_user_id" value={this.state.sender_user_id} onChange={this.onChange}>
+                    <div className="form-group">
+                        <label htmlFor="typeselect">Select By Sender:</label>
+                        <select className="form-control" name="sender_user_id" id="sender_user_id" value={this.state.sender_user_id} onChange={this.onChange}>
                             {this.state.users.map(user => (
                                 <option value={user.id}>
                                     {user.first_name} {user.last_name}
@@ -109,37 +109,37 @@ export class BusinessReporting extends Component {
                             ))}
                         </select>
                     </div>
-                    <button classname="btn btn-primary" type="submit">display</button>
+                    <button className="btn btn-primary" type="submit">display</button>
                     </form>
                 <form
                     id="filterrecipient"
                     onSubmit={this.showAward}
                 >
-                    <div classname="form-group">
-                        <label htmlfor="typeselect">Select recipient id from name:</label>
-                        <select classname="form-control" name="recipient_user_id" id="recipient_user_id" value={this.state.recipient_user_id} onChange={this.onChange}>
+                    <div className="form-group">
+                        <label htmlFor="typeselect">Select By Recipient:</label>
+                        <select className="form-control" name="recipient_user_id" id="recipient_user_id" value={this.state.recipient_user_id} onChange={this.onChange}>
                             {this.state.users.map(user => (
                                 <option value={user.id}>
                                     {user.first_name} {user.last_name}
                                 </option>
                             ))}
                         </select>
+                        <button className="btn btn-primary" type="submit">display</button>
                     </div>
-                    <button classname="btn btn-primary" type="submit">display</button>
                 </form>
                 <form
                     id="filtertype"
                     onSubmit={this.showAward}
                 >
-                    <div classname="form-group">
-                        <label htmlfor="typeselect">type:</label>
-                        <select classname="form-control" name="type" id="typeselect" value={this.state.type} onChange={this.onChange}>
+                    <div className="form-group">
+                        <label htmlFor="typeselect">Select By Type:</label>
+                        <select className="form-control" name="type" id="typeselect" value={this.state.type} onChange={this.onChange}>
                             <option value="Service">Service</option>
                             <option value="Performance">Performance</option>
                             <option value="Team Work">Team Work</option>
                         </select>
                     </div>
-                    <button classname="btn btn-primary" type="submit">display</button>
+                    <button className="btn btn-primary" type="submit">display</button>
                 </form>             
                 {/*<div style={{ display: this.state.test ? 'block' : 'none' }}>{this.displaydata}</div>*/}
                 <hr />
