@@ -148,124 +148,77 @@ namespace employeeRecognition.Controllers
                *****************/
         //Test url:  /api/email/sendpdf
         [HttpPost("[action]")]
-        public IActionResult SendPdf()
+        public IActionResult SendPdf( [FromBody]JObject jObject)
         //public IActionResult testEmail()
         {
-
-            using (var reader = new StreamReader(Request.Body))
-            {
-                var body = reader.ReadToEnd();
-                Console.WriteLine("body string: "+body);
-                // Do something
-            }
-            
-            var jObject = HttpContext.Request.Body;
-            Console.WriteLine("jObject string: "+jObject);
-            //dynamic obj = jObject;
-            //Console.WriteLine("obj string: ", obj);
-            //Console.Write("dynamic obj is: " + obj);  [FromBody]JObject @"data:application/pdf;filename=generated.pdf;base64,(?<data>.+)"
+            dynamic obj = jObject;
             try
-            {
-               // var strJson = obj.pdfContent;
-                //Console.WriteLine("JSON string: ", jObject);
-                //var match = Regex.Match(jObject.pdfContent, @"data:application/pdf;base64,(?<data>.+)");
-                //Console.WriteLine("match: ", match);
-                //var base64Data = match.Groups["data"].Value;
-                //Console.WriteLine("base64data: ", base64Data);
-                //var binData = Convert.FromBase64String(jObject);
+            {   //parse email and pdf content from object to be set as 2 strings below
+                string awardemail = obj.email;
+                string strJson = obj.pdfContent;
+
+                //remove unnnecessary information from JSON string (data:application/pdf;base64,)
+                string newStr = strJson.Remove(0, 28);
+                //convert to System.Byte[] file
+                var binData = Convert.FromBase64String(newStr);
+                //create temp filepath and filename
                 var filePath = Path.GetTempFileName();
-                return Ok();
+                var fileName = filePath + "award.pdf";
+
+                // write content to the pdf
+                using (var fs = new FileStream(fileName, FileMode.Create))
+                using (var writer = new BinaryWriter(fs))
+                {
+                    writer.Write(binData, 0, binData.Length);
+                    writer.Close();
+                }
+
+                var message = new MimeMessage();
+
+                    //Specify sender email
+                    message.From.Add(new MailboxAddress("employeerecognition3@gmail.com"));
+
+                    //Specify recipient email
+                    message.To.Add(new MailboxAddress(awardemail)); 
+
+                    //Subject
+                    message.Subject = "EmployeeRecognition: Award Certificate";
+
+                    //Builder: Set plain-text version of the message text
+                    var builder = new BodyBuilder();
+
+                    //Body, will be formatted in HTML format
+                    builder.TextBody = @"Congratulations for your hard work!";
+
+                    //Attachment
+                    builder.Attachments.Add(fileName);
+
+                    message.Body = builder.ToMessageBody();
+
+                    using (var client = new SmtpClient())
+                    {
+                        client.Connect("smtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
+
+                        // Note: since we don't have an OAuth2 token, disable
+                        // the XOAUTH2 authentication mechanism.
+                        client.AuthenticationMechanisms.Remove("XOAUTH2");
+
+                        client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
+                        client.Send(message);
+                        client.Disconnect(true);
+
+                    }
+
+                    Console.WriteLine("Send Mail Success.");
+                    return Ok();
             }
+
             catch (Exception e)
             {
                 Console.WriteLine("Send Mail Failed : " + e.Message);
                 return BadRequest();
+
             }
-            /*
-                //}
-                //create pdf
-                // var pdfBinary = Convert.FromBase64String(data);
-                //var dir = Server.MapPath("~/DataDump");
-
-                //if (!Directory.Exists(dir))
-                //    Directory.CreateDirectory(dir);
-
-                //var fileName = dir + "\\PDFnMail-" + DateTime.Now.ToString("yyyyMMdd-HHMMss") + ".pdf";
-                var fileName = filePath + ".pdf";
-                Console.Write(fileName);
-                //// write content to the pdf
-                //using (var fs = new FileStream(fileName, FileMode.Create))
-                //using (var writer = new BinaryWriter(fs))
-                //{
-                //    writer.Write(binData, 0, binData.Length);
-                //    writer.Close();
-                //}
-
-
-                var message = new MimeMessage();
-                using (var memoryStream = new MemoryStream()) 
-                {
-
-
-                //Newtonsoft.Json.Linq.JToken token = Newtonsoft.Json.Linq.JObject.Parse(result);
-
-                // Specify sender email
-                message.From.Add(new MailboxAddress("employeerecognition3@gmail.com"));
-
-                // Specify recipient email
-                message.To.Add(new MailboxAddress("dongv@oregonstate.edu")); // replace recipient with {User.email}
-
-                // Subject
-                message.Subject = "EmployeeRecognition: Award Certificate";
-
-
-                // Builder: Set plain-text version of the message text
-                var builder = new BodyBuilder();
-
-                // Body, will be formatted in HTML format
-                builder.TextBody = @"From SendPDF function";
-
-                // Attachment
-                //builder.Attachments.Add(@"data:application/pdf;filename=generated.pdf;base64,(?<data>.+)");
-                //builder.Attachments.Add(new MemoryStream(binData), "htmlToPdf.pdf");
-                var attachment = "@\"" + fileName + "\"";
-                builder.Attachments.Add(attachment);
-
-
-                //mail.Attachments.Add(new Attachment(new MemoryStream(binData), "htmlToPdf.pdf")); // from stackoverflow
-
-
-                message.Body = builder.ToMessageBody();
-
-                }
-
-
-                using (var client = new SmtpClient())
-                {
-                    client.Connect("smtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
-
-                    // Note: since we don't have an OAuth2 token, disable
-                    // the XOAUTH2 authentication mechanism.
-                    client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                    client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
-                    client.Send(message);
-                    client.Disconnect(true);
-
-                }
-
-                Console.WriteLine("Send Mail Success.");
-                return Ok();
-
-            //}
-
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine("Send Mail Failed : " + e.Message);
-            //    return BadRequest();
-
-            //}
-*/
         }
 
         }
