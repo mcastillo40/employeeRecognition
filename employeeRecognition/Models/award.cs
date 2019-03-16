@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,5 +18,7 @@ namespace employeeRecognition.Models
         public string type { get; set; }
         public string time { get; set; }
         public string date { get; set; }
+        public string email { get; set; }
+        public IFormFile signature { get; set; }
     }
 }

@@ -48,7 +48,6 @@ namespace employeeRecognition.Controllers
         public IActionResult getUser(int id)
         {
             string sql = $"SELECT userAcct.id, userAcct.first_name, userAcct.last_name, userAcct.email FROM userAcct WHERE userAcct.id={id}";
-
             dt = sqlConnection.Connection(sql);
            
             DataRow row = dt.Rows[0];
@@ -170,6 +169,7 @@ namespace employeeRecognition.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AdminEdit(int id, [FromBody]UserAcct User)
         {
+
             if (ModelState.IsValid)
             {
                 string query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', email='{User.email}', role={User.role} WHERE userAcct.id={id}";

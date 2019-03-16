@@ -92,11 +92,11 @@ export class Addaward extends Component {
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="TypeSelect">Select Recipient ID from Name:</label>
+                            <label htmlFor="TypeSelect">Select Recipient ID from Name, E-mail:</label>
                             <select className="form-control" name="recipient_user_id" id="recipient_user_id" value={this.state.recipient_user_id} onChange={this.onChange}>
                                 {this.state.users.map(user => (
                                     <option value={user.id}>
-                                        {user.first_name} {user.last_name}
+                                        {user.first_name} {user.last_name}, {user.email}
                                     </option>
                             ))}
                             </select>
