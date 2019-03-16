@@ -91,17 +91,16 @@ render() {
                             </div>
                         </div>
                         <div className="col-md-6">
-                             <a href="/signup" className="btn btn-outline-primary btn-block">Sign up</a>
+                                <a href="/ForgetPassword" className="btn btn-outline-primary btn-block">Forgot password?</a>
                         </div>
                     </div>
-                    <p className="text-center"><a href="/ForgetPassword" className="btn">Forgot password?</a></p>
-                    </form>
+                </form>
 
-                    <span id="incorrect_info" style={{ display: "none" }}>
-                        <br />
-                        <span className="alert alert-danger col" role="alert">Incorrect UserName/Password</span>
-                        <br /> <br />
-                    </span>
+                <span id="incorrect_info" style={{ display: "none" }}>
+                    <br />
+                    <span className="alert alert-danger col" role="alert">Incorrect UserName/Password</span>
+                    <br /> <br />
+                </span>
             </article>
         </div> 
       </div> // End of JSX root in render

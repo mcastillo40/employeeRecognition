@@ -38,7 +38,7 @@ export class NavMenu extends Component {
                 return (
                     <div className="navbar-nav ml-auto">
                         <NavLink className="nav-link nav-item" exact to="/">Home</NavLink>
-                        <NavLink className="nav-link nav-item" to="/award">Awards</NavLink>
+                        <NavLink className="nav-link nav-item" to="/awards">Awards</NavLink>
                         <NavLink className="nav-link nav-item" to="/settings">Settings</NavLink>
                         <NavLink className="nav-link nav-item" to="/login" onClick={this.LogOut}>LogOut</NavLink>
                     </div>
@@ -66,5 +66,5 @@ export class NavMenu extends Component {
                 </div>
             </nav>
         );
-  }
+    }
 }

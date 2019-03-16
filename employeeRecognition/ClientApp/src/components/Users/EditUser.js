@@ -46,7 +46,7 @@ export class EditUser extends Component {
             email: this.state.email,
             role: this.state.role,
         }
-
+        
         try {
             const { token } = AUTH_MODEL.get();
             const url = `api/users/AdminEdit?id=${this.props.location.state.user.id}`;
@@ -60,6 +60,10 @@ export class EditUser extends Component {
                 }
             });
 
+            console.log("token is: ", token);
+            console.log("userInfo is: ", userInfo);
+            console.log("Response is: ", response);
+            
             if (response.ok)
                 this.setState({ reRoute: true });
         }
@@ -113,7 +117,7 @@ export class EditUser extends Component {
                             <label>Email:</label>
                             <input
                                 id="email"
-                                type="email"
+                                type="text"
                                 className="form-control"
                                 value={this.state.email}
                                 onChange={this.onChange}
@@ -164,4 +168,4 @@ export class EditUser extends Component {
             )
         }
     }
-}
+} 

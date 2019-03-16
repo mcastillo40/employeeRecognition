@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class PasswordReset extends Component {
     constructor(props) {
@@ -28,12 +29,15 @@ export class PasswordReset extends Component {
             let data = { password: this.state.password };
 
             try {
+                const { token } = AUTH_MODEL.get();
                 const url = `api/users/editpassword?id=${this.props.id}`;
+
                 const response = await fetch(url, {
                     method: 'PUT',
                     body: JSON.stringify(data),
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        authorization: `Bearer ${token}`
                     }
                 });
 

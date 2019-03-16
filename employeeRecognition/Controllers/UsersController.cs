@@ -10,6 +10,7 @@ using employeeRecognition.Models;
 using Microsoft.AspNetCore.Http;
 using static System.Net.Mime.MediaTypeNames;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace employeeRecognition.Controllers
 {
@@ -21,6 +22,7 @@ namespace employeeRecognition.Controllers
         private DbConnection sqlConnection = new DbConnection();
 
         [HttpGet("[action]")]
+        [Authorize]
         public IEnumerable<UserAcct> Index()
         {
             List<UserAcct> list = new List<UserAcct>();
@@ -47,22 +49,27 @@ namespace employeeRecognition.Controllers
         [HttpGet("[action]")]
         public IActionResult getUser(int id)
         {
-            string sql = $"SELECT userAcct.id, userAcct.first_name, userAcct.last_name, userAcct.email FROM userAcct WHERE userAcct.id={id}";
-
+            string sql = $"SELECT userAcct.id, userAcct.signature, userAcct.first_name, userAcct.last_name, userAcct.email FROM userAcct WHERE userAcct.id={id}";
             dt = sqlConnection.Connection(sql);
            
             DataRow row = dt.Rows[0];
-
-            var user_info = new {
-                first_name = row["first_name"].ToString(),
-                last_name = row["last_name"].ToString(),
-                email = row["email"].ToString(),
+            Byte[] tempsig = new Byte[0];
+            if (!Convert.IsDBNull(row["signature"])) {
+                tempsig = (Byte[])row["signature"];
+                    };
+                var user_info = new
+                {
+                    first_name = row["first_name"].ToString(),
+                    last_name = row["last_name"].ToString(),
+                    signature = tempsig,
+                    email = row["email"].ToString(),
             };
 
             return new ObjectResult(user_info) { StatusCode = 200 };
         }
 
         [HttpPost("[action]")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create([FromBody]UserAcct User)
         {
             if (ModelState.IsValid)
@@ -91,30 +98,16 @@ namespace employeeRecognition.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("[action]")]
         public async Task<IActionResult> UploadSignature(int id)
-        //[HttpPost("content/upload-image")]
-        //public IActionResult UploadSignature(int id, IFormFile files)
-        //public IActionResult UploadSignature(int id, [FromBody]Byte[] files)
-        //public IActionResult UploadSignature(int id, [FromBody]IFormFile files)
-        //public IActionResult UploadSignature(int id, IFormFile files)
         {
-
             var files = HttpContext.Request.Form.Files;
-            Console.WriteLine("USER: " + id);
-            Console.WriteLine("Files: " + files[0].FileName);
 
             long size = files.Sum(f => f.Length);
 
             //// full path to file in temp location
             var filePath = Path.GetTempFileName();
-
-            //using (FileStream fs = new FileStream(filePath, FileMode.Open)
-            //{
-            //     BinaryReader fileReader = new BinaryReader(filePath);
-            //    data = fileReader.ReadBytes((int)document.Length);
-            //    fs.Close(); // don't forget to close file stream
-            //}
 
             try
             {
@@ -128,46 +121,25 @@ namespace employeeRecognition.Controllers
                         }
                     }
                 }
-
-                Console.WriteLine("PATH: " + filePath);   
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR: " + e);
                 return BadRequest(new { Error = e });
             }
 
             byte[] bytes = System.IO.File.ReadAllBytes(filePath);
-            //byte[] fileData = null;
-
-            //using (FileStream fs = System.IO.File.OpenRead(files))
-            //{
-            //    var binaryReader = new BinaryReader(fs);
-            //    fileData = binaryReader.ReadBytes((int)fs.Length);
-            //}
 
             try
             {
-                //String query = $"UPDATE userAcct set signature='{bytes}' WHERE userAcct.id={id}";
                 string query = $"UPDATE userAcct set signature=@binaryValue WHERE userAcct.id={id}";
                 string connectionString = @"Data Source = tcp:erraisqlserver.database.windows.net,1433;Initial Catalog=EmployeeDB;Persist Security Info=False;User ID=erraiadmin;Password=DBaccess3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
                 SqlConnection con = new SqlConnection(connectionString);
                 string sql = @query;
 
-                Console.WriteLine("QUERY: " + sql);
-
-                //dt = sqlConnection.Connection(sql);
-
-                //Console.WriteLine("DT 2: " + dt);
                 con.Open();
 
                 using (SqlCommand cmd = new SqlCommand(sql, con))
                 {
-                    //cmd.CommandType = CommandType.StoredProcedure;
-
-                    // Replace 8000, below, with the correct size of the field
-                    //cmd.Parameters.AddWithValue("(@binaryValue)", SqlDbType.VarBinary).Value = bytes;
-                    //cmd.ExecuteNonQuery();
                     SqlParameter sqlParam = cmd.Parameters.AddWithValue("@binaryValue", bytes);
                     sqlParam.DbType = DbType.Binary;
                     cmd.ExecuteNonQuery();
@@ -179,29 +151,36 @@ namespace employeeRecognition.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR: " + e);
                 return BadRequest(new { Error = e });
             }
         }
 
         [HttpDelete("[action]")]
-        public void Delete(int id)
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(int id)
         {
-            string query = $"DELETE FROM userAcct WHERE userAcct.id = {id}";
-            string sql = @query;
+            try {
+                String query = $"DELETE FROM userAcct WHERE userAcct.id = {id}";
 
-            dt = sqlConnection.Connection(sql);
+                String sql = @query;
+
+                dt = sqlConnection.Connection(sql);
+                return Ok();
+            }
+            catch (Exception e) {
+                return BadRequest(new {error=e});
+            }
         }
 
         [HttpPut("[action]")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AdminEdit(int id, [FromBody]UserAcct User)
         {
+
             if (ModelState.IsValid)
             {
                 string query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', email='{User.email}', role={User.role} WHERE userAcct.id={id}";
                 string sql = @query;
-
-                Console.WriteLine("QUERY: " + sql);
 
                 dt = sqlConnection.Connection(sql);
 
@@ -213,6 +192,7 @@ namespace employeeRecognition.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("[action]")]
         public IActionResult UserEdit(int id, [FromBody]UserAcct User)
         {
@@ -221,8 +201,6 @@ namespace employeeRecognition.Controllers
                 string query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', email='{User.email}' WHERE userAcct.id={id}";
                 string sql = @query;
 
-                Console.WriteLine("QUERY: " + sql);
-
                 dt = sqlConnection.Connection(sql);
 
                 return Ok();
@@ -233,6 +211,7 @@ namespace employeeRecognition.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("[action]")]
         public IActionResult EditPassword(int id, [FromBody]UserAcct User)
         {

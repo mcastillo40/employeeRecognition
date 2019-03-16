@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class NameReset extends Component {
     constructor(props) {
@@ -39,12 +40,15 @@ export class NameReset extends Component {
         }
 
         try {
+            const { token } = AUTH_MODEL.get();
             const url = `api/users/UserEdit?id=${this.state.id}`;
+
             const response = await fetch(url, {
                 method: 'PUT',
                 body: JSON.stringify(userInfo),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    authorization: `Bearer ${token}`
                 }
             });
 

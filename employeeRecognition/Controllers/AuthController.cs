@@ -96,12 +96,14 @@ namespace employeeRecognition.Controllers
 
                 if (roleID == 1)
                 {
-                    claims.Add(new Claim("Role", "Admin"));  // Don't forget to assign this claim to the token body, in #4.    
+                    claims.Add(new Claim("Role", "Admin"));  // Don't forget to assign this claim to the token body, in #4.  
+                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
                 }
 
                 else
                 {
                     claims.Add(new Claim("Role", "User"));
+                    claims.Add(new Claim(ClaimTypes.Role, "User"));
                 }
 
 

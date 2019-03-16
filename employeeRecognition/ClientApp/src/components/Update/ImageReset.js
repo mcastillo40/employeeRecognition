@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class ImageReset extends Component {

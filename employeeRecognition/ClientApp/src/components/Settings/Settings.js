@@ -35,8 +35,11 @@ export class Settings extends Component {
     async componentDidMount() {
         try {
             const { userInfo } = AUTH_MODEL.get();
+            const { token } = AUTH_MODEL.get();
 
-            const response = await fetch(`api/users/getUser/?id=${parseInt(userInfo.UserId, 10)}`);
+            const response = await fetch(`api/users/getUser/?id=${parseInt(userInfo.UserId, 10)}`,
+                { headers: { authorization: `Bearer ${token}` } }
+            );
             let data = await response.json();
 
             data.id = userInfo.UserId;
