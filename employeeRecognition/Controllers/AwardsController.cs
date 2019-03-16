@@ -44,6 +44,9 @@ FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN user
                 Award.rfn = row["rfn"].ToString();
                 Award.rln = row["rln"].ToString();
                 Award.type = row["type"].ToString();
+                if (!Convert.IsDBNull(row["signature"])){
+                Award.signature = (Byte[])row["signature"];
+                };
                 Award.email = row["email"].ToString();
                 Award.time = row["time"].ToString();
                 Award.date = row["date"].ToString();

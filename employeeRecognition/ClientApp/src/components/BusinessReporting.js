@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import { Chart } from 'react-google-charts'
-import { Redirect } from 'react-router-dom';
+//import { Redirect } from 'react-router-dom';
 import { AUTH_MODEL } from '../Shared/Auth/Auth';
 
 export class BusinessReporting extends Component {
@@ -15,11 +15,13 @@ export class BusinessReporting extends Component {
             sender_user_id: '',
             recipient_user_id: '',
             type: "",
+            test: false,
             reRoute: false,
             loading: true
         };
         this.showAward = this.showAward.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.displaydata = this.displaydata.bind(this);
     }
 
     onChange(event) {
@@ -55,7 +57,8 @@ export class BusinessReporting extends Component {
             });
  
             const data = await response.json();
-            this.setState({awards: data})
+            this.setState({ awards: data, test: true })
+            console.log("data: ", data);
         }
         catch (err) {
             console.log("err: ", err);
@@ -74,103 +77,74 @@ export class BusinessReporting extends Component {
         }
     }
 
-    static renderBusiness(awards) {
-    return (
-        <div>     
-            <br /> <br />
-            <div className="form-border">
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>Sender Name</th>
-                            <th>Recipient Name</th>
-                            <th>Award Type</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {awards.map(award => (
-                            <tr key={award.id}>
-                            <td>{award.sfn} {award.sln}</td>
-                            <td>{award.rfn} {award.rln}</td>
-                            <td>{award.type}</td>
-                            <td>{award.date}</td>
-                        </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-}
+    displaydata() {
+
+        return (
+            <div>
+                <p>display</p>
+                <div>
+                    {this.state.awards.map(award => (
+                        <div>{award.sfn} {award.sln}</div>))}
+                </div >
+            </div >
+          )
+    }
 
     render() {
-        if (this.state.reroute) {
-            return <redirect to="/businessreporting" />
-        }
-        else {
-            return (
-                <div>
-                    <h1>Set Filters</h1>
-                    <br />
-                    <form
-                        id="filtersender"
-                        onSubmit={this.showAward}
-                    >
-                        <div classname="form-group">
-                            <label htmlfor="typeselect">Select sender id from name:</label>
-                            <select classname="form-control" name="sender_user_id" id="sender_user_id" value={this.state.sender_user_id} onChange={this.onChange}>
-                                {this.state.users.map(user => (
-                                    <option value={user.id}>
-                                        {user.first_name} {user.last_name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <button classname="btn btn-primary" type="submit">display</button>
-                        </form>
-                    <form
-                        id="filterrecipient"
-                        onSubmit={this.showAward}
-                    >
-                        <div classname="form-group">
-                            <label htmlfor="typeselect">Select recipient id from name:</label>
-                            <select classname="form-control" name="recipient_user_id" id="recipient_user_id" value={this.state.recipient_user_id} onChange={this.onChange}>
-                                {this.state.users.map(user => (
-                                    <option value={user.id}>
-                                        {user.first_name} {user.last_name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <button classname="btn btn-primary" type="submit">display</button>
+        return (
+            <div>
+                <h1>Set Filters</h1>
+                <br />
+                <form
+                    id="filtersender"
+                    onSubmit={this.showAward}
+                >
+                    <div classname="form-group">
+                        <label htmlfor="typeselect">Select sender id from name:</label>
+                        <select classname="form-control" name="sender_user_id" id="sender_user_id" value={this.state.sender_user_id} onChange={this.onChange}>
+                            {this.state.users.map(user => (
+                                <option value={user.id}>
+                                    {user.first_name} {user.last_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <button classname="btn btn-primary" type="submit">display</button>
                     </form>
-                    <form
-                        id="filtertype"
-                        onSubmit={this.showAward}
-                    >
-                        <div classname="form-group">
-                            <label htmlfor="typeselect">type:</label>
-                            <select classname="form-control" name="type" id="typeselect" value={this.state.type} onChange={this.onChange}>
-                                <option value="Service">Service</option>
-                                <option value="Performance">Performance</option>
-                                <option value="Team Work">Team Work</option>
-                            </select>
-                        </div>
-                        <button classname="btn btn-primary" type="submit">display</button>
-                    </form>             
-                </div>
-            )
-
-            let contents = this.state.loading
-                ? <p><em>Loading...</em></p>
-                : BusinessReporting.renderBusiness(this.state.awards);
-            return (
-                <div>
-                    <h1>Business Reporting Infomation</h1>
-                    {contents}
-                </div>
-            );
-        }
+                <form
+                    id="filterrecipient"
+                    onSubmit={this.showAward}
+                >
+                    <div classname="form-group">
+                        <label htmlfor="typeselect">Select recipient id from name:</label>
+                        <select classname="form-control" name="recipient_user_id" id="recipient_user_id" value={this.state.recipient_user_id} onChange={this.onChange}>
+                            {this.state.users.map(user => (
+                                <option value={user.id}>
+                                    {user.first_name} {user.last_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <button classname="btn btn-primary" type="submit">display</button>
+                </form>
+                <form
+                    id="filtertype"
+                    onSubmit={this.showAward}
+                >
+                    <div classname="form-group">
+                        <label htmlfor="typeselect">type:</label>
+                        <select classname="form-control" name="type" id="typeselect" value={this.state.type} onChange={this.onChange}>
+                            <option value="Service">Service</option>
+                            <option value="Performance">Performance</option>
+                            <option value="Team Work">Team Work</option>
+                        </select>
+                    </div>
+                    <button classname="btn btn-primary" type="submit">display</button>
+                </form>             
+                {/*<div style={{ display: this.state.test ? 'block' : 'none' }}>{this.displaydata}</div>*/}
+                <hr />
+                {this.displaydata()}
+            </div>
+        )
     }
 }

@@ -44,32 +44,31 @@ export class Awards extends Component {
         pdf.text('Time: ' + award.time, 30, 160);
         pdf.text('Date: ' + award.date, 30, 170);
         // Convert the array to a base 64 sring.
-        
-        //pdf.addImage(award.signature, 'png', 220, 140, 280, 170)
+        let signature = `data:image/jpeg;base64,${award.signature}`
+        console.log("sig", signature);
+        pdf.addImage(signature, 'jpeg', 220, 140, 280, 170)
         pdf.setFontStyle("italic");
         pdf.setFontSize(40);
         pdf.text(award.type + ' Award', 90, 60);
-        //pdf.save('award.pdf');
-        pdf.text(award.type + ' Award', 90, 60);
-        //pdf.save('award.pdf');
+        pdf.save('award.pdf');
 
-        let data = {};
-        data.pdfContent = pdf.output('datauristring');
-        console.log("The base 64 string:\n   {0}\n", data.pdfContent, award.email);
-        try {
+        //let data = {};
+        //data.pdfContent = pdf.output('datauristring');
+        //console.log("The base 64 string:\n   {0}\n", data.pdfContent, award.email);
+        //try {
 
-            const response = await fetch('api/email/sendpdf', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            console.log("response is: ", response);
-        }
-        catch (err) {
-            console.log("ERR: ", err);
-        }
+        //    const response = await fetch('api/email/sendpdf', {
+        //        method: 'POST',
+        //        body: JSON.stringify(data),
+        //        headers: {
+        //            'Content-Type': 'application/json'
+        //        }
+        //    })
+        //    console.log("response is: ", response);
+        //}
+        //catch (err) {
+        //    console.log("ERR: ", err);
+        //}
     }
 
     async handleDelete(id) {

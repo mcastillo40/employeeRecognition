@@ -19,6 +19,6 @@ namespace employeeRecognition.Models
         public string time { get; set; }
         public string date { get; set; }
         public string email { get; set; }
-        public IFormFile signature { get; set; }
+        public Byte[] signature { get; set; }
     }
 }
