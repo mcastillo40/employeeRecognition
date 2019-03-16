@@ -43,7 +43,6 @@ export class Users extends Component {
     }
 
     static renderUsersTable(users, handleDelete, handleEdit) {
-        console.log("USER: ", users)
         return (
             <div>
                 <Link to='/addUser'><CreateButton /></Link>

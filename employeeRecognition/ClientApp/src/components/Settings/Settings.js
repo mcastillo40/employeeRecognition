@@ -3,6 +3,7 @@ import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 import { PasswordReset } from '../Update/PasswordReset';
 import { EmailReset } from '../Update/EmailReset';
 import { NameReset } from '../Update/NameReset';
+import { ImageReset } from '../Update/ImageReset';
 import { Link } from 'react-router-dom';
 
 export class Settings extends Component {
@@ -19,12 +20,14 @@ export class Settings extends Component {
         showNameUpdate: false,
         showEmailUpdate: false,
         showPasswordUpdate: false,
+        showSignatureUpdate: false,
         loading: true
       };
 
       this.showEditName = this.showEditName.bind(this);
       this.showEditEmail = this.showEditEmail.bind(this);
       this.showEditPassword = this.showEditPassword.bind(this);
+      this.showEditImage = this.showEditImage.bind(this);
       this.updateUser = this.updateUser.bind(this);
       this.LogOut.bind(this);
     }
@@ -62,6 +65,10 @@ export class Settings extends Component {
         this.setState({ showPasswordUpdate: !this.state.showPasswordUpdate });
     }
 
+    showEditImage() {
+        this.setState({ showSignatureUpdate: !this.state.showSignatureUpdate });
+    }
+
     LogOut() {
         AUTH_MODEL.remove();
     }
@@ -81,6 +88,7 @@ export class Settings extends Component {
                             <div className='col-md-6'>
                                 <h2>{this.state.last_name}, {this.state.first_name}</h2>
                                 <p style={{ fontWeight: '500' }}>{this.state.role}</p>
+                                
                                 <br />
                                 <p style={{ fontWeight: '400' }}>Email:  {this.state.email}</p>
                             </div>
@@ -125,6 +133,15 @@ export class Settings extends Component {
                                     </span>
                                     <span style={{ display: this.state.showPasswordUpdate ? 'block' : 'none' }}>
                                         <PasswordReset id={this.state.id} showEditPassword={this.showEditPassword} />
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <span style={{ display: this.state.showSignatureUpdate ? 'none' : 'block' }}>
+                                        <button type="button" className="btn btn-link" onClick={this.showEditImage} style={{ paddingLeft: '0px' }}>Update Signature</button>
+                                    </span>
+                                    <span style={{ display: this.state.showSignatureUpdate ? 'block' : 'none' }}>
+                                        <ImageReset id={this.state.id} showEditImage={this.showEditImage} />
                                     </span>
                                 </div>
 

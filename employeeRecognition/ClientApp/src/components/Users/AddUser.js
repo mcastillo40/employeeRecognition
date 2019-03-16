@@ -189,7 +189,7 @@ export class AddUser extends Component {
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="roleSelect">Upload Signature:</label>
+                            <label>Upload Signature:</label>
                             <input
                                 style={{ display: 'none'}}
                                 id="signature"

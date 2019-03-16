@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class ImageReset extends Component {
     constructor(props) {
@@ -6,7 +7,9 @@ export class ImageReset extends Component {
 
         this.state = {
             id: props.id,
-            signature: ''
+            signature: '',
+            selectImage: true,
+            loading: false,
         };
 
         this.editImage = this.editImage.bind(this);
@@ -20,13 +23,21 @@ export class ImageReset extends Component {
 
     onChange(event) {
         event.preventDefault();
-        this.setState({ signature: event.target.files[0] });
+
+        this.setState({
+            signature: event.target.files[0],
+            selectImage: false
+        });
     }
 
     async editImage(e) {
         e.preventDefault();
 
         try {
+            this.setState({ loading: true });
+
+            const { token } = AUTH_MODEL.get();
+
             const url = `api/users/uploadsignature?id=${this.state.id}`
             let formData = new FormData();
 
@@ -35,42 +46,56 @@ export class ImageReset extends Component {
             const response = await fetch(url, {
                 method: 'POST',
                 body: formData,
-                //headers: {'content-type': 'multipart/form-data' }
+                headers: { authorization: `Bearer ${token}` }
             });
 
             if (response.status === 201) {
                 this.props.showEditImage();
                 //this.props.updateUser({ signature: userInfo.email });
+                this.setState({ selectImage: true })
             }
         }
         catch (err) {
             console.log("ERROR: ", err);
         }
-
-        this.props.showEditImage();
     }
 
     cancelImage() {
+        this.setState({
+            signature: '',
+            selectImage: true
+        });
+
         this.props.showEditImage();
     }
 
     render() {
-        return (
-            <div>
-                <input
-                    style={{ display: 'none' }}
-                    id="signature"
-                    name="signature"
-                    type="file"
-                    className="form-control"
-                    onChange={this.onChange}
-                    ref={fileInput => this.fileInput = fileInput}
-                />
-                <button type="button" className="btn btn-secondary" style={{ marginBottom: '10px' }} onClick={() => this.fileInput.click()}>Pick Image</button>
-                <br/>
-                <button type="submit" className="btn btn-info" onClick={this.editImage.bind(this)} style={{ marginRight: '10px' }}>Update Image</button>
-                <button type="button" className="btn btn-danger" onClick={this.cancelImage}>Cancel</button>
-            </div>
-        );
+        if (this.state.loading) {
+            return (<div> <p><em>Uploading Signature...</em></p> </div>)
+        }
+        else {
+            return (
+                <div>
+                    <input
+                        style={{ display: 'none' }}
+                        id="signature"
+                        name="signature"
+                        type="file"
+                        onChange={this.onChange}
+                        ref={fileInput => this.fileInput = fileInput}
+                    />
+
+                    <span style={{ display: this.state.selectImage ? 'block' : 'none' }}>
+                        <button type="button" className="btn btn-secondary" style={{ marginRight: '10px' }} onClick={() => this.fileInput.click()}>Pick Image</button>
+                        <button type="button" className="btn btn-danger" onClick={this.cancelImage}>Cancel</button>
+                    </span>
+
+                    <span style={{ display: this.state.selectImage ? 'none' : 'block' }}>
+                        <button type="submit" className="btn btn-info" style={{ marginRight: '10px' }} onClick={this.editImage.bind(this)}>Update Image</button>
+                        <button type="button" className="btn btn-danger" onClick={this.cancelImage}>Cancel</button>
+                    </span>
+                </div>
+            );
+        }
     }
 }
