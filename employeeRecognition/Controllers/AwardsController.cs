@@ -153,7 +153,5 @@ FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN user
                 return BadRequest();
             }
         }
-
-      
     }
 }

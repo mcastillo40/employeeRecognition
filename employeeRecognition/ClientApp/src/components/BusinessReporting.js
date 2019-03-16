@@ -30,7 +30,6 @@ export class BusinessReporting extends Component {
 
     async showAward(e) {
         e.preventDefault();
-        
         try {
             let id = '';
             let filter = '';
@@ -78,7 +77,6 @@ export class BusinessReporting extends Component {
     }
 
     displaydata() {
-
         return (
             <div>
                 <p>display</p>

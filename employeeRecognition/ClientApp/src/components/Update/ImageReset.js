@@ -1,4 +1,4 @@
-﻿﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class ImageReset extends Component {
@@ -23,6 +23,7 @@ export class ImageReset extends Component {
 
     onChange(event) {
         event.preventDefault();
+
         this.setState({
             signature: event.target.files[0],
             selectImage: false
@@ -36,6 +37,7 @@ export class ImageReset extends Component {
             this.setState({ loading: true });
 
             const { token } = AUTH_MODEL.get();
+
             const url = `api/users/uploadsignature?id=${this.state.id}`
             let formData = new FormData();
 
@@ -49,6 +51,7 @@ export class ImageReset extends Component {
 
             if (response.status === 201) {
                 this.props.showEditImage();
+                //this.props.updateUser({ signature: userInfo.email });
                 this.setState({ selectImage: true })
             }
         }
