@@ -60,12 +60,12 @@ export class BusinessReporting extends Component {
 
             const { token } = AUTH_MODEL.get();
             const url = `api/awards/business?id=${parseInt(id, 10)}&type=${this.state.type}&filter=${filter}`;
-            
+
             const response = await fetch(url, {
                 method: 'GET',
                 headers: { authorization: `Bearer ${token}` }
             });
- 
+
             const data = await response.json();
 
             if (response.status === 200) {
@@ -190,7 +190,7 @@ export class BusinessReporting extends Component {
                 dataTable_2.push(newArray)
             })
 
-            return { total, dataTable_1, dataTable_2};
+            return { total, dataTable_1, dataTable_2 };
         }
         else if (filter === 'recipient') {
             for (let i in cloneAwards) {
@@ -235,7 +235,7 @@ export class BusinessReporting extends Component {
                 dataTable_2.push(newArray)
             })
 
-            return { total, dataTable_1, dataTable_2};
+            return { total, dataTable_1, dataTable_2 };
         }
         else if (filter === 'type') {
             // Ensure that filter has been updated
@@ -441,10 +441,10 @@ export class BusinessReporting extends Component {
         }
         else {
             if (state.filter === 'sender') {
-                return ( <div>{displaySenderData(calculateData, state)}</div> )
+                return (<div>{displaySenderData(calculateData, state)}</div>)
             }
             else if (state.filter === 'recipient') {
-                return (<div>{displayRecipientData(calculateData, state)}</div> )
+                return (<div>{displayRecipientData(calculateData, state)}</div>)
             }
             else if (state.filter === 'type') {
                 return (<div>{displayTypeData(calculateData, state)}</div>)
@@ -464,17 +464,17 @@ export class BusinessReporting extends Component {
                         <div className="container" style={{ paddingLeft: '0px' }}>
                             <div className="row">
                                 <div className='col-md-6' style={{ paddingLeft: '0px' }}>
-                                <select className="form-control" name="sender_user_id" id="sender_user_id" value={state.sender_user_id} onChange={onChange}>
-                                    {state.users.map(user => (
-                                        <option key={user.id} value={user.id}>
-                                            {user.first_name} {user.last_name}
-                                        </option>
-                                    ))}
-                                </select>
-                               </div>
-                               <div className='col-md-6'>
+                                    <select className="form-control" name="sender_user_id" id="sender_user_id" value={state.sender_user_id} onChange={onChange}>
+                                        {state.users.map(user => (
+                                            <option key={user.id} value={user.id}>
+                                                {user.first_name} {user.last_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className='col-md-6'>
                                     <button className="btn btn-primary" type="submit">Results</button>
-                               </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -538,6 +538,7 @@ export class BusinessReporting extends Component {
         return (
             <div>
                 <h1>Set Filters</h1>
+                <br />
                 <br />
                 {contents}
             </div>
