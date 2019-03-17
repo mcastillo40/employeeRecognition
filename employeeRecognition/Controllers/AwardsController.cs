@@ -20,6 +20,7 @@ namespace employeeRecognition.Controllers
         private DbConnection sqlConnection = new DbConnection();
 
         [HttpGet("[action]")]
+        [Authorize]
         public IEnumerable<award> Nominated()
         {
             List<award> list = new List<award>();
@@ -55,6 +56,7 @@ FROM award JOIN userAcct AS sender ON sender.id = award.sender_user_id JOIN user
         }
 
         [HttpGet("[action]")]
+        [Authorize]
         public IEnumerable<award> Business(int id, string type, string filter)
         {
             List <award> list2 = new List<award>();
