@@ -19,7 +19,10 @@ const TableAwards = props => {
                 <i className="fas fa-trash-alt"></i>
             </button >
             &nbsp;
-            <button title="PDF" onClick={e => props.onPrint(e, props.awardInfo)}>PDF</button >
+            <button className="btn btn-info" title="PDF+Email" onClick={id => props.onPrint(props.awardInfo)}
+            >
+                <i className="far fa-envelope"></i>
+            </button >
         </div >
         </td >
 }
