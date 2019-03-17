@@ -539,6 +539,7 @@ export class BusinessReporting extends Component {
             <div>
                 <h1>Set Filters</h1>
                 <br />
+                <br />
                 {contents}
             </div>
         );
