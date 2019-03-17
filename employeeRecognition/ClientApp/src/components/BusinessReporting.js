@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-//import { Chart } from 'react-google-charts'
-//import { AUTH_MODEL } from '../Shared/Auth/Auth';
-//import _ from 'lodash';
-//import { TYPES } from '../Shared/Types';
+import { Chart } from 'react-google-charts'
+import { AUTH_MODEL } from '../Shared/Auth/Auth';
+import _ from 'lodash';
+import { TYPES } from '../Shared/Types';
 
 export class BusinessReporting extends Component {
     displayName = BusinessReporting.name
