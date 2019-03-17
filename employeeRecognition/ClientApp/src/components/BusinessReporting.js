@@ -533,9 +533,9 @@ export class BusinessReporting extends Component {
     }
 
     render() {
-        let contents = this.state.loading
-            ? <p><em>Loading...</em></p>
-            : BusinessReporting.renderBusinessReporting(this.state, this.showAward, this.onChange, this.displaydata, this.displayOverallData, this.displaySenderData, this.displayRecipientData, this.displayTypeData, this.calculateData);
+        //let contents = this.state.loading
+        //    ? <p><em>Loading...</em></p>
+        //    : BusinessReporting.renderBusinessReporting(this.state, this.showAward, this.onChange, this.displaydata, this.displayOverallData, this.displaySenderData, this.displayRecipientData, this.displayTypeData, this.calculateData);
         return (
             <div>
                 <h1>Set Filters</h1>
