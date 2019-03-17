@@ -26,7 +26,7 @@ export default class App extends Component {
                     <PrivateRoute exact path='/' component={Home} />
                     <PrivateRoute path='/signup' roles={['Admin']} component={SignUp} />
                     <Route path='/ForgetPassword' component={ForgetPassword} />
-                    <PrivateRoute path='/businessreporting' roles={['Admin']} component={BusinessReporting} />
+                    <PrivateRoute path='/businessReporting' roles={['Admin']} component={BusinessReporting} />
                     <PrivateRoute path='/users' roles={['Admin']} component={Users} />
                     <PrivateRoute path='/awards' roles={['User']} component={Awards} />
                     <PrivateRoute path='/settings' component={Settings} />
