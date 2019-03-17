@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
-
-var util = require('util');
 
 export class AddUser extends Component {
     constructor(props) {
@@ -16,7 +14,6 @@ export class AddUser extends Component {
             role: 0,
             signature: '',
             imagePreviewUrl: '',
-           // reRoute: false,
             loading: false
         };
 

@@ -7,7 +7,7 @@ const User = props => {
             <td>{props.userInfo.first_name}</td>
             <td>{props.userInfo.last_name}</td>
             <td>{props.userInfo.email}</td>
-            <td><img style={{ transform: "rotate(90deg)"}} src={`data:image/jpeg;base64,${props.userInfo.signature}`} width='500' height='500'/></td>
+            {/* <td><img src={`data:image/jpeg; base64,${props.userInfo.signature}`} width='200' height='200' alt="Employee's Signature"/></td>*/}
             <TableButtons
                 handleDelete={props.handleDelete}
                 handleEdit={props.handleEdit}
