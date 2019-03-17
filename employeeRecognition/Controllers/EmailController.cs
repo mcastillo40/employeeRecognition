@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +23,10 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlClient;
 using System.Data;
 using System.Net.Sockets;
+using System.IO;
+
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 
 // https://www.youtube.com/watch?v=Y2X5wtuzuX4
@@ -138,14 +143,83 @@ namespace employeeRecognition.Controllers
 
         }
 
-
         /*****************
-         TO WORK ON: METHOD FOR EMAILING ATTACHMENT (SEND CERTIFICATE)
-        *****************/
+                TESTER: METHOD FOR EMAILING ATTACHMENT (SEND CERTIFICATE)
+               *****************/
+        //Test url:  /api/email/sendpdf
+        [HttpPost("[action]")]
+        public IActionResult SendPdf( [FromBody]JObject jObject)
+        //public IActionResult testEmail()
+        {
+            dynamic obj = jObject;
+            try
+            {   //parse email and pdf content from object to be set as 2 strings below
+                string awardemail = obj.email;
+                string strJson = obj.pdfContent;
 
+                //remove unnnecessary information from JSON string (data:application/pdf;base64,)
+                string newStr = strJson.Remove(0, 28);
+                //convert to System.Byte[] file
+                var binData = Convert.FromBase64String(newStr);
+                //create temp filepath and filename
+                var filePath = Path.GetTempFileName();
+                var fileName = filePath + "award.pdf";
 
+                // write content to the pdf
+                using (var fs = new FileStream(fileName, FileMode.Create))
+                using (var writer = new BinaryWriter(fs))
+                {
+                    writer.Write(binData, 0, binData.Length);
+                    writer.Close();
+                }
 
+                var message = new MimeMessage();
 
-    }
+                    //Specify sender email
+                    message.From.Add(new MailboxAddress("employeerecognition3@gmail.com"));
+
+                    //Specify recipient email
+                    message.To.Add(new MailboxAddress(awardemail)); 
+
+                    //Subject
+                    message.Subject = "EmployeeRecognition: Award Certificate";
+
+                    //Builder: Set plain-text version of the message text
+                    var builder = new BodyBuilder();
+
+                    //Body, will be formatted in HTML format
+                    builder.TextBody = @"Congratulations for your hard work!";
+
+                    //Attachment
+                    builder.Attachments.Add(fileName);
+
+                    message.Body = builder.ToMessageBody();
+
+                    using (var client = new SmtpClient())
+                    {
+                        client.Connect("smtp.gmail.com", 587, false); //"false" because SSL, we are using less secure app
+
+                        // Note: since we don't have an OAuth2 token, disable
+                        // the XOAUTH2 authentication mechanism.
+                        client.AuthenticationMechanisms.Remove("XOAUTH2");
+
+                        client.Authenticate("employeerecognition3@gmail.com", "teamerrai");
+                        client.Send(message);
+                        client.Disconnect(true);
+
+                    }
+
+                    Console.WriteLine("Send Mail Success.");
+                    return Ok();
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine("Send Mail Failed : " + e.Message);
+                return BadRequest();
+
+            }
+        }
+
+        }
 }
-

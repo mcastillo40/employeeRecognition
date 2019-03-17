@@ -9,13 +9,19 @@ export class BusinessReporting extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            filter: "",
             users: [],
             awards: [],
+            sender_user_id: '',
+            recipient_user_id: '',
+            type: "",
+            test: false,
             reRoute: false,
             loading: true
         };
-        this.showAward.bind(this);
+        this.showAward = this.showAward.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.displaydata = this.displaydata.bind(this);
     }
 
     onChange(event) {
@@ -24,27 +30,35 @@ export class BusinessReporting extends Component {
 
     async showAward(e) {
         e.preventDefault();
-
+        
         try {
-            let awardInfo = {
-                sender_user_id: this.state.sender_user_id,
-                recipient_user_id: this.state.recipient_user_id,
-                type: this.state.type,
+            let id = '';
+            let filter = '';
+            let form = e.target.id;
+            if (form === "filtersender") {
+                id = this.state.sender_user_id;
+                filter = "sender";
             }
-            const { token } = AUTH_MODEL.get();
+            else if (form === "filterrecipient") {
+                id = this.state.recipient_user_id;
+                filter = "recipient";
+            }
+            else if (form === "filtertype")
+                filter = "type";
 
-            const url = 'api/awards/business';
+            const { token } = AUTH_MODEL.get();
+            const url = `api/awards/business?id=${parseInt(id, 10)}&type=${this.state.type}&filter=${filter}`;
+            
             const response = await fetch(url, {
                 method: 'GET',
-                body: JSON.stringify(awardInfo),
                 headers: {
-                    'Content-Type': 'application/json',
                     authorization: `Bearer ${token}`
                 }
             });
-            console.log("data: ", awardInfo);
-            if (response.ok)
-                this.setState({ reRoute: true });
+ 
+            const data = await response.json();
+            this.setState({ awards: data, test: true })
+            console.log("data: ", data);
         }
         catch (err) {
             console.log("err: ", err);
@@ -63,92 +77,74 @@ export class BusinessReporting extends Component {
         }
     }
 
-    static renderBusiness(awards) {
-    return (
-        <div>     
-            <br /> <br />
-            <div className="form-border">
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>Sender Name</th>
-                            <th>Recipient Name</th>
-                            <th>Award Type</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {awards.map(award => (
-                            <tr key={award.id}>
-                            <td>{award.sfn} {award.sln}</td>
-                            <td>{award.rfn} {award.rln}</td>
-                            <td>{award.type}</td>
-                            <td>{award.date}</td>
-                        </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-}
+    displaydata() {
 
-    render() {
-
-        let contents = this.state.loading
-            ? <p><em>Loading...</em></p>
-            : BusinessReporting.renderBusiness(this.state.awards);
         return (
             <div>
-                <h1>Business Reporting Infomation</h1>
-                {contents}
-            </div>
-        );
+                <p>display</p>
+                <div>
+                    {this.state.awards.map(award => (
+                        <div>{award.sfn} {award.sln}</div>))}
+                </div >
+            </div >
+          )
+    }
 
-        //if (this.state.reRoute) {
-        //    return <Redirect to="/BusinessReporting" />
-        //}
-        //else {
-        //    return (
-        //        <div>
-        //            <h1>Set filters</h1>
-        //            <br />
-        //            <form
-        //                id="Addaward"
-        //                onSubmit={this.showAward.bind(this)}
-        //            >
-        //                <div className="form-group">
-        //                    <label htmlFor="TypeSelect">Select Sender ID from Name:</label>
-        //                    <select className="form-control" name="sender_user_id" id="sender_user_id" value={this.state.sender_user_id} onChange={this.onChange}>
-        //                        {this.state.users.map(user => (
-        //                            <option value={user.id}>
-        //                                {user.first_name} {user.last_name}
-        //                            </option>
-        //                        ))}
-        //                    </select>
-        //                </div>
-        //                <div className="form-group">
-        //                    <label htmlFor="TypeSelect">Select Recipient ID from Name:</label>
-        //                    <select className="form-control" name="recipient_user_id" id="recipient_user_id" value={this.state.recipient_user_id} onChange={this.onChange}>
-        //                        {this.state.users.map(user => (
-        //                            <option value={user.id}>
-        //                                {user.first_name} {user.last_name}
-        //                            </option>
-        //                        ))}
-        //                    </select>
-        //                </div>
-        //                <div className="form-group">
-        //                    <label htmlFor="TypeSelect">Type:</label>
-        //                    <select className="form-control" name="type" id="TypeSelect" value={this.state.type} onChange={this.onChange}>
-        //                        <option value="Service">Service</option>
-        //                        <option value="Performance">Performance</option>
-        //                        <option value="Team Work">Team Work</option>
-        //                    </select>
-        //                </div>
-        //                <button className="btn btn-primary" type="submit">Display</button>
-        //            </form>
-        //        </div>
-        //    )
-        //}
+    render() {
+        return (
+            <div>
+                <h1>Set Filters</h1>
+                <br />
+                <form
+                    id="filtersender"
+                    onSubmit={this.showAward}
+                >
+                    <div classname="form-group">
+                        <label htmlfor="typeselect">Select sender id from name:</label>
+                        <select classname="form-control" name="sender_user_id" id="sender_user_id" value={this.state.sender_user_id} onChange={this.onChange}>
+                            {this.state.users.map(user => (
+                                <option value={user.id}>
+                                    {user.first_name} {user.last_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <button classname="btn btn-primary" type="submit">display</button>
+                    </form>
+                <form
+                    id="filterrecipient"
+                    onSubmit={this.showAward}
+                >
+                    <div classname="form-group">
+                        <label htmlfor="typeselect">Select recipient id from name:</label>
+                        <select classname="form-control" name="recipient_user_id" id="recipient_user_id" value={this.state.recipient_user_id} onChange={this.onChange}>
+                            {this.state.users.map(user => (
+                                <option value={user.id}>
+                                    {user.first_name} {user.last_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <button classname="btn btn-primary" type="submit">display</button>
+                </form>
+                <form
+                    id="filtertype"
+                    onSubmit={this.showAward}
+                >
+                    <div classname="form-group">
+                        <label htmlfor="typeselect">type:</label>
+                        <select classname="form-control" name="type" id="typeselect" value={this.state.type} onChange={this.onChange}>
+                            <option value="Service">Service</option>
+                            <option value="Performance">Performance</option>
+                            <option value="Team Work">Team Work</option>
+                        </select>
+                    </div>
+                    <button classname="btn btn-primary" type="submit">display</button>
+                </form>             
+                {/*<div style={{ display: this.state.test ? 'block' : 'none' }}>{this.displaydata}</div>*/}
+                <hr />
+                {this.displaydata()}
+            </div>
+        )
     }
 }

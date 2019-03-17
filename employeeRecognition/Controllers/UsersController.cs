@@ -47,16 +47,20 @@ namespace employeeRecognition.Controllers
         [HttpGet("[action]")]
         public IActionResult getUser(int id)
         {
-            string sql = $"SELECT userAcct.id, userAcct.first_name, userAcct.last_name, userAcct.email FROM userAcct WHERE userAcct.id={id}";
-
+            string sql = $"SELECT userAcct.id, userAcct.signature, userAcct.first_name, userAcct.last_name, userAcct.email FROM userAcct WHERE userAcct.id={id}";
             dt = sqlConnection.Connection(sql);
            
             DataRow row = dt.Rows[0];
-
-            var user_info = new {
-                first_name = row["first_name"].ToString(),
-                last_name = row["last_name"].ToString(),
-                email = row["email"].ToString(),
+            Byte[] tempsig = new Byte[0];
+            if (!Convert.IsDBNull(row["signature"])) {
+                tempsig = (Byte[])row["signature"];
+                    };
+                var user_info = new
+                {
+                    first_name = row["first_name"].ToString(),
+                    last_name = row["last_name"].ToString(),
+                    signature = tempsig,
+                    email = row["email"].ToString(),
             };
 
             return new ObjectResult(user_info) { StatusCode = 200 };
@@ -170,6 +174,7 @@ namespace employeeRecognition.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AdminEdit(int id, [FromBody]UserAcct User)
         {
+
             if (ModelState.IsValid)
             {
                 string query = $"Update userAcct set first_name='{User.first_name}', last_name='{User.last_name}', email='{User.email}', role={User.role} WHERE userAcct.id={id}";
