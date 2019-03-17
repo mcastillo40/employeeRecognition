@@ -21,6 +21,7 @@ export class BusinessReporting extends Component {
             displayFilter: false,
             reRoute: false,
             loading: true,
+            test: true,
         };
 
         this.showAward = this.showAward.bind(this);
