@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -15,13 +14,7 @@ using MailKit;
 using MimeKit;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
-
-using employeeRecognition.Extensions;
 using employeeRecognition.Models;
-
-using Microsoft.AspNetCore.Authorization;
-using System.Data.SqlClient;
-using System.Data;
 using System.Net.Sockets;
 using System.IO;
 
