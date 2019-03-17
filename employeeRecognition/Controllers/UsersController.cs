@@ -69,6 +69,7 @@ namespace employeeRecognition.Controllers
         }
 
         [HttpGet("[action]")]
+        [Authorize]
         public IActionResult getUser(int id)
         {
             string sql = $"SELECT userAcct.id, userAcct.signature, userAcct.first_name, userAcct.last_name, userAcct.email FROM userAcct WHERE userAcct.id={id}";
@@ -86,6 +87,25 @@ namespace employeeRecognition.Controllers
                     signature = tempsig,
                     email = row["email"].ToString(),
             };
+
+            return new ObjectResult(user_info) { StatusCode = 200 };
+        }
+
+        [HttpGet("[action]")]
+        [Authorize]
+        public IActionResult getSignature(int id)
+        {
+            string sql = $"SELECT userAcct.signature FROM userAcct WHERE userAcct.id={id}";
+            dt = sqlConnection.Connection(sql);
+
+            DataRow row = dt.Rows[0];
+            Byte[] tempsig = new Byte[0];
+            if (!Convert.IsDBNull(row["signature"]))
+            {
+                tempsig = (Byte[])row["signature"];
+            };
+
+            var user_info = new { signature = tempsig };
 
             return new ObjectResult(user_info) { StatusCode = 200 };
         }

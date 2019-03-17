@@ -50,8 +50,13 @@ export class ImageReset extends Component {
             });
 
             if (response.status === 201) {
+                let res = await fetch(`api/users/getSignature/?id=${this.state.id}`,
+                    { headers: { authorization: `Bearer ${token}` } }
+                );
+                let data = await res.json();
+
+                this.props.updateUser({ signature: data.signature });
                 this.props.showEditImage();
-                //this.props.updateUser({ signature: userInfo.email });
                 this.setState({ selectImage: true })
             }
         }
@@ -86,13 +91,13 @@ export class ImageReset extends Component {
                     />
 
                     <span style={{ display: this.state.selectImage ? 'block' : 'none' }}>
-                        <button type="button" className="btn btn-secondary" style={{ marginRight: '10px' }} onClick={() => this.fileInput.click()}>Pick Image</button>
-                        <button type="button" className="btn btn-danger" onClick={this.cancelImage}>Cancel</button>
+                        <button type="button" id="signatureInput" className="btn btn-secondary" style={{ marginRight: '10px' }} onClick={() => this.fileInput.click()}>Pick Image</button>
+                        <button type="button" id="signatureCancel_1" className="btn btn-danger" onClick={this.cancelImage}>Cancel</button>
                     </span>
 
                     <span style={{ display: this.state.selectImage ? 'none' : 'block' }}>
-                        <button type="submit" className="btn btn-info" style={{ marginRight: '10px' }} onClick={this.editImage.bind(this)}>Update Image</button>
-                        <button type="button" className="btn btn-danger" onClick={this.cancelImage}>Cancel</button>
+                        <button type="submit" id="signatureUpdate" className="btn btn-info" style={{ marginRight: '10px' }} onClick={this.editImage.bind(this)}>Update Image</button>
+                        <button type="button" id="signatureCancel_2" className="btn btn-danger" onClick={this.cancelImage}>Cancel</button>
                     </span>
                 </div>
             );

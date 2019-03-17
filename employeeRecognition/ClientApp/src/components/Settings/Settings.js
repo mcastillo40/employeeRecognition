@@ -21,6 +21,7 @@ export class Settings extends Component {
         showEmailUpdate: false,
         showPasswordUpdate: false,
         showSignatureUpdate: false,
+        signatureUpdate: false,
         loading: true
       };
 
@@ -69,6 +70,7 @@ export class Settings extends Component {
     }
 
     showEditImage() {
+        document.getElementById("signatureUpdate").onclick = null;
         this.setState({ showSignatureUpdate: !this.state.showSignatureUpdate });
     }
 
@@ -91,6 +93,8 @@ export class Settings extends Component {
                             <div className='col-md-6'>
                                 <h2>{this.state.last_name}, {this.state.first_name}</h2>
                                 <p style={{ fontWeight: '500' }}>{this.state.role}</p>
+
+                                <span><img src={`data:image/jpeg;base64,${this.state.signature}`} width='100' height='100' /></span>
                                 
                                 <br />
                                 <p style={{ fontWeight: '400' }}>Email:  {this.state.email}</p>
@@ -141,10 +145,14 @@ export class Settings extends Component {
 
                                 <div>
                                     <span style={{ display: this.state.showSignatureUpdate ? 'none' : 'block' }}>
-                                        <button type="button" className="btn btn-link" onClick={this.showEditImage} style={{ paddingLeft: '0px' }}>Update Signature</button>
+                                        <button type="button" id="signatureUpdate" className="btn btn-link" onClick={this.showEditImage} style={{ paddingLeft: '0px' }}>Update Signature</button>
                                     </span>
                                     <span style={{ display: this.state.showSignatureUpdate ? 'block' : 'none' }}>
-                                        <ImageReset id={this.state.id} showEditImage={this.showEditImage} />
+                                        <ImageReset
+                                            id={this.state.id}
+                                            showEditImage={this.showEditImage}
+                                            updateUser={this.updateUser}
+                                        />
                                     </span>
                                 </div>
 
