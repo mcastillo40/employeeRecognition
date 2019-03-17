@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { CreateButton } from '../../Shared/CreateButton';
 import { Award } from './Award';
 import { Link } from 'react-router-dom';
@@ -20,7 +20,6 @@ export class Awards extends Component {
 
     async componentDidMount() {
         try {
-
             const { token } = AUTH_MODEL.get();
             const response = await fetch('api/awards/nominated', { headers: { authorization: `Bearer ${token}` } });
 
@@ -31,7 +30,6 @@ export class Awards extends Component {
             console.log("ERR: ", err);
         }
     }
-
 
     async onPrint(award) {
         // Use http://dataurl.net/#dataurlmaker to create template img below
@@ -76,7 +74,6 @@ export class Awards extends Component {
     }
 
     async handleDelete(id) {
-
         const { token } = AUTH_MODEL.get();
         let url = `api/awards/delete?id=${id}`;
 

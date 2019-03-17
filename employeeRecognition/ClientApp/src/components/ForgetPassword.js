@@ -11,19 +11,15 @@ export class ForgetPassword extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-
 handleChange(event){
     this.setState({email: event.target.value});
 }
-
-
 
 async handleSubmit(event){
     event.preventDefault();
     const data = {email: this.state.email};
 
     try{
-        console.log("data is: ", data); 
         const response = await fetch('api/email/sendPassword', {
             method: 'POST',
             body: JSON.stringify(data),
@@ -31,41 +27,28 @@ async handleSubmit(event){
                 'Content-Type': 'application/json'
                 }
          });
-
-        console.log("Response is: ", response);
-        const responseOK = response.ok;
-        console.log("response.ok is: ", responseOK);
+        let mySpan;
         if (response.ok){
-            var mySpan = document.getElementById('sent_confirm');
+            mySpan = document.getElementById('sent_confirm');
             mySpan.style.display = "";
             mySpan = document.getElementById('incorrect_info');
             mySpan.style.display = 'none';
         }
         else{
-              var mySpan = document.getElementById('incorrect_info');
+            mySpan = document.getElementById('incorrect_info');
             mySpan.style.display = "";
               mySpan = document.getElementById('sent_confirm');
             mySpan.style.display = 'none';
         }
-
-    
     }
-
     catch (err){
         console.log("ERR: ", err);
-//        var mySpan = document.getElementById('incorrect_info');
-  //      mySpan.style.display = "";
     }
 }
 
-
-
-
 render() {
     return (
-
       <div> {/*JSX ROOT*/}
-        
         <div className="card">
             <article className="card-body">
                 <h4 className="card-title text-center mb-4 mt-1">RECOVER PASSWORD</h4>

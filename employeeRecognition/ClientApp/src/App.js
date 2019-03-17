@@ -12,24 +12,14 @@ import { Addaward } from './components/Awards/Addaward';
 import { Editaward } from './components/Awards/Editaward';
 import { AddUser } from './components/Users/AddUser';
 import { EditUser } from './components/Users/EditUser';
-
-
 import { ForgetPassword } from './components/ForgetPassword';
-
-
-//import AuthenticatedComponent from './components/Auth/AuthenticatedComponent';
 import { PrivateRoute } from './Shared/Auth/PrivateRoute';
-
-
-
-
 
 export default class App extends Component {
     displayName = App.name
 
     render() {
         return (
-
             <Layout>
                 <Switch>
                     <Route path='/login' component={Login} />
@@ -45,9 +35,7 @@ export default class App extends Component {
                     <PrivateRoute path='/Addaward' roles={['User']} component={Addaward} />
                     <PrivateRoute path='/Editaward' roles={['User']} component={Editaward} />
                 </Switch>
-
             </Layout>
         );
     }
-
 }

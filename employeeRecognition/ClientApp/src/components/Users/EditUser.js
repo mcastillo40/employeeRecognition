@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { PasswordReset } from '../Update/PasswordReset';
+import { ImageReset } from '../Update/ImageReset';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
 
 export class EditUser extends Component {
@@ -14,12 +15,14 @@ export class EditUser extends Component {
             email: props.location.state.user.email,
             role: props.location.state.user.role,
             reRoute: false,
-            showPasswordUpdate: false
+            showPasswordUpdate: false,
+            showImageUpdate: false,
         };
 
         this.editUser.bind(this);
         this.onChange = this.onChange.bind(this);
         this.showEditPassword = this.showEditPassword.bind(this);
+        this.showEditImage = this.showEditImage.bind(this);
     }
 
     onChange(event) {
@@ -28,6 +31,10 @@ export class EditUser extends Component {
 
     showEditPassword() {
         this.setState({ showPasswordUpdate: !this.state.showPasswordUpdate });
+    }
+
+    showEditImage() {
+        this.setState({ showImageUpdate: !this.state.showImageUpdate });
     }
 
     async editUser(e) {
@@ -41,16 +48,15 @@ export class EditUser extends Component {
         }
         
         try {
-            const url = `api/users/AdminEdit?id=${this.props.location.state.user.id}`;
             const { token } = AUTH_MODEL.get();
-
-
+            const url = `api/users/AdminEdit?id=${this.props.location.state.user.id}`;
 
             const response = await fetch(url, {
                 method: 'PUT',
                 body: JSON.stringify(userInfo),
                 headers: {
-                    'Content-Type': 'application/json', authorization: `Bearer ${token}`
+                    'Content-Type': 'application/json',
+                    authorization: `Bearer ${token}`
                 }
             });
 
@@ -121,30 +127,42 @@ export class EditUser extends Component {
                             />
                         </div>
                         <div className="form-group">
-
-                            <div className="form-group">
-                                <label>Password:</label>
-                                <br />
-                                <span style={{ display: this.state.showPasswordUpdate ? 'none' : 'block' }}>
-                                    <button type="button" className="btn btn-secondary" onClick={this.showEditPassword}>Change Password</button>
-                                </span>
-                                <span style={{ display: this.state.showPasswordUpdate ? 'block' : 'none' }}>
-                                    <PasswordReset id={this.state.id} showEditPassword={this.showEditPassword}/>
-                                </span>
-                            </div>
-
-                        </div>
-                        <div className="form-group">
                             <label htmlFor="roleSelect">Role:</label>
                             <select className="form-control" name="role" id="roleSelect" value={this.state.role} onChange={this.onChange}>
                                 <option value={0}>User</option>
                                 <option value={1}>Admin</option>
                             </select>
                         </div>
+
                         <button className="btn btn-primary" type="submit" style={{ marginRight: '10px' }}>
                             Submit Changes
                         </button>
                         <Link to="/Users"><button type="button" className="btn btn-danger">Cancel</button></Link>
+
+                        <hr/>
+
+                        <div className="form-group">
+                            <div className="form-group">
+                                <label>Edit Password:</label>
+                                <br />
+                                <span style={{ display: this.state.showPasswordUpdate ? 'none' : 'block' }}>
+                                    <button type="button" className="btn btn-secondary" onClick={this.showEditPassword}>Update Password</button>
+                                </span>
+                                <span style={{ display: this.state.showPasswordUpdate ? 'block' : 'none' }}>
+                                    <PasswordReset id={this.state.id} showEditPassword={this.showEditPassword} />
+                                </span>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label>Edit Signature:</label>
+                            <br />
+                            <span style={{ display: this.state.showImageUpdate ? 'none' : 'block' }}>
+                                <button type="button" className="btn btn-secondary" onClick={this.showEditImage}>Update Signature</button>
+                            </span>
+                            <span style={{ display: this.state.showImageUpdate ? 'block' : 'none' }}>
+                                <ImageReset id={this.state.id} showEditImage={this.showEditImage} />
+                            </span>
+                        </div>
                     </form>
                 </div>
             )

@@ -38,6 +38,30 @@ namespace employeeRecognition.Controllers
                 user.first_name = row["first_name"].ToString();
                 user.last_name = row["last_name"].ToString();
                 user.email = row["email"].ToString();
+                if(!Convert.IsDBNull(row["signature"]))
+                    user.signature = (Byte[])row["signature"];
+                list.Add(user);
+            }
+
+            return list;
+        }
+
+        [HttpGet("[action]")]
+        [Authorize]
+        public IEnumerable<UserAcct> limitedUser()
+        {
+            List<UserAcct> list = new List<UserAcct>();
+
+            string sql = @"SELECT * FROM userAcct";
+
+            dt = sqlConnection.Connection(sql);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                var user = new UserAcct();
+                user.id = (int)row["id"];
+                user.first_name = row["first_name"].ToString();
+                user.last_name = row["last_name"].ToString();
                 list.Add(user);
             }
 

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AUTH_MODEL } from '../../Shared/Auth/Auth';
-
-var util = require('util');
 
 export class AddUser extends Component {
     constructor(props) {
@@ -16,7 +14,6 @@ export class AddUser extends Component {
             role: 0,
             signature: '',
             imagePreviewUrl: '',
-           // reRoute: false,
             loading: false
         };
 
@@ -33,9 +30,7 @@ export class AddUser extends Component {
         event.preventDefault();
         console.log(event.target.files[0]);
 
-        this.setState({
-            signature: event.target.files[0] 
-        })
+        this.setState({ signature: event.target.files[0] })
     }
 
     async createUser(e) {
@@ -160,7 +155,7 @@ export class AddUser extends Component {
                             </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="roleSelect">Upload Signature:</label>
+                            <label>Upload Signature:</label>
                             <input
                                 style={{ display: 'none' }}
                                 id="signature"
