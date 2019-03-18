@@ -55,7 +55,9 @@ export class ImageReset extends Component {
                 );
                 let data = await res.json();
 
-                this.props.updateUser({ signature: data.signature });
+                if (this.props.updateUser)
+                    this.props.updateUser({ signature: data.signature });
+
                 this.props.showEditImage();
                 this.setState({ selectImage: true })
             }

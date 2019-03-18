@@ -56,12 +56,11 @@ export class Users extends Component {
             const response = await fetch(url, {
                 headers: {authorization: `Bearer ${token}`
                 }});
-            console.log("handleEdit method response is: ", response);
+
             if (response.ok)
                 this.props.history.push({
                 pathname: '/editUser',
                 state: { user }})
-            
         }
 
         catch(err){
