@@ -86,7 +86,7 @@ namespace csharp_db_test
             email       varchar(128)       not null,
             role        int                not null REFERENCES role (id),   -- A foreign key to role.id
             create_on   datetime2           default CURRENT_TIMESTAMP,          
-            signature   image
+            signature   VARBINARY(MAX)
         
         );
 
